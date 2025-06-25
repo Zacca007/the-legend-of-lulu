@@ -8,7 +8,7 @@ int main(void)
     InitWindow(screenSize.x, screenSize.y, "lulù ti amo");
     Texture2D bg = LoadTexture("core/assets/rooms/room1.png");
 
-    SetTargetFPS(30);
+    SetTargetFPS(60);
     while (!WindowShouldClose())
     {
         BeginDrawing();

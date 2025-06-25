@@ -5,7 +5,7 @@ namespace lulu
 {
     struct pair
     {
-        float x=0, y=0;
+        float x = 0, y = 0;
 
         pair operator+(const pair &other) const { return {x + other.x, y + other.y}; }
         pair operator-(const pair &other) const { return {x - other.x, y - other.y}; }
@@ -16,9 +16,17 @@ namespace lulu
 
     enum Key
     {
-        RIGHT = 262,
-        LEFT = 263,
-        DOWN = 264,
-        UP = 265
+        K_RIGHT = 262,
+        K_LEFT = 263,
+        K_DOWN = 264,
+        K_UP = 265
+    };
+
+    enum collision
+    {
+        C_RIGHT,
+        C_LEFT,
+        C_TOP,
+        C_BOTTOM
     };
 }

@@ -4,23 +4,28 @@
 
 namespace lulu
 {
+    class Actor;
     class Arena
     {
     private:
-        //attrs
+        // attrs
         pair _pos;
         pair _size;
         std::vector<Key> _currKeys;
         std::vector<Key> _prevKeys;
+        std::vector<Actor *> _actors;
 
     public:
         // constructors
         Arena(pair position, pair size) : _pos(position), _size(size) {};
 
         // getters
-        const pair &pos() { return _pos; }
-        const pair &size() { return _size; }
-        const std::vector<Key> &currKeys() { return _currKeys; }
-        const std::vector<Key> &prevKeys() { return _prevKeys; }
+        const pair &pos() const { return _pos; }
+        const pair &size() const { return _size; }
+        const std::vector<Key> &currKeys() const { return _currKeys; }
+        const std::vector<Key> &prevKeys() const { return _prevKeys; }
+
+        bool spawn(Actor *actor);
+        bool kill(Actor *actor);
     };
 } // namespace lulu
