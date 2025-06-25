@@ -6,5 +6,5 @@ pkgs.mkShell {
     pkg-config
   ];
 
-  shellHook = " code . ";
+  shellHook = " code .  && exit";
 }

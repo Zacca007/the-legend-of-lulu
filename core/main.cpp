@@ -2,17 +2,18 @@
 #include "lulu.hpp"
 int main(void)
 {
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    const lulu::pair screenSize{800, 550}, arenaSize{600, 350}, arenaPos{100, 100};
+    lulu::Arena arena(arenaPos, arenaSize);
 
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    InitWindow(screenSize.x, screenSize.y, "lulù ti amo");
+    Texture2D bg = LoadTexture("core/assets/rooms/room1.png");
 
-    SetTargetFPS(60);
+    SetTargetFPS(30);
     while (!WindowShouldClose())
     {
         BeginDrawing();
-        ClearBackground(RAYWHITE);
-        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+        DrawTexture(bg, 0, 0, WHITE);
+        DrawRectangleLines(arena.pos().x, arena.pos().y, arena.size().x, arena.size().y, YELLOW);
         EndDrawing();
     }
     CloseWindow();
