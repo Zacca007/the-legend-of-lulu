@@ -24,6 +24,7 @@ namespace lulu
         const pair &size() const { return _size; }
         const std::vector<Key> &currKeys() const { return _currKeys; }
         const std::vector<Key> &prevKeys() const { return _prevKeys; }
+        const std::vector<Actor *> &actors() const { return _actors; }
 
         void spawn(Actor *actor);
         void kill(Actor *actor);
