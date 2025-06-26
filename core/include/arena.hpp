@@ -25,7 +25,7 @@ namespace lulu
         const std::vector<Key> &currKeys() const { return _currKeys; }
         const std::vector<Key> &prevKeys() const { return _prevKeys; }
 
-        bool spawn(Actor *actor);
-        bool kill(Actor *actor);
+        void spawn(Actor *actor);
+        void kill(Actor *actor);
     };
 } // namespace lulu
