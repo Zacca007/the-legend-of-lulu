@@ -8,6 +8,7 @@ namespace lulu
         float x = 0, y = 0;
 
         pair operator+(const pair &other) const { return {x + other.x, y + other.y}; }
+        pair operator+(float offset) const { return {x + offset, y + offset}; }
         pair operator-(const pair &other) const { return {x - other.x, y - other.y}; }
         pair operator*(float scalar) const { return {x * scalar, y * scalar}; }
 
