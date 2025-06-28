@@ -7,7 +7,7 @@
 std::vector<lulu::Key> getCurrentKeys()
 {
     std::vector<lulu::Key> active_keys;
-    static const std::array<lulu::Key, 4> keys_to_check = {lulu::K_DOWN, lulu::K_LEFT, lulu::K_RIGHT, lulu::K_UP};
+    static const std::array<lulu::Key, 4> keys_to_check = {lulu::K_W, lulu::K_A, lulu::K_S, lulu::K_D};
     
     for (lulu::Key key : keys_to_check)
     {
@@ -39,7 +39,7 @@ int main(void)
     lulu::Actor act12(arenaPos + lulu::pair{9 * 50, 5 * 50}, {50, 50}, &arena);
 
     // Link che si può muovere
-    lulu::Link link(arenaPos + lulu::pair{arenaSize.x / 2, arenaSize.y / 2}, {50, 50}, {5, 5}, &arena);
+    lulu::Link link(arenaPos + lulu::pair{arenaSize.x / 2, arenaSize.y / 2}, {50, 50}, {7, 7}, &arena);
 
     InitWindow(screenSize.x, screenSize.y, "legend of lulu");
     Texture2D bg = LoadTexture("core/assets/rooms/room1.png");
@@ -76,7 +76,6 @@ int main(void)
 
         // Disegna Link con un colore diverso per distinguerlo
         DrawRectangle(link.pos().x, link.pos().y, link.size().x, link.size().y, YELLOW);
-
         EndDrawing();
     }
 
