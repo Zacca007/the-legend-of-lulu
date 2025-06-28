@@ -5,6 +5,7 @@
 namespace lulu
 {
     class Actor;
+    class Movable;
     class Arena
     {
     private:
@@ -28,5 +29,6 @@ namespace lulu
 
         void spawn(Actor *actor);
         void kill(Actor *actor);
+        void tick(const std::vector<Key> &keys);
     };
 } // namespace lulu

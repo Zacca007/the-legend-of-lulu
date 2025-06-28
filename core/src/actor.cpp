@@ -1,6 +1,6 @@
 #include "arena.hpp"
 #include "actor.hpp"
-using lulu::Arena, lulu::Actor;
+using lulu::Actor;
 
 Actor::Actor(pair position, pair size, Arena *arena, const std::string &sprite)
     : _pos(position), _size(size), _arena(arena), _sprite(sprite)

@@ -1,5 +1,4 @@
 #pragma once
-#include <cmath>
 
 namespace lulu
 {
@@ -8,19 +7,28 @@ namespace lulu
         float x = 0, y = 0;
 
         pair operator+(const pair &other) const { return {x + other.x, y + other.y}; }
-        pair operator+(float offset) const { return {x + offset, y + offset}; }
         pair operator-(const pair &other) const { return {x - other.x, y - other.y}; }
-        pair operator*(float scalar) const { return {x * scalar, y * scalar}; }
+        pair operator*(const pair &other) const { return {x * other.x, y * other.y}; }
+        pair operator/(const pair &other) const { return {x / other.x, y / other.y}; }
 
-        float length() const { return std::sqrt(x * x + y * y); }
+        pair operator+(float offset) const { return {x + offset, y + offset}; }
+        pair operator-(float offset) const { return {x - offset, y - offset}; }
+        pair operator*(float offset) const { return {x * offset, y * offset}; }
+        pair operator/(float offset) const { return {x / offset, y / offset}; }
+
+        pair &operator+=(const pair &other);
+        pair &operator-=(const pair &other);
+
+        pair diagonal() const;
     };
 
     enum Key
     {
-        K_RIGHT = 262,
-        K_LEFT = 263,
-        K_DOWN = 264,
-        K_UP = 265
+        K_A = 65,
+        K_D = 68,
+        K_S = 83,
+        K_W = 87,
+
     };
 
     enum collision
