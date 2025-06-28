@@ -13,6 +13,7 @@ FLAGS="-Wall -Wextra -O2"
 SOURCES=(
     "core/main.cpp"
     "core/src/*.cpp"
+    "core/src/actors/*.cpp"
 )
 
 # === INCLUDES ===
