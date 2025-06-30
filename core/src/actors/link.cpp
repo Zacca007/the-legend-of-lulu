@@ -31,9 +31,6 @@ void Link::move()
         }
     }
 
-    // Salva la posizione precedente
-    pair oldPos = _pos;
-
     pair diagonal = _speed.diagonal(); // equals speed.x and speed.y
     if (w && a)
         _pos -= diagonal;
@@ -50,64 +47,36 @@ void Link::move()
         _pos.y += diagonal.y;
     }
     else if (w)
-        _pos.y -= _speed.y; // Corretto: era *pos.y -= *speed.y;
+        _pos.y -= _speed.y;
     else if (a)
-        _pos.x -= _speed.x; // Corretto: era *pos.x -= *speed.x;
+        _pos.x -= _speed.x;
     else if (s)
-        _pos.y += _speed.y; // Corretto: era *pos.y += *speed.y;
+        _pos.y += _speed.y;
     else if (d)
-        _pos.x += _speed.x; // Corretto: era *pos.x += *speed.x;
+        _pos.x += _speed.x;
 
-    // Controlla collisioni con altri attori
-    if (_arena)
+    for (const Actor *other : _arena->actors())
     {
-        // Controlla se la nuova posizione causa collisioni
-        const std::vector<Actor *> &actors = _arena->actors();
-
-        for (Actor *other : actors)
+        if (other != this)
         {
-            if (other != this) // Non controllare collisioni con se stesso
+            collision coll = checkCollision(other);
+            switch (coll)
             {
-                collision collType = this->checkCollision(other);
-                if (collType != C_NONE)
-                {
+            case C_TOP:
+                _pos.y = other->pos().y + other->size().y;
+                break;
 
-                    // Gestisci la collisione in base al tipo
-                    switch (collType)
-                    {
-                    case C_RIGHT:
-                        // Collisione dal lato destro, impedisci movimento verso destra
-                        if (_pos.x > oldPos.x)
-                            _pos.x = oldPos.x;
-                        break;
-                    case C_LEFT:
-                        // Collisione dal lato sinistro, impedisci movimento verso sinistra
-                        if (_pos.x < oldPos.x)
-                            _pos.x = oldPos.x;
-                        break;
-                    case C_BOTTOM:
-                        // Collisione dal lato inferiore, impedisci movimento verso il basso
-                        if (_pos.y > oldPos.y)
-                            _pos.y = oldPos.y;
-                        break;
-                    case C_TOP:
-                        // Collisione dal lato superiore, impedisci movimento verso l'alto
-                        if (_pos.y < oldPos.y)
-                            _pos.y = oldPos.y;
-                        break;
-                    default:
-                        break;
-                    }
-                }
-            }
-        }
+            case C_BOTTOM:
+                _pos.y = other->pos().y - _size.y;
+                break;
 
-        // Se c'è ancora una collisione (casi complessi), ripristina completamente la posizione
-        for (Actor *other : actors)
-        {
-            if (other != this && this->checkCollision(other) != C_NONE)
-            {
-                _pos = oldPos;
+            case C_LEFT:
+                _pos.x = other->pos().x + other->size().x;
+                break;
+            case C_RIGHT:
+                _pos.x = other->pos().x - _size.x;
+
+            default:
                 break;
             }
         }
@@ -115,9 +84,9 @@ void Link::move()
 
     // Gestisci i confini della stanza
     if (_pos.x + _size.x >= fullRoom.x)
-        _pos.x = fullRoom.x - _size.x; // Corretto: era *pos.x = fullRoom.x - *size.x;
+        _pos.x = fullRoom.x - _size.x;
     if (_pos.y + _size.y >= fullRoom.y)
-        _pos.y = fullRoom.y - _size.y; // Corretto: era *pos.y = fullRoom.y - *size.y;
+        _pos.y = fullRoom.y - _size.y;
     if (_pos.x <= roomPos.x)
         _pos.x = roomPos.x;
     if (_pos.y <= roomPos.y)

@@ -16,9 +16,9 @@ namespace lulu
         std::vector<Key> _currKeys;
         std::vector<Key> _prevKeys;
         std::vector<Actor *> _actors;
-        std::map<Actor *, std::vector<Actor *>> _collision; // Mappa attore -> lista collisioni
+        std::map<Actor *, std::vector<Actor *>> _collisions; // Mappa attore -> lista collisioni
 
-        void detectCollisions(std::vector<Actor *> &actors);
+        void detectCollisions();
 
     public:
         // Costruttori
@@ -30,7 +30,7 @@ namespace lulu
         const std::vector<Key> &currKeys() const { return _currKeys; }
         const std::vector<Key> &prevKeys() const { return _prevKeys; }
         const std::vector<Actor *> &actors() const { return _actors; }
-        const std::map<Actor *, std::vector<Actor *>> &collisions() const { return _collision; }
+        const std::map<Actor *, std::vector<Actor *>> &collisions() const { return _collisions; }
 
         
         void spawn(Actor *actor);

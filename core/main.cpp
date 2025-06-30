@@ -1,5 +1,5 @@
-#include <raylib.h>
 #include "lulu.hpp"
+#include <raylib.h>
 #include <iostream>
 #include <vector>
 #include <array>
@@ -7,7 +7,7 @@
 std::vector<lulu::Key> getCurrentKeys()
 {
     std::vector<lulu::Key> active_keys;
-    static const std::array<lulu::Key, 4> keys_to_check = {lulu::K_W, lulu::K_A, lulu::K_S, lulu::K_D};
+    static constexpr std::array<lulu::Key, 4> keys_to_check = {lulu::K_W, lulu::K_A, lulu::K_S, lulu::K_D};
     
     for (lulu::Key key : keys_to_check)
     {
@@ -19,9 +19,9 @@ std::vector<lulu::Key> getCurrentKeys()
     return active_keys;
 }
 
-int main(void)
+int main()
 {
-    const lulu::pair screenSize{800, 550}, arenaSize{600, 350}, arenaPos{100, 100};
+    constexpr lulu::pair screenSize{800, 550}, arenaSize{600, 350}, arenaPos{100, 100};
     lulu::Arena arena(arenaPos, arenaSize);
     
     // Attori statici alle coordinate specificate (coordinate * 50 + arenaPos)
@@ -39,7 +39,7 @@ int main(void)
     lulu::Actor act12(arenaPos + lulu::pair{10 * 50, 5 * 50}, {50, 50}, &arena);
     
     // Link che si può muovere
-    lulu::Link link(arenaPos + lulu::pair{arenaSize.x / 2, arenaSize.y / 2}, {25, 25}, {7, 7}, &arena);
+    lulu::Link link(arenaPos + lulu::pair{arenaSize.x / 2, arenaSize.y / 2}, {30, 30}, {5, 5}, &arena);
     
     InitWindow(screenSize.x, screenSize.y, "legend of lulu");
     Texture2D bg = LoadTexture("core/assets/rooms/room1.png");

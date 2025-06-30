@@ -37,20 +37,17 @@ lulu::collision Actor::checkCollision(const Actor *other) const
     const pair &otherPos = other->pos();
     const pair &otherSize = other->size();
 
-    // Calcola i bordi di entrambi i rettangoli
     pair thisMin = _pos;
     pair thisMax = _pos + _size;
     pair otherMin = otherPos;
     pair otherMax = otherPos + otherSize;
 
-    // Verifica se c'è una collisione
     if (thisMax.x <= otherMin.x || otherMax.x <= thisMin.x ||
         thisMax.y <= otherMin.y || otherMax.y <= thisMin.y)
     {
         return C_NONE;
     }
 
-    // Calcola l'overlap su ogni asse
     float overlapX = std::min(thisMax.x - otherMin.x, otherMax.x - thisMin.x);
     float overlapY = std::min(thisMax.y - otherMin.y, otherMax.y - thisMin.y);
 
@@ -62,9 +59,9 @@ lulu::collision Actor::checkCollision(const Actor *other) const
         pair otherCenter = otherPos + otherSize / 2.0f;
 
         if (thisCenter.x < otherCenter.x)
-            return C_RIGHT; // Questo oggetto collide dal lato destro
+            return C_RIGHT;
         else
-            return C_LEFT; // Questo oggetto collide dal lato sinistro
+            return C_LEFT;
     }
     else
     {
@@ -73,8 +70,8 @@ lulu::collision Actor::checkCollision(const Actor *other) const
         pair otherCenter = otherPos + otherSize / 2.0f;
 
         if (thisCenter.y < otherCenter.y)
-            return C_BOTTOM; // Questo oggetto collide dal lato inferiore
+            return C_BOTTOM;
         else
-            return C_TOP; // Questo oggetto collide dal lato superiore
+            return C_TOP;
     }
 }
