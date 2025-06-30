@@ -36,6 +36,7 @@ namespace lulu
         C_RIGHT,
         C_LEFT,
         C_TOP,
-        C_BOTTOM
+        C_BOTTOM,
+        C_NONE
     };
 }
