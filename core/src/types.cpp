@@ -15,10 +15,12 @@ pair &pair::operator-=(const pair &other)
     return *this;
 }
 
-pair pair::diagonal() const
+std::optional<pair> pair::diagonal() const
 {
-    float l;
-    if(x==y) l = x/std::sqrt(2);
-    else l = -1;
-    return {l, l};
+    if (x == y)
+    {
+        const auto l = static_cast<float>(x / std::sqrt(2));
+        return pair{l, l};
+    }
+    return std::nullopt;
 }

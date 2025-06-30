@@ -1,13 +1,10 @@
 #pragma once
 #include "types.hpp"
 #include <string>
-
-namespace lulu
-{
+namespace lulu {
     class Arena;
 
-    class Actor
-    {
+    class Actor {
     protected:
         pair _pos;
         pair _size;
@@ -16,13 +13,15 @@ namespace lulu
 
     public:
         Actor(pair position, pair size, Arena *arena = nullptr, const std::string &sprite = "");
+
         virtual ~Actor() = default;
 
-        const pair &pos() const { return _pos; }
-        const pair &size() const { return _size; }
-        const Arena *arena() const { return _arena; }
+        [[nodiscard]] const pair &pos() const { return _pos; }
+        [[nodiscard]] const pair &size() const { return _size; }
+        [[nodiscard]] const Arena *arena() const { return _arena; }
 
         void setArena(Arena *arena);
-        collision checkCollision(const Actor *other) const;
+
+        collisionType checkCollision(const Actor *other) const;
     };
 }
