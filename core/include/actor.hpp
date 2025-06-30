@@ -23,5 +23,6 @@ namespace lulu
         const Arena *arena() const { return _arena; }
 
         void setArena(Arena *arena);
+        collision checkCollision(const Actor *other) const;
     };
 }
