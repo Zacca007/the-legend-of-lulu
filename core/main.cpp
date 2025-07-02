@@ -1,3 +1,4 @@
+
 #include <raylib.h>
 
 #include <array>
@@ -27,6 +28,7 @@ class Game
   public:
     Game()
         : arena(ARENA_POS, ARENA_SIZE), link(ARENA_POS + (ARENA_SIZE / 2), {30, 30}, 5, 12, 1, &arena)
+
     {
         initializeStaticActors();
         initializeGraphics();
