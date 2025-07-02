@@ -7,7 +7,6 @@
 #include "actors/fighter.hpp"
 #include "actors/link.hpp"
 
-namespace lulu
-{
-    //libreria
+namespace lulu {
+    // libreria
 }

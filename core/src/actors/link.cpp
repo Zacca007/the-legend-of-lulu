@@ -1,15 +1,14 @@
 #include "actors/link.hpp"
 #include "arena.hpp"
+
 #include <algorithm>
-using lulu::Link;
+
+using namespace lulu;
 
 void Link::move()
 {
-    pair roomPos = _arena->pos();
-    pair roomSize = _arena->size();
-    pair fullRoom = roomPos + roomSize;
-
     bool w = false, a = false, s = false, d = false;
+
     for (Key key : _arena->currKeys())
     {
         switch (key)
@@ -31,21 +30,16 @@ void Link::move()
         }
     }
 
-    pair diagonal = _speed.diagonal(); // equals speed.x and speed.y
+    const pair diag = _speed.diagonal().value();
+
     if (w && a)
-        _pos -= diagonal;
+        _pos -= diag;
     else if (s && d)
-        _pos += diagonal;
+        _pos += diag;
     else if (w && d)
-    {
-        _pos.x += diagonal.x;
-        _pos.y -= diagonal.y;
-    }
+        _pos += {diag.x, -diag.y};
     else if (s && a)
-    {
-        _pos.x -= diagonal.x;
-        _pos.y += diagonal.y;
-    }
+        _pos += {-diag.x, diag.y};
     else if (w)
         _pos.y -= _speed.y;
     else if (a)
@@ -54,41 +48,39 @@ void Link::move()
         _pos.y += _speed.y;
     else if (d)
         _pos.x += _speed.x;
+}
 
-    for (const Actor *other : _arena->actors())
+void Link::handleCollisions(const std::vector<collision> &collisions)
+{
+    for (const auto &coll : collisions)
     {
-        if (other != this)
+        const auto &target = coll.target;
+        const auto &tPos = target->pos();
+        const auto &tSize = target->size();
+
+        switch (coll.type)
         {
-            collision coll = checkCollision(other);
-            switch (coll)
-            {
-            case C_TOP:
-                _pos.y = other->pos().y + other->size().y;
-                break;
-
-            case C_BOTTOM:
-                _pos.y = other->pos().y - _size.y;
-                break;
-
-            case C_LEFT:
-                _pos.x = other->pos().x + other->size().x;
-                break;
-            case C_RIGHT:
-                _pos.x = other->pos().x - _size.x;
-
-            default:
-                break;
-            }
+        case C_TOP:
+            _pos.y = tPos.y + tSize.y;
+            break;
+        case C_BOTTOM:
+            _pos.y = tPos.y - _size.y;
+            break;
+        case C_LEFT:
+            _pos.x = tPos.x + tSize.x;
+            break;
+        case C_RIGHT:
+            _pos.x = tPos.x - _size.x;
+            break;
+        default:
+            break;
         }
     }
 
-    // Gestisci i confini della stanza
-    if (_pos.x + _size.x >= fullRoom.x)
-        _pos.x = fullRoom.x - _size.x;
-    if (_pos.y + _size.y >= fullRoom.y)
-        _pos.y = fullRoom.y - _size.y;
-    if (_pos.x <= roomPos.x)
-        _pos.x = roomPos.x;
-    if (_pos.y <= roomPos.y)
-        _pos.y = roomPos.y;
+    const auto roomPos = _arena->pos();
+    const auto roomSize = _arena->size();
+    const auto roomEnd = roomPos + roomSize;
+
+    _pos.x = std::clamp(_pos.x, roomPos.x, roomEnd.x - _size.x);
+    _pos.y = std::clamp(_pos.y, roomPos.y, roomEnd.y - _size.y);
 }

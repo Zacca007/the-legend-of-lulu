@@ -2,8 +2,9 @@
 #include "actor.hpp"
 #include "movable.hpp"
 #include <algorithm>
-#include <set>
-using lulu::Arena;
+#include <utility>
+
+using namespace lulu;
 
 void Arena::spawn(Actor *actor)
 {
@@ -12,14 +13,11 @@ void Arena::spawn(Actor *actor)
 
     actor->setArena(this);
 
-    // Evita di aggiungere lo stesso attore due volte
-    for (const Actor *currentActor : _actors)
-    {
-        if (currentActor == actor)
-            return;
-    }
-    _actors.push_back(actor);
-    _collisions.insert({actor, std::vector<Actor *>()});
+    if (std::ranges::find(_actors, actor) != _actors.end())
+        return;
+
+    _actors.emplace_back(actor);
+    _collisions[actor] = {};
 }
 
 void Arena::kill(Actor *actor)
@@ -34,39 +32,35 @@ void Arena::kill(Actor *actor)
 
 void Arena::tick(const std::vector<Key> &keys)
 {
-    detectCollisions();
+    _prevKeys = std::exchange(_currKeys, keys);
 
-    // Aggiorna i tasti
-    _prevKeys = _currKeys;
-    _currKeys = keys;
-
-    // Muove tutti gli attori
-    for (Actor *actor : _actors)
+    for (auto *actor : _actors)
     {
-        Movable *movable = dynamic_cast<Movable *>(actor);
-        if (movable)
+        if (auto *movable = dynamic_cast<Movable *>(actor))
         {
             movable->move();
+            detectCollisions();
+            movable->handleCollisions(_collisions[actor]);
         }
     }
-
-    _count++;
 }
 
 void Arena::detectCollisions()
 {
-    _collisions.clear();
-
-    for (Actor *act : _actors)
+    for (auto &[actor, collisions] : _collisions)
     {
-        std::vector<Actor *> collisions;
-        for (Actor *other : _actors)
+        collisions.clear();
+
+        for (auto *other : _actors)
         {
-            if (act == other)
+            if (actor == other)
                 continue;
-            else if (act->checkCollision(other) != C_NONE)
-                collisions.push_back(other);
+
+            const auto coll = actor->checkCollision(other);
+            if (coll != C_NONE)
+            {
+                collisions.emplace_back(other, coll);
+            }
         }
-        _collisions.insert({act, collisions});
     }
 }
