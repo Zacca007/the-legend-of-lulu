@@ -3,21 +3,23 @@
 #include <array>
 #include <iostream>
 #include <vector>
+#include <ranges>
+#include <utility>
 
 #include "lulu.hpp"
 
-class Game
-{
+class Game {
     static constexpr lulu::pair SCREEN_SIZE{800, 550};
     static constexpr lulu::pair ARENA_SIZE{600, 350};
     static constexpr lulu::pair ARENA_POS{100, 100};
     static constexpr int CELL_SIZE = 50;
 
-    static constexpr std::array<lulu::Key, 4> INPUT_KEYS = {lulu::K_W, lulu::K_A, lulu::K_S, lulu::K_D};
+    static constexpr std::array<lulu::Key, 4> INPUT_KEYS = {
+        lulu::K_W, lulu::K_A, lulu::K_S, lulu::K_D};
 
-    // Posizioni degli attori statici in coordinate griglia
     static constexpr std::array<lulu::pair, 12> STATIC_ACTOR_POSITIONS = {
-        {{1, 1}, {1, 3}, {1, 5}, {4, 1}, {4, 3}, {4, 5}, {7, 1}, {7, 3}, {7, 5}, {10, 1}, {10, 3}, {10, 5}}};
+        {{1, 1}, {1, 3}, {1, 5}, {4, 1}, {4, 3}, {4, 5},
+         {7, 1}, {7, 3}, {7, 5}, {10, 1}, {10, 3}, {10, 5}}};
 
     lulu::Arena arena;
     std::vector<lulu::Actor> staticActors;
@@ -26,106 +28,94 @@ class Game
 
   public:
     Game()
-        : arena(ARENA_POS, ARENA_SIZE), link(ARENA_POS + (ARENA_SIZE / 2), {30, 30}, 5, 12, 1, &arena)
-    {
+        : arena(ARENA_POS, ARENA_SIZE),
+          link(ARENA_POS + (ARENA_SIZE / 2), {30, 30}, 5, 12, 1, &arena) {
         initializeStaticActors();
         initializeGraphics();
     }
 
-    ~Game()
-    {
-        cleanup();
+    ~Game() {
+        for (auto* actor : arena.actors())
+            arena.kill(actor);
+        UnloadTexture(background);
+        CloseWindow();
     }
 
-    void run()
-    {
-        while (!WindowShouldClose())
-        {
+    void run() {
+        while (!WindowShouldClose()) {
             update();
             render();
-            std::cout << "link è in ccollisione con gli attori in queste posizioni:" << std::endl;
-            auto pair = arena.collisions().find(&link);
-            for (const auto &collision : pair->second)
-            {
-                std::cout << "x: " << collision.target->pos().x << ", y: " << collision.target->pos().y << std::endl;
+
+            // Debug stampa collisioni con Link
+            if (const auto it = arena.collisions().find(&link); it != arena.collisions().end()) {
+                std::cout << "Link è in collisione con:\n";
+                for (const auto& coll : it->second)
+                    std::cout << "  - (" << coll.target->pos().x << ", " << coll.target->pos().y << ")\n";
+                std::cout << std::endl;
             }
-            std::cout << std::endl;
         }
+
+        // Stampa riepilogo finale
+        std::cout << "\nFine gioco." << std::endl;
+        std::cout << "Attori totali nell'arena: " << arena.actors().size() << std::endl;
+        std::cout << "Voci nella mappa di collisioni: " << arena.collisions().size() << std::endl;
     }
 
   private:
-    void initializeStaticActors()
-    {
+    void initializeStaticActors() {
         staticActors.reserve(STATIC_ACTOR_POSITIONS.size());
 
-        for (const auto &gridPos : STATIC_ACTOR_POSITIONS)
-        {
-            lulu::pair worldPos = ARENA_POS + lulu::pair{gridPos.x * CELL_SIZE, gridPos.y * CELL_SIZE};
+        for (const auto& gridPos : STATIC_ACTOR_POSITIONS) {
+            const lulu::pair worldPos = ARENA_POS + lulu::pair{gridPos.x * CELL_SIZE, gridPos.y * CELL_SIZE};
             staticActors.emplace_back(worldPos, lulu::pair{CELL_SIZE, CELL_SIZE}, &arena);
         }
     }
 
-    void initializeGraphics()
-    {
+    void initializeGraphics() {
         InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "Legend of Lulu");
         background = LoadTexture("core/assets/rooms/room1.png");
         SetTargetFPS(60);
     }
 
-    std::vector<lulu::Key> getActiveKeys() const
-    {
-        std::vector<lulu::Key> activeKeys;
+    [[nodiscard]]
+    std::vector<lulu::Key> getActiveKeys() const {
+        std::vector<lulu::Key> keys;
+        keys.reserve(INPUT_KEYS.size());
         for (lulu::Key key : INPUT_KEYS)
             if (IsKeyDown(key))
-                activeKeys.push_back(key);
-        return activeKeys;
+                keys.push_back(key);
+        return keys;
     }
 
-    void update()
-    {
-        std::vector<lulu::Key> activeKeys = getActiveKeys();
-        arena.tick(activeKeys);
+    void update() {
+        arena.tick(getActiveKeys());
     }
 
-    void render()
-    {
+    void render() {
         BeginDrawing();
-
+        ClearBackground(BLACK);
         DrawTexture(background, 0, 0, WHITE);
-        drawArena();
-        drawStaticActors();
-        drawLink();
+
+        drawRectOutline(arena.pos(), arena.size(), YELLOW);
+
+        for (const auto& actor : staticActors)
+            drawRectOutline(actor.pos(), actor.size(), YELLOW);
+
+        drawRectFilled(link.pos(), link.size(), YELLOW);
 
         EndDrawing();
     }
 
-    void drawArena() const
-    {
-        DrawRectangleLines(arena.pos().x, arena.pos().y, arena.size().x, arena.size().y, YELLOW);
+    static void drawRectOutline(const lulu::pair& pos, const lulu::pair& size, Color color) {
+        DrawRectangleLines(pos.x, pos.y, size.x, size.y, color);
     }
 
-    void drawStaticActors() const
-    {
-        for (const auto &actor : staticActors)
-            DrawRectangleLines(actor.pos().x, actor.pos().y, actor.size().x, actor.size().y, YELLOW);
-    }
-
-    void drawLink() const
-    {
-        DrawRectangle(link.pos().x, link.pos().y, link.size().x, link.size().y, YELLOW);
-    }
-
-    void cleanup()
-    {
-        for (lulu::Actor *actor : arena.actors())
-            arena.kill(actor);
-        UnloadTexture(background);
-        CloseWindow();
+    static void drawRectFilled(const lulu::pair& pos, const lulu::pair& size, Color color) {
+        DrawRectangle(pos.x, pos.y, size.x, size.y, color);
     }
 };
 
-int main()
-{
+int main() {
     Game game;
     game.run();
     return 0;

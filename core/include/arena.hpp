@@ -16,6 +16,7 @@ namespace lulu {
         std::vector<Actor *> _actors;
         std::map<Actor *, std::vector<collision>> _collisions;
 
+        void detectCollisionsFor(Actor *actor);
         void detectCollisions();
 
     public:
