@@ -12,7 +12,9 @@ class Game
     static constexpr lulu::pair ARENA_SIZE{600, 350};
     static constexpr lulu::pair ARENA_POS{100, 100};
     static constexpr int CELL_SIZE = 50;
-    static constexpr std::array<lulu::Key, 4> INPUT_KEYS = {lulu::K_W, lulu::K_A, lulu::K_S, lulu::K_D};
+    static constexpr std::array<lulu::Key, 9> INPUT_KEYS = {lulu::K_W,     lulu::K_A,    lulu::K_S,
+                                                            lulu::K_D,     lulu::K_DOWN, lulu::K_LEFT,
+                                                            lulu::K_RIGHT, lulu::K_UP,   lulu::K_SPACE};
     static constexpr std::array<lulu::pair, 12> STATIC_ACTOR_POSITIONS = {
         {{1, 1}, {1, 3}, {1, 5}, {4, 1}, {4, 3}, {4, 5}, {7, 1}, {7, 3}, {7, 5}, {10, 1}, {10, 3}, {10, 5}}};
 

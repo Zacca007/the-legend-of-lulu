@@ -12,6 +12,7 @@ class Link final : public Fighter
     inline static animations _left = {"core/assets/link/link left 1.png", "core/assets/link/link left 2.png"};
     inline static animations _right = {"core/assets/link/link right 1.png", "core/assets/link/link right 2.png"};
 
+    
     bool _animationCounter;
 
     void updateSprite(const animations &anim);

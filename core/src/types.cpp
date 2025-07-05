@@ -3,6 +3,46 @@
 
 using lulu::pair;
 
+pair pair::operator+(const pair &other) const
+{
+    return {x + other.x, y + other.y};
+}
+
+pair pair::operator-(const pair &other) const
+{
+    return {x - other.x, y - other.y};
+}
+
+pair pair::operator*(const pair &other) const
+{
+    return {x * other.x, y * other.y};
+}
+
+pair pair::operator/(const pair &other) const
+{
+    return {x / other.x, y / other.y};
+}
+
+pair pair::operator+(const float offset) const
+{
+    return {x + offset, y + offset};
+}
+
+pair pair::operator-(const float offset) const
+{
+    return {x - offset, y - offset};
+}
+
+pair pair::operator*(const float offset) const
+{
+    return {x * offset, y * offset};
+}
+
+pair pair::operator/(const float offset) const
+{
+    return {x / offset, y / offset};
+}
+
 pair &pair::operator+=(const pair &other)
 {
     *this = *this + other;

@@ -8,7 +8,9 @@ class Movable
   protected:
     using animations = std::pair<std::string, std::string>;
     pair _speed;
-    explicit Movable(const pair speed) : _speed(speed)
+    direction _direction ;
+
+    explicit Movable(const pair speed) : _speed(speed), _direction(D_STILL)
     {
     }
 
