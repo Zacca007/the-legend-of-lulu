@@ -18,7 +18,8 @@ file(GLOB_RECURSE SOURCES
 )
 
 # === CREATE EXECUTABLE ===
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES}
+        core/include/animationHandler.hpp)
 
 # === INCLUDES ===
 target_include_directories(${PROJECT_NAME} PRIVATE

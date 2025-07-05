@@ -12,7 +12,7 @@ class Fighter : public Actor, public Movable
     float _damage;
 
     Fighter(const pair position, const pair size, const pair speed, const float hp, const float damage, Arena *arena = nullptr, const std::string &sprite = "")
-        : Actor(position, size, arena, sprite), Movable(speed), _hp(hp), _damage(damage) {}
+        : Actor(position, size, arena, sprite), Movable(speed, true), _hp(hp), _damage(damage) {}
 
   public:
     void takeDamage(float damage);

@@ -1,4 +1,5 @@
 #pragma once
+#include "animationHandler.hpp"
 #include "types.hpp"
 #include <vector>
 namespace lulu
@@ -6,10 +7,13 @@ namespace lulu
 class Movable
 {
   protected:
-    using animations = std::pair<std::string, std::string>;
     pair _speed;
-    explicit Movable(const pair speed) : _speed(speed)
+    AnimationHandler _animation;
+
+    explicit Movable(const pair speed, bool enableAnimation = false) : _speed(speed)
     {
+        if (enableAnimation)
+            _animation.enable();
     }
 
   public:

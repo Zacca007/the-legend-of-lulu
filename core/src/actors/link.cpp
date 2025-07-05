@@ -8,86 +8,119 @@ void Link::move()
 {
     // Parsing input
     bool w = false, a = false, s = false, d = false;
+
     for (const Key key : _arena->currKeys())
     {
         switch (key)
         {
         case K_W:
+        case K_UP:
             w = true;
             break;
+
         case K_A:
+        case K_LEFT:
             a = true;
             break;
+
         case K_S:
+        case K_DOWN:
             s = true;
             break;
+
         case K_D:
+        case K_RIGHT:
             d = true;
+            break;
+
+        default:
             break;
         }
     }
 
     // Risolvi input conflittuali
     if (a && d)
-    {
-        a = false;
-        d = false;
-    }
+        a = d = false;
     if (w && s)
-    {
-        w = false;
-        s = false;
-    }
+        w = s = false;
 
-    // Calcola movimento e aggiorna sprite
-    const pair diag = _speed.diagonal().value();
+    // Determina la direzione e movimento
+    direction newDirection = D_STILL;
 
     if (w && a)
-    {
-        _pos -= diag;
-        updateSprite(_up);
-    }
+        newDirection = D_UPLEFT;
     else if (w && d)
-    {
-        _pos += {diag.x, -diag.y};
-        updateSprite(_up);
-    }
+        newDirection = D_UPRIGHT;
     else if (s && a)
-    {
-        _pos += {-diag.x, diag.y};
-        updateSprite(_down);
-    }
+        newDirection = D_DOWNLEFT;
     else if (s && d)
-    {
-        _pos += diag;
-        updateSprite(_down);
-    }
+        newDirection = D_DOWNRIGHT;
     else if (w)
-    {
-        _pos.y -= _speed.y;
-        updateSprite(_up);
-    }
+        newDirection = D_UP;
     else if (s)
-    {
-        _pos.y += _speed.y;
-        updateSprite(_down);
-    }
+        newDirection = D_DOWN;
     else if (a)
-    {
-        _pos.x -= _speed.x;
-        updateSprite(_left);
-    }
+        newDirection = D_LEFT;
     else if (d)
-    {
-        _pos.x += _speed.x;
-        updateSprite(_right);
-    }
-}
+        newDirection = D_RIGHT;
 
-void Link::updateSprite(const animations &anim)
-{
-    _sprite = _animationCounter ? anim.second : anim.first;
-    _animationCounter = !_animationCounter;
+    // Movimento basato sulla direzione
+    if (newDirection != D_STILL)
+    {
+        pair movement{0, 0};
+
+        switch (newDirection)
+        {
+        case D_UPLEFT:
+        case D_UPRIGHT:
+        case D_DOWNLEFT:
+        case D_DOWNRIGHT:
+            {
+                auto diagonal = _speed.diagonal();
+                if (diagonal.has_value())
+                {
+                    pair diag = diagonal.value();
+                    switch (newDirection)
+                    {
+                    case D_UPLEFT:
+                        movement = {-diag.x, -diag.y};
+                        break;
+                    case D_UPRIGHT:
+                        movement = {diag.x, -diag.y};
+                        break;
+                    case D_DOWNLEFT:
+                        movement = {-diag.x, diag.y};
+                        break;
+                    case D_DOWNRIGHT:
+                        movement = {diag.x, diag.y};
+                        break;
+                    }
+                }
+            }
+            break;
+        case D_UP:
+            movement = {0, -_speed.y};
+            break;
+        case D_DOWN:
+            movement = {0, _speed.y};
+            break;
+        case D_LEFT:
+            movement = {-_speed.x, 0};
+            break;
+        case D_RIGHT:
+            movement = {_speed.x, 0};
+            break;
+        }
+
+        _pos += movement;
+            // _sprite = _animation.getCurrentSprite();
+    }
+    if (newDirection != D_STILL)
+    {
+        if (newDirection != _animation.CurrentDirection())
+            _animation.set(S_MOVEMENT, newDirection);
+        _sprite = _animation.nextSprite();
+    }
 }
 
 void Link::handleCollisions(const std::vector<collision> &collisions)
@@ -112,7 +145,8 @@ void Link::handleCollisions(const std::vector<collision> &collisions)
         case C_RIGHT:
             _pos.x = tPos.x - _size.x;
             break;
-        default: break;
+        default:
+            break;
         }
     }
 
