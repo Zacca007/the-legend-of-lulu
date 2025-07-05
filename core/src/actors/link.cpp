@@ -1,17 +1,14 @@
 #include "actors/link.hpp"
 #include "arena.hpp"
-
 #include <algorithm>
-#include <iostream>
-#include <ostream>
 
 using namespace lulu;
 
 void Link::move()
 {
+    // Parsing input
     bool w = false, a = false, s = false, d = false;
-
-    for (Key key : _arena->currKeys())
+    for (const Key key : _arena->currKeys())
     {
         switch (key)
         {
@@ -27,13 +24,10 @@ void Link::move()
         case K_D:
             d = true;
             break;
-        default:
-            break;
         }
     }
 
-    const pair diag = _speed.diagonal().value();
-
+    // Risolvi input conflittuali
     if (a && d)
     {
         a = false;
@@ -44,121 +38,56 @@ void Link::move()
         w = false;
         s = false;
     }
+
+    // Calcola movimento e aggiorna sprite
+    const pair diag = _speed.diagonal().value();
+
     if (w && a)
     {
         _pos -= diag;
-        if (_animationCounter)
-        {
-            _sprite = _up.first;
-            _animationCounter = false;
-        }
-        else
-        {
-            _animationCounter = true;
-            _sprite = _up.second;
-        }
-    }
-    else if (s && d)
-    {
-        _pos += diag;
-        if (_animationCounter)
-        {
-            _sprite = _down.first;
-            _animationCounter = false;
-        }
-        else
-        {
-            _animationCounter = true;
-            _sprite = _down.second;
-        }
+        updateSprite(_up);
     }
     else if (w && d)
     {
         _pos += {diag.x, -diag.y};
-        if (_animationCounter)
-        {
-            _sprite = _up.first;
-            _animationCounter = false;
-        }
-        else
-        {
-            _animationCounter = true;
-            _sprite = _up.second;
-        }
+        updateSprite(_up);
     }
     else if (s && a)
     {
         _pos += {-diag.x, diag.y};
-        if (_animationCounter)
-        {
-            _sprite = _down.first;
-            _animationCounter = false;
-        }
-        else
-        {
-            _animationCounter = true;
-            _sprite = _down.second;
-        }
+        updateSprite(_down);
+    }
+    else if (s && d)
+    {
+        _pos += diag;
+        updateSprite(_down);
     }
     else if (w)
     {
         _pos.y -= _speed.y;
-        if (_animationCounter)
-        {
-            _sprite = _up.first;
-            _animationCounter = false;
-        }
-        else
-        {
-            _animationCounter = true;
-            _sprite = _up.second;
-        }
+        updateSprite(_up);
+    }
+    else if (s)
+    {
+        _pos.y += _speed.y;
+        updateSprite(_down);
     }
     else if (a)
     {
         _pos.x -= _speed.x;
-        if (_animationCounter)
-        {
-            _sprite = _left.first;
-            _animationCounter = false;
-        }
-        else
-        {
-            _animationCounter = true;
-            _sprite = _left.second;
-        }
-    }
-
-    else if (s)
-    {
-        _pos.y += _speed.y;
-        if (_animationCounter)
-        {
-            _sprite = _down.first;
-            _animationCounter = false;
-        }
-        else
-        {
-            _animationCounter = true;
-            _sprite = _down.second;
-        }
+        updateSprite(_left);
     }
     else if (d)
     {
         _pos.x += _speed.x;
-        if (_animationCounter)
-        {
-            _sprite = _right.first;
-            _animationCounter = false;
-        }
-        else
-        {
-            _animationCounter = true;
-            _sprite = _right.second;
-        }
+        updateSprite(_right);
     }
+}
 
-
+void Link::updateSprite(const animations &anim)
+{
+    _sprite = _animationCounter ? anim.second : anim.first;
+    _animationCounter = !_animationCounter;
 }
 
 void Link::handleCollisions(const std::vector<collision> &collisions)
@@ -183,11 +112,11 @@ void Link::handleCollisions(const std::vector<collision> &collisions)
         case C_RIGHT:
             _pos.x = tPos.x - _size.x;
             break;
-        default:
-            break;
+        default: break;
         }
     }
 
+    // Mantieni Link dentro l'arena
     const auto roomPos = _arena->pos();
     const auto roomSize = _arena->size();
     const auto roomEnd = roomPos + roomSize;
