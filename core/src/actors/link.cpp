@@ -2,6 +2,8 @@
 #include "arena.hpp"
 
 #include <algorithm>
+#include <iostream>
+#include <ostream>
 
 using namespace lulu;
 
@@ -32,22 +34,131 @@ void Link::move()
 
     const pair diag = _speed.diagonal().value();
 
+    if (a && d)
+    {
+        a = false;
+        d = false;
+    }
+    if (w && s)
+    {
+        w = false;
+        s = false;
+    }
     if (w && a)
+    {
         _pos -= diag;
+        if (_animationCounter)
+        {
+            _sprite = _up.first;
+            _animationCounter = false;
+        }
+        else
+        {
+            _animationCounter = true;
+            _sprite = _up.second;
+        }
+    }
     else if (s && d)
+    {
         _pos += diag;
+        if (_animationCounter)
+        {
+            _sprite = _down.first;
+            _animationCounter = false;
+        }
+        else
+        {
+            _animationCounter = true;
+            _sprite = _down.second;
+        }
+    }
     else if (w && d)
+    {
         _pos += {diag.x, -diag.y};
+        if (_animationCounter)
+        {
+            _sprite = _up.first;
+            _animationCounter = false;
+        }
+        else
+        {
+            _animationCounter = true;
+            _sprite = _up.second;
+        }
+    }
     else if (s && a)
+    {
         _pos += {-diag.x, diag.y};
+        if (_animationCounter)
+        {
+            _sprite = _down.first;
+            _animationCounter = false;
+        }
+        else
+        {
+            _animationCounter = true;
+            _sprite = _down.second;
+        }
+    }
     else if (w)
+    {
         _pos.y -= _speed.y;
+        if (_animationCounter)
+        {
+            _sprite = _up.first;
+            _animationCounter = false;
+        }
+        else
+        {
+            _animationCounter = true;
+            _sprite = _up.second;
+        }
+    }
     else if (a)
+    {
         _pos.x -= _speed.x;
+        if (_animationCounter)
+        {
+            _sprite = _left.first;
+            _animationCounter = false;
+        }
+        else
+        {
+            _animationCounter = true;
+            _sprite = _left.second;
+        }
+    }
+
     else if (s)
+    {
         _pos.y += _speed.y;
+        if (_animationCounter)
+        {
+            _sprite = _down.first;
+            _animationCounter = false;
+        }
+        else
+        {
+            _animationCounter = true;
+            _sprite = _down.second;
+        }
+    }
     else if (d)
+    {
         _pos.x += _speed.x;
+        if (_animationCounter)
+        {
+            _sprite = _right.first;
+            _animationCounter = false;
+        }
+        else
+        {
+            _animationCounter = true;
+            _sprite = _right.second;
+        }
+    }
+
+
 }
 
 void Link::handleCollisions(const std::vector<collision> &collisions)
