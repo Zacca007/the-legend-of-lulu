@@ -1,37 +1,35 @@
-
-#include <raylib.h>
-
+#include "lulu.hpp"
 #include <array>
 #include <iostream>
+#include <raylib.h>
+#include <unordered_map>
 #include <vector>
-
-#include "lulu.hpp"
 
 class Game
 {
+  private:
     static constexpr lulu::pair SCREEN_SIZE{800, 550};
     static constexpr lulu::pair ARENA_SIZE{600, 350};
     static constexpr lulu::pair ARENA_POS{100, 100};
     static constexpr int CELL_SIZE = 50;
-
-    static constexpr std::array<lulu::Key, 4> INPUT_KEYS = {lulu::K_W, lulu::K_A, lulu::K_S, lulu::K_D};
-
-    // Posizioni degli attori statici in coordinate griglia
+    static constexpr std::array<lulu::Key, 9> INPUT_KEYS = {lulu::K_W,     lulu::K_A,    lulu::K_S,
+                                                            lulu::K_D,     lulu::K_DOWN, lulu::K_LEFT,
+                                                            lulu::K_RIGHT, lulu::K_UP,   lulu::K_SPACE};
     static constexpr std::array<lulu::pair, 12> STATIC_ACTOR_POSITIONS = {
         {{1, 1}, {1, 3}, {1, 5}, {4, 1}, {4, 3}, {4, 5}, {7, 1}, {7, 3}, {7, 5}, {10, 1}, {10, 3}, {10, 5}}};
 
     lulu::Arena arena;
     std::vector<lulu::Actor> staticActors;
     lulu::Link link;
+
     Texture2D background;
+    std::unordered_map<std::string, Texture2D> textureCache;
 
   public:
-    Game()
-        : arena(ARENA_POS, ARENA_SIZE), link(ARENA_POS + (ARENA_SIZE / 2), {30, 30}, 5, 12, 1, &arena)
-
+    Game() : arena(ARENA_POS, ARENA_SIZE), link(ARENA_POS + (ARENA_SIZE / 2), {50, 50}, 10, 12, 1, &arena)
     {
-        initializeStaticActors();
         initializeGraphics();
+        initializeStaticActors();
     }
 
     ~Game()
@@ -45,84 +43,84 @@ class Game
         {
             update();
             render();
-            std::cout << "link è in ccollisione con gli attori in queste posizioni:" << std::endl;
-            auto pair = arena.collisions().find(&link);
-            for (const auto &collision : pair->second)
-            {
-                std::cout << "x: " << collision.target->pos().x << ", y: " << collision.target->pos().y << std::endl;
-            }
-            std::cout << std::endl;
         }
     }
 
   private:
+    void initializeGraphics()
+    {
+        InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "Legend of Lulu");
+        background = LoadTexture("core/assets/rooms/dungeon hall.png");
+        SetTargetFPS(10);
+    }
+
     void initializeStaticActors()
     {
         staticActors.reserve(STATIC_ACTOR_POSITIONS.size());
-
         for (const auto &gridPos : STATIC_ACTOR_POSITIONS)
         {
-            lulu::pair worldPos = ARENA_POS + lulu::pair{gridPos.x * CELL_SIZE, gridPos.y * CELL_SIZE};
+            const lulu::pair worldPos = ARENA_POS + lulu::pair{gridPos.x * CELL_SIZE, gridPos.y * CELL_SIZE};
             staticActors.emplace_back(worldPos, lulu::pair{CELL_SIZE, CELL_SIZE}, &arena);
         }
     }
 
-    void initializeGraphics()
+    void cleanup()
     {
-        InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "Legend of Lulu");
-        background = LoadTexture("core/assets/rooms/room1.png");
-        SetTargetFPS(60);
+        for (auto *actor : arena.actors())
+            arena.kill(actor);
+
+        for (auto &[path, texture] : textureCache)
+            UnloadTexture(texture);
+
+        UnloadTexture(background);
+        CloseWindow();
+    }
+
+    Texture2D getTexture(const std::string &path)
+    {
+        auto it = textureCache.find(path);
+        if (it == textureCache.end())
+        {
+            textureCache[path] = LoadTexture(path.c_str());
+            return textureCache[path];
+        }
+        return it->second;
     }
 
     std::vector<lulu::Key> getActiveKeys() const
     {
-        std::vector<lulu::Key> activeKeys;
+        std::vector<lulu::Key> keys;
+        keys.reserve(INPUT_KEYS.size());
+
         for (lulu::Key key : INPUT_KEYS)
             if (IsKeyDown(key))
-                activeKeys.push_back(key);
-        return activeKeys;
+                keys.push_back(key);
+
+        return keys;
     }
 
     void update()
     {
-        std::vector<lulu::Key> activeKeys = getActiveKeys();
-        arena.tick(activeKeys);
+        arena.tick(getActiveKeys());
     }
 
     void render()
     {
         BeginDrawing();
+        ClearBackground(BLACK);
 
         DrawTexture(background, 0, 0, WHITE);
-        drawArena();
-        drawStaticActors();
-        drawLink();
+
+        Texture2D linkTexture = getTexture(link.sprite());
+        DrawTexture(linkTexture, static_cast<int>(link.pos().x), static_cast<int>(link.pos().y), WHITE);
 
         EndDrawing();
     }
 
-    void drawArena() const
+    void drawRectOutline(const lulu::pair &pos, const lulu::pair &size, Color color)
     {
-        DrawRectangleLines(arena.pos().x, arena.pos().y, arena.size().x, arena.size().y, YELLOW);
-    }
-
-    void drawStaticActors() const
-    {
-        for (const auto &actor : staticActors)
-            DrawRectangleLines(actor.pos().x, actor.pos().y, actor.size().x, actor.size().y, YELLOW);
-    }
-
-    void drawLink() const
-    {
-        DrawRectangle(link.pos().x, link.pos().y, link.size().x, link.size().y, YELLOW);
-    }
-
-    void cleanup()
-    {
-        for (lulu::Actor *actor : arena.actors())
-            arena.kill(actor);
-        UnloadTexture(background);
-        CloseWindow();
+        DrawRectangleLines(static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(size.x),
+                           static_cast<int>(size.y), color);
     }
 };
 
