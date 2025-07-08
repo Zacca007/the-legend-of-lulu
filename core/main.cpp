@@ -110,10 +110,6 @@ class Game
         ClearBackground(BLACK);
 
         DrawTexture(background, 0, 0, WHITE);
-        drawRectOutline(arena.pos(), arena.size(), YELLOW);
-
-        for (const auto &actor : staticActors)
-            drawRectOutline(actor.pos(), actor.size(), YELLOW);
 
         Texture2D linkTexture = getTexture(link.sprite());
         DrawTexture(linkTexture, static_cast<int>(link.pos().x), static_cast<int>(link.pos().y), WHITE);
