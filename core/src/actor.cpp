@@ -37,11 +37,11 @@ collisionType Actor::checkCollision(const Actor *other) const
 
     const auto &[ox, oy] = other->pos();
     const auto &[ow, oh] = other->size();
-
     const pair thisMax = _pos + _size;
     const pair otherMax = {ox + ow, oy + oh};
 
     if (thisMax.x < ox || otherMax.x < _pos.x || thisMax.y < oy || otherMax.y < _pos.y)
+
     {
         return C_NONE;
     }
