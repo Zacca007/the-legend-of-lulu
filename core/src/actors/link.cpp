@@ -14,10 +14,23 @@ Link::Link(const pair position, const pair size, float speed, float hp, float da
 
 void Link::setupAnimations()
 {
-    const std::vector<std::string> up = {"core/assets/link/link up 1.png", "core/assets/link/link up 2.png"};
-    const std::vector<std::string> down = {"core/assets/link/link front 1.png", "core/assets/link/link front 2.png"};
-    const std::vector<std::string> left = {"core/assets/link/link left 1.png", "core/assets/link/link left 2.png"};
-    const std::vector<std::string> right = {"core/assets/link/link right 1.png", "core/assets/link/link right 2.png"};
+    const std::vector<std::string> up = {"core/assets/link/movement/link up 1.png",
+                                         "core/assets/link/movement/link up 2.png"};
+    const std::vector<std::string> down = {"core/assets/link/movement/link front 1.png",
+                                           "core/assets/link/movement/link front 2.png"};
+    const std::vector<std::string> left = {"core/assets/link/movement/link left 1.png",
+                                           "core/assets/link/movement/link left 2.png"};
+    const std::vector<std::string> right = {"core/assets/link/movement/link right 1.png",
+                                            "core/assets/link/movement/link right 2.png"};
+    const std::vector<std::string> attackDown = {
+        "core/assets/link/attack/link attack down 1.png", "core/assets/link/attack/link attack down 2.png",
+        "core/assets/link/attack/link attack down 3.png", "core/assets/link/attack/link attack down 4.png"};
+    const std::vector<std::string> attackLeft = {
+        "core/assets/link/attack/link attack left 1.png", "core/assets/link/attack/link attack left 2.png",
+        "core/assets/link/attack/link attack left 3.png", "core/assets/link/attack/link attack left 4.png"};
+    const std::vector<std::string> attackRight = {
+        "core/assets/link/attack/link attack right 1.png", "core/assets/link/attack/link attack right 2.png",
+        "core/assets/link/attack/link attack right 3.png", "core/assets/link/attack/link attack right 4.png"};
 
     // Animazioni verso l'alto
     _animation.addAnimation(S_MOVEMENT, D_UP, up);
@@ -32,6 +45,13 @@ void Link::setupAnimations()
     // Animazioni laterali
     _animation.addAnimation(S_MOVEMENT, D_LEFT, left);
     _animation.addAnimation(S_MOVEMENT, D_RIGHT, right);
+
+    _animation.addAnimation(S_ATTACK, D_DOWN, attackDown);
+    _animation.addAnimation(S_ATTACK, D_DOWNLEFT, attackDown);
+    _animation.addAnimation(S_ATTACK, D_DOWNRIGHT, attackDown);
+
+    _animation.addAnimation(S_ATTACK, D_LEFT, attackLeft);
+    _animation.addAnimation(S_ATTACK, D_RIGHT, attackRight);
 }
 
 direction Link::parseInput() const
@@ -64,18 +84,28 @@ direction Link::parseInput() const
     }
 
     // Risolvi input conflittuali
-    if (a && d) a = d = false;
-    if (w && s) w = s = false;
+    if (a && d)
+        a = d = false;
+    if (w && s)
+        w = s = false;
 
     // Determina la direzione
-    if (w && a) return D_UPLEFT;
-    if (w && d) return D_UPRIGHT;
-    if (s && a) return D_DOWNLEFT;
-    if (s && d) return D_DOWNRIGHT;
-    if (w) return D_UP;
-    if (s) return D_DOWN;
-    if (a) return D_LEFT;
-    if (d) return D_RIGHT;
+    if (w && a)
+        return D_UPLEFT;
+    if (w && d)
+        return D_UPRIGHT;
+    if (s && a)
+        return D_DOWNLEFT;
+    if (s && d)
+        return D_DOWNRIGHT;
+    if (w)
+        return D_UP;
+    if (s)
+        return D_DOWN;
+    if (a)
+        return D_LEFT;
+    if (d)
+        return D_RIGHT;
 
     return D_STILL;
 }
@@ -95,28 +125,27 @@ pair Link::calculateMovement(direction dir) const
     case D_UPLEFT:
     case D_UPRIGHT:
     case D_DOWNLEFT:
-    case D_DOWNRIGHT:
+    case D_DOWNRIGHT: {
+        auto diagonal = _speed.diagonal();
+        if (diagonal.has_value())
         {
-            auto diagonal = _speed.diagonal();
-            if (diagonal.has_value())
+            const pair diag = diagonal.value();
+            switch (dir)
             {
-                const pair diag = diagonal.value();
-                switch (dir)
-                {
-                case D_UPLEFT:
-                    return {-diag.x, -diag.y};
-                case D_UPRIGHT:
-                    return {diag.x, -diag.y};
-                case D_DOWNLEFT:
-                    return {-diag.x, diag.y};
-                case D_DOWNRIGHT:
-                    return {diag.x, diag.y};
-                default:
-                    break;
-                }
+            case D_UPLEFT:
+                return {-diag.x, -diag.y};
+            case D_UPRIGHT:
+                return {diag.x, -diag.y};
+            case D_DOWNLEFT:
+                return {-diag.x, diag.y};
+            case D_DOWNRIGHT:
+                return {diag.x, diag.y};
+            default:
+                break;
             }
         }
-        break;
+    }
+    break;
     default:
         break;
     }
