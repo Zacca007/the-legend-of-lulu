@@ -51,7 +51,7 @@ class Game
     {
         InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "Legend of Lulu");
         background = LoadTexture("core/assets/rooms/dungeon hall.png");
-        SetTargetFPS(10);
+        SetTargetFPS(15);
     }
 
     void initializeStaticActors()

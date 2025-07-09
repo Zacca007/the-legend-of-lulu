@@ -1,14 +1,15 @@
 #include "actors/link.hpp"
 #include "arena.hpp"
 #include <algorithm>
+#include <ranges>
 
 using namespace lulu;
 
 Link::Link(const pair position, const pair size, float speed, float hp, float damage, Arena *arena)
-    : Fighter(position, size, {speed, speed}, hp, damage, arena)
+    : Fighter(position, size, {speed, speed}, hp, damage, arena), _isAttacking(false), _attackFrame(0)
 {
     setupAnimations();
-    _animation.set(S_MOVEMENT, D_UP);
+    _animation.set(S_STILL, D_DOWN);
     _sprite = _animation.nextSprite();
 }
 
@@ -22,6 +23,11 @@ void Link::setupAnimations()
                                            "core/assets/link/movement/link left 2.png"};
     const std::vector<std::string> right = {"core/assets/link/movement/link right 1.png",
                                             "core/assets/link/movement/link right 2.png"};
+
+    // Animazioni di attacco - tutte le direzioni
+    const std::vector<std::string> attackUp = {
+        "core/assets/link/attack/link attack up 1.png", "core/assets/link/attack/link attack up 2.png",
+        "core/assets/link/attack/link attack up 3.png", "core/assets/link/attack/link attack up 4.png"};
     const std::vector<std::string> attackDown = {
         "core/assets/link/attack/link attack down 1.png", "core/assets/link/attack/link attack down 2.png",
         "core/assets/link/attack/link attack down 3.png", "core/assets/link/attack/link attack down 4.png"};
@@ -32,29 +38,62 @@ void Link::setupAnimations()
         "core/assets/link/attack/link attack right 1.png", "core/assets/link/attack/link attack right 2.png",
         "core/assets/link/attack/link attack right 3.png", "core/assets/link/attack/link attack right 4.png"};
 
-    // Animazioni verso l'alto
+    // Animazioni movimento
     _animation.addAnimation(S_MOVEMENT, D_UP, up);
     _animation.addAnimation(S_MOVEMENT, D_UPLEFT, up);
     _animation.addAnimation(S_MOVEMENT, D_UPRIGHT, up);
-
-    // Animazioni verso il basso
     _animation.addAnimation(S_MOVEMENT, D_DOWN, down);
     _animation.addAnimation(S_MOVEMENT, D_DOWNLEFT, down);
     _animation.addAnimation(S_MOVEMENT, D_DOWNRIGHT, down);
-
-    // Animazioni laterali
     _animation.addAnimation(S_MOVEMENT, D_LEFT, left);
     _animation.addAnimation(S_MOVEMENT, D_RIGHT, right);
 
+    _animation.addAnimation(S_STILL, D_UP, up);
+    _animation.addAnimation(S_STILL, D_UPLEFT, up);
+    _animation.addAnimation(S_STILL, D_UPRIGHT, up);
+    _animation.addAnimation(S_STILL, D_DOWN, down);
+    _animation.addAnimation(S_STILL, D_DOWNLEFT, down);
+    _animation.addAnimation(S_STILL, D_DOWNRIGHT, down);
+    _animation.addAnimation(S_STILL, D_LEFT, left);
+    _animation.addAnimation(S_STILL, D_RIGHT, right);
+
+    // Animazioni attacco
     _animation.addAnimation(S_ATTACK, D_DOWN, attackDown);
     _animation.addAnimation(S_ATTACK, D_DOWNLEFT, attackDown);
     _animation.addAnimation(S_ATTACK, D_DOWNRIGHT, attackDown);
-
     _animation.addAnimation(S_ATTACK, D_LEFT, attackLeft);
     _animation.addAnimation(S_ATTACK, D_RIGHT, attackRight);
+    // TODO: ADD D_UP ATTACKS
 }
 
-direction Link::parseInput() const
+state Link::updateState() const
+{
+    if (_isAttacking)
+        return S_ATTACK;
+
+    for (const Key key : _arena->currKeys())
+    {
+        switch (key)
+        {
+        case K_SPACE:
+            return S_ATTACK;
+        case K_W:
+        case K_UP:
+        case K_A:
+        case K_LEFT:
+        case K_S:
+        case K_DOWN:
+        case K_D:
+        case K_RIGHT:
+            return S_MOVEMENT;
+        default:
+            break;
+        }
+    }
+    return S_STILL;
+}
+
+direction Link::updateDirection() const
 {
     bool w = false, a = false, s = false, d = false;
 
@@ -107,7 +146,7 @@ direction Link::parseInput() const
     if (d)
         return D_RIGHT;
 
-    return D_STILL;
+    return _animation.currentDirection();
 }
 
 pair Link::calculateMovement(direction dir) const
@@ -126,52 +165,138 @@ pair Link::calculateMovement(direction dir) const
     case D_UPRIGHT:
     case D_DOWNLEFT:
     case D_DOWNRIGHT: {
-        auto diagonal = _speed.diagonal();
-        if (diagonal.has_value())
+        if (auto diagonal = _speed.diagonal(); diagonal.has_value())
         {
-            const pair diag = diagonal.value();
+            const auto [x, y] = diagonal.value();
             switch (dir)
             {
             case D_UPLEFT:
-                return {-diag.x, -diag.y};
+                return {-x, -y};
             case D_UPRIGHT:
-                return {diag.x, -diag.y};
+                return {x, -y};
             case D_DOWNLEFT:
-                return {-diag.x, diag.y};
+                return {-x, y};
             case D_DOWNRIGHT:
-                return {diag.x, diag.y};
+                return {x, y};
             default:
                 break;
             }
         }
     }
     break;
+
+    case D_STILL:
     default:
         break;
     }
     return {0, 0};
 }
 
+void Link::setupAttack()
+{
+    _isAttacking = true;
+    _attackFrame = 0;
+    _previousFrame = _animation.currentFrame();
+    _animation.set(S_ATTACK, _animation.currentDirection());
+}
+
+void Link::performAttack()
+{
+    if (_attackFrame == 2)
+    {
+        const auto &collisionMap = _arena->collisions();
+        auto it = collisionMap.find(this);
+
+        if (it != collisionMap.end())
+        {
+            for (const auto &coll : it->second)
+            {
+                if (auto *fighter = dynamic_cast<Fighter *>(coll.target))
+                {
+                    attack(*fighter);
+                }
+            }
+        }
+    }
+
+    _sprite = _animation.nextSprite();
+
+    if (auto spriteDimOpt = AnimationHandler::getSpriteDimension(_sprite))
+    {
+        const pair spriteSize = *spriteDimOpt;
+        const pair sizeDiff = spriteSize - _size;
+
+        switch (_animation.currentDirection())
+        {
+        case D_LEFT:
+            _pos.x -= sizeDiff.x;
+
+        case D_UP:
+        case D_UPLEFT:
+        case D_UPRIGHT:
+            // TODO: handle vertical adjustment
+            break;
+        default:
+            break;
+        }
+
+        _size = spriteSize;
+    }
+
+    ++_attackFrame;
+}
+
+void Link::endAttack()
+{
+    _isAttacking = false;
+    _attackFrame = 0;
+
+    _animation.set(S_MOVEMENT, _animation.currentDirection());
+
+    while (_animation.currentFrame() < _previousFrame - 1)
+        _animation.nextSprite();
+
+    _sprite = _animation.nextSprite();
+}
+
 void Link::move()
 {
-    const direction newDirection = parseInput();
+    const state newState = updateState();
 
-    if (newDirection != D_STILL)
+    if (newState == S_STILL)
     {
-        const pair movement = calculateMovement(newDirection);
-        _pos += movement;
+        if (_animation.currentState() != S_STILL)
+            _animation.set(S_STILL, _animation.currentDirection());
+    }
 
-        // Aggiorna animazione solo se la direzione è cambiata
-        if (newDirection != _animation.currentDirection())
-        {
+    else if (newState == S_MOVEMENT)
+    {
+        const direction newDirection = updateDirection();
+        _pos += calculateMovement(newDirection);
+
+        if (_animation.currentDirection() != newDirection && newDirection != D_STILL)
             _animation.set(S_MOVEMENT, newDirection);
-        }
+
         _sprite = _animation.nextSprite();
+    }
+
+    else if (newState == S_ATTACK)
+    {
+        if (!_attackFrame)
+            setupAttack();
+
+        performAttack();
+
+        if (_attackFrame == _animation.currentAnimation().size())
+            endAttack();
     }
 }
 
 void Link::handleCollisions(const std::vector<collision> &collisions)
 {
+    if (_isAttacking)
+        return; // Non gestire collisioni durante l'attacco
+
     for (const auto &coll : collisions)
     {
         const auto &target = coll.target;
