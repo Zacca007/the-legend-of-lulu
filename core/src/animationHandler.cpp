@@ -1,5 +1,4 @@
 #include "animationHandler.hpp"
-
 #include <cstring>
 
 using namespace lulu;
@@ -7,16 +6,6 @@ using namespace lulu;
 AnimationHandler::AnimationHandler()
     : _currentDirection(D_STILL), _currentFrame(0), _currentState(S_STILL), _enabled(false)
 {
-}
-
-std::uint32_t AnimationHandler::readBigEndian(std::ifstream& file)
-{
-    uint8_t bytes[4];
-    file.read(reinterpret_cast<char*>(bytes), 4);
-    return (static_cast<uint32_t>(bytes[0]) << 24) |
-           (static_cast<uint32_t>(bytes[1]) << 16) |
-           (static_cast<uint32_t>(bytes[2]) << 8)  |
-           (static_cast<uint32_t>(bytes[3]));
 }
 
 AnimationHandler::AnimationHandler(bool enableAnimation, direction initialDirection, state initialState)
@@ -27,6 +16,16 @@ AnimationHandler::AnimationHandler(bool enableAnimation, direction initialDirect
         _currentState = S_STILL;
         _currentDirection = D_STILL;
     }
+}
+
+std::uint32_t AnimationHandler::readBigEndian(std::ifstream& file)
+{
+    uint8_t bytes[4];
+    file.read(reinterpret_cast<char*>(bytes), 4);
+    return (static_cast<uint32_t>(bytes[0]) << 24) |
+           (static_cast<uint32_t>(bytes[1]) << 16) |
+           (static_cast<uint32_t>(bytes[2]) << 8)  |
+           (static_cast<uint32_t>(bytes[3]));
 }
 
 void AnimationHandler::enable()
@@ -64,7 +63,7 @@ std::optional<pair> AnimationHandler::getSpriteDimension(const std::string& file
     if (!file)
         return std::nullopt;
 
-    const uint8_t expected_signature[8] = { 0x89, 'P', 'N', 'G', 0x0D, 0x0A, 0x1A, 0x0A };
+    constexpr uint8_t expected_signature[8] = { 0x89, 'P', 'N', 'G', 0x0D, 0x0A, 0x1A, 0x0A };
     uint8_t signature[8];
     file.read(reinterpret_cast<char*>(signature), 8);
     if (!file || std::memcmp(signature, expected_signature, 8) != 0)

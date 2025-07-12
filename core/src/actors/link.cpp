@@ -24,6 +24,8 @@ void Link::setupAnimations()
     const std::vector<std::string> right = {"core/assets/link/movement/link right 1.png",
                                             "core/assets/link/movement/link right 2.png"};
 
+
+
     // Animazioni di attacco - tutte le direzioni
     const std::vector<std::string> attackUp = {
         "core/assets/link/attack/link attack up 1.png", "core/assets/link/attack/link attack up 2.png",
@@ -221,9 +223,9 @@ void Link::performAttack()
 
     _sprite = _animation.nextSprite();
 
-    if (auto spriteDimOpt = AnimationHandler::getSpriteDimension(_sprite))
+    if (const auto spriteDimOpt = AnimationHandler::getSpriteDimension(_sprite))
     {
-        const pair spriteSize = *spriteDimOpt;
+        const pair spriteSize = spriteDimOpt.value();
         const pair sizeDiff = spriteSize - _size;
 
         switch (_animation.currentDirection())
@@ -261,9 +263,8 @@ void Link::endAttack()
 
 void Link::move()
 {
-    const state newState = updateState();
-
-    if (newState == S_STILL)
+    static long long int animationSwitch = 0;
+    if (const state newState = updateState(); newState == S_STILL)
     {
         if (_animation.currentState() != S_STILL)
             _animation.set(S_STILL, _animation.currentDirection());
@@ -277,6 +278,7 @@ void Link::move()
         if (_animation.currentDirection() != newDirection && newDirection != D_STILL)
             _animation.set(S_MOVEMENT, newDirection);
 
+        if (animationSwitch++ % 3 == 0)
         _sprite = _animation.nextSprite();
     }
 
