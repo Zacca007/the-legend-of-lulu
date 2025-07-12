@@ -1,4 +1,5 @@
 #include "animationHandler.hpp"
+#include <cstring>
 
 using namespace lulu;
 
@@ -17,24 +18,14 @@ AnimationHandler::AnimationHandler(bool enableAnimation, direction initialDirect
     }
 }
 
-direction AnimationHandler::currentDirection() const
+std::uint32_t AnimationHandler::readBigEndian(std::ifstream& file)
 {
-    return _currentDirection;
-}
-
-std::uint8_t AnimationHandler::currentFrame() const
-{
-    return _currentFrame;
-}
-
-state AnimationHandler::currentState() const
-{
-    return _currentState;
-}
-
-bool AnimationHandler::enabled() const
-{
-    return _enabled;
+    uint8_t bytes[4];
+    file.read(reinterpret_cast<char*>(bytes), 4);
+    return (static_cast<uint32_t>(bytes[0]) << 24) |
+           (static_cast<uint32_t>(bytes[1]) << 16) |
+           (static_cast<uint32_t>(bytes[2]) << 8)  |
+           (static_cast<uint32_t>(bytes[3]));
 }
 
 void AnimationHandler::enable()
@@ -56,8 +47,7 @@ void AnimationHandler::set(state newState, direction newDirection)
 
 std::string AnimationHandler::nextSprite()
 {
-    if (_animationSet.empty() ||
-        _animationSet[_currentState].empty() ||
+    if (_animationSet.empty() || _animationSet[_currentState].empty() ||
         _animationSet[_currentState][_currentDirection].empty())
     {
         return "";
@@ -66,4 +56,31 @@ std::string AnimationHandler::nextSprite()
     std::string sprite = _animationSet[_currentState][_currentDirection][_currentFrame];
     _currentFrame = (_currentFrame + 1) % _animationSet[_currentState][_currentDirection].size();
     return sprite;
+}
+
+std::optional<pair> AnimationHandler::getSpriteDimension(const std::string& filepath) {
+    std::ifstream file(filepath, std::ios::binary);
+    if (!file)
+        return std::nullopt;
+
+    constexpr uint8_t expected_signature[8] = { 0x89, 'P', 'N', 'G', 0x0D, 0x0A, 0x1A, 0x0A };
+    uint8_t signature[8];
+    file.read(reinterpret_cast<char*>(signature), 8);
+    if (!file || std::memcmp(signature, expected_signature, 8) != 0)
+        return std::nullopt;
+
+    file.ignore(4); // Lunghezza chunk
+
+    char chunkType[5] = {0};
+    file.read(chunkType, 4);
+    if (std::string(chunkType) != "IHDR")
+        return std::nullopt;
+
+    uint32_t width = readBigEndian(file);
+    uint32_t height = readBigEndian(file);
+
+    return pair{
+        static_cast<float>(width),
+        static_cast<float>(height)
+    };
 }

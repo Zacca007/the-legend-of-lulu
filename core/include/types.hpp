@@ -57,7 +57,8 @@ enum state
 {
     S_STILL,
     S_MOVEMENT,
-    S_ATTACK
+    S_ATTACK,
+    D_HURT
 };
 
 enum collisionType

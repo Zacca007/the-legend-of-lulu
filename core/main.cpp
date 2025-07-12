@@ -26,7 +26,7 @@ class Game
     std::unordered_map<std::string, Texture2D> textureCache;
 
   public:
-    Game() : arena(ARENA_POS, ARENA_SIZE), link(ARENA_POS + (ARENA_SIZE / 2), {50, 50}, 10, 12, 1, &arena)
+    Game() : arena(ARENA_POS, ARENA_SIZE), link(ARENA_POS + (ARENA_SIZE / 2), {50, 50}, 7, 12, 1, &arena)
     {
         initializeGraphics();
         initializeStaticActors();
@@ -51,7 +51,7 @@ class Game
     {
         InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "Legend of Lulu");
         background = LoadTexture("core/assets/rooms/dungeon hall.png");
-        SetTargetFPS(10);
+        SetTargetFPS(20);
     }
 
     void initializeStaticActors()
