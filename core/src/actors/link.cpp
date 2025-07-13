@@ -286,7 +286,7 @@ void Link::move()
         if (_animation.currentDirection() != newDirection && newDirection != D_STILL)
             _animation.set(S_MOVEMENT, newDirection);
 
-        if (animationSwitch++ % 3 == 0)
+        if (animationSwitch++ % 2 == 0)
             _sprite = _animation.nextSprite();
     }
 
