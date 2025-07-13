@@ -74,15 +74,22 @@ state Link::updateState() const
     if (_isAttacking)
         return S_ATTACK;
 
-    auto keys = _arena->currKeys();
+    std::vector<Key> currKeys = _arena->currKeys();
+    std::vector<Key> prevKeys = _arena->prevKeys();
+    auto currIt = std::ranges::find(currKeys, K_SPACE);
+    auto prevIt = std::ranges::find(prevKeys, K_SPACE);
 
-    if (std::ranges::find(keys, K_SPACE) != keys.end())
+    if (currIt != currKeys.end() && prevIt != prevKeys.end())
+    {
+        currKeys.erase(currIt);
+    }
+    else if (currIt != currKeys.end() && prevIt == prevKeys.end())
     {
         return S_ATTACK;
     }
 
     // if not attacking, every other key is moevment key
-    if (!keys.empty())
+    if (!currKeys.empty())
         return S_MOVEMENT;
 
     return S_STILL;
@@ -286,7 +293,7 @@ void Link::move()
         if (_animation.currentDirection() != newDirection && newDirection != D_STILL)
             _animation.set(S_MOVEMENT, newDirection);
 
-        if (animationSwitch++ % 2 == 0)
+        if (animationSwitch++ % 4 == 0)
             _sprite = _animation.nextSprite();
     }
 
@@ -298,7 +305,10 @@ void Link::move()
         performAttack();
 
         if (_attackFrame == _animation.currentAnimation().size())
+        {
             endAttack();
+            animationSwitch = 0;
+        }
     }
 }
 

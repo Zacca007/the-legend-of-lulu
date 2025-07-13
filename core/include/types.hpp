@@ -34,6 +34,7 @@ enum Key
     K_D = 68,
     K_S = 83,
     K_W = 87,
+    K_ENTER = 257,
     K_RIGHT = 262,
     K_LEFT = 263,
     K_DOWN = 264,
