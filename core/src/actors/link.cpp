@@ -60,6 +60,9 @@ void Link::setupAnimations()
     _animation.addAnimation(S_STILL, D_RIGHT, right);
 
     // Animazioni attacco
+    _animation.addAnimation(S_ATTACK, D_UP, attackUp);
+    _animation.addAnimation(S_ATTACK, D_UPLEFT, attackUp);
+    _animation.addAnimation(S_ATTACK, D_UPRIGHT, attackUp);
     _animation.addAnimation(S_ATTACK, D_DOWN, attackDown);
     _animation.addAnimation(S_ATTACK, D_DOWNLEFT, attackDown);
     _animation.addAnimation(S_ATTACK, D_DOWNRIGHT, attackDown);
@@ -73,25 +76,17 @@ state Link::updateState() const
     if (_isAttacking)
         return S_ATTACK;
 
-    for (const Key key : _arena->currKeys())
+    auto keys = _arena->currKeys();
+
+    if (std::ranges::find(keys, K_SPACE)!=keys.end())
     {
-        switch (key)
-        {
-        case K_SPACE:
-            return S_ATTACK;
-        case K_W:
-        case K_UP:
-        case K_A:
-        case K_LEFT:
-        case K_S:
-        case K_DOWN:
-        case K_D:
-        case K_RIGHT:
-            return S_MOVEMENT;
-        default:
-            break;
-        }
+        return S_ATTACK;
     }
+
+    //if not attacking, every other key is moevment key
+    if (!keys.empty())
+        return S_MOVEMENT;
+
     return S_STILL;
 }
 
@@ -236,7 +231,7 @@ void Link::performAttack()
         case D_UP:
         case D_UPLEFT:
         case D_UPRIGHT:
-            // TODO: handle vertical adjustment
+            _pos.y -= sizeDiff.y;
             break;
         default:
             break;
@@ -259,6 +254,7 @@ void Link::endAttack()
         _animation.nextSprite();
 
     _sprite = _animation.nextSprite();
+    _size = AnimationHandler::getSpriteDimension(_sprite).value();
 }
 
 void Link::move()
