@@ -5,7 +5,6 @@ namespace lulu
 {
 class Link final : public Fighter
 {
-private:
     bool _isAttacking;
     std::uint8_t _attackFrame;
     std::uint8_t _previousFrame{};

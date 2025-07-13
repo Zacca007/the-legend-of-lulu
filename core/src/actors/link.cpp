@@ -24,8 +24,6 @@ void Link::setupAnimations()
     const std::vector<std::string> right = {"core/assets/link/movement/link right 1.png",
                                             "core/assets/link/movement/link right 2.png"};
 
-
-
     // Animazioni di attacco - tutte le direzioni
     const std::vector<std::string> attackUp = {
         "core/assets/link/attack/link attack up 1.png", "core/assets/link/attack/link attack up 2.png",
@@ -78,12 +76,12 @@ state Link::updateState() const
 
     auto keys = _arena->currKeys();
 
-    if (std::ranges::find(keys, K_SPACE)!=keys.end())
+    if (std::ranges::find(keys, K_SPACE) != keys.end())
     {
         return S_ATTACK;
     }
 
-    //if not attacking, every other key is moevment key
+    // if not attacking, every other key is moevment key
     if (!keys.empty())
         return S_MOVEMENT;
 
@@ -218,28 +216,24 @@ void Link::performAttack()
 
     _sprite = _animation.nextSprite();
 
-    if (const auto spriteDimOpt = AnimationHandler::getSpriteDimension(_sprite))
+    const pair spriteSize = AnimationHandler::getSpriteDimension(_sprite).value();
+    const pair sizeDiff = spriteSize - _size;
+
+    switch (_animation.currentDirection())
     {
-        const pair spriteSize = spriteDimOpt.value();
-        const pair sizeDiff = spriteSize - _size;
+    case D_LEFT:
+        _pos.x -= sizeDiff.x;
 
-        switch (_animation.currentDirection())
-        {
-        case D_LEFT:
-            _pos.x -= sizeDiff.x;
-
-        case D_UP:
-        case D_UPLEFT:
-        case D_UPRIGHT:
-            _pos.y -= sizeDiff.y;
-            break;
-        default:
-            break;
-        }
-
-        _size = spriteSize;
+    case D_UP:
+    case D_UPLEFT:
+    case D_UPRIGHT:
+        _pos.y -= sizeDiff.y;
+        break;
+    default:
+        break;
     }
 
+    _size = spriteSize;
     ++_attackFrame;
 }
 
@@ -254,7 +248,25 @@ void Link::endAttack()
         _animation.nextSprite();
 
     _sprite = _animation.nextSprite();
-    _size = AnimationHandler::getSpriteDimension(_sprite).value();
+
+    const pair spriteSize = AnimationHandler::getSpriteDimension(_sprite).value();
+    const pair sizeDiff = spriteSize - _size;
+
+    switch (_animation.currentDirection())
+    {
+    case D_LEFT:
+        _pos.x -= sizeDiff.x;
+
+    case D_UP:
+    case D_UPLEFT:
+    case D_UPRIGHT:
+        _pos.y -= sizeDiff.y;
+        break;
+    default:
+        break;
+    }
+
+    _size = spriteSize;
 }
 
 void Link::move()
@@ -275,7 +287,7 @@ void Link::move()
             _animation.set(S_MOVEMENT, newDirection);
 
         if (animationSwitch++ % 3 == 0)
-        _sprite = _animation.nextSprite();
+            _sprite = _animation.nextSprite();
     }
 
     else if (newState == S_ATTACK)
