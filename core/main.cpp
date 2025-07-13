@@ -1,34 +1,33 @@
 #include "lulu.hpp"
+#include <array>
 #include <memory>
 #include <ranges>
 #include <raylib.h>
 #include <unordered_map>
 #include <vector>
-#include <array>
 
 // Forward declaration
 class Game;
 
 class GameScene
 {
-protected:
+  protected:
     Texture2D _background{};
     Music _music{};
     std::map<std::string, Sound> _sounds;
     std::vector<lulu::Key> _inputKeys;
-    Game* _game; // Riferimento al game per poter cambiare scena
+    Game *_game; // Riferimento al game per poter cambiare scena
 
-public:
-    GameScene(const std::string &background, const std::string &music,
-              const std::vector<std::string> &sounds, const std::vector<lulu::Key> &inputKeys,
-              Game* game = nullptr)
+  public:
+    GameScene(const std::string &background, const std::string &music, const std::vector<std::string> &sounds,
+              const std::vector<lulu::Key> &inputKeys, Game *game = nullptr)
         : _inputKeys(inputKeys), _game(game)
     {
         _background = LoadTexture(background.c_str());
-        //_music = LoadMusicStream(music.c_str());
+        _music = LoadMusicStream(music.c_str());
         for (const auto &sound : sounds)
         {
-            //_sounds[sound] = LoadSound(sound.c_str());
+            _sounds[sound] = LoadSound(sound.c_str());
         }
     }
 
@@ -43,7 +42,7 @@ public:
     virtual void tick() = 0;
     virtual void render() = 0;
 
-protected:
+  protected:
     [[nodiscard]] std::vector<lulu::Key> getActiveKeys() const
     {
         std::vector<lulu::Key> keys;
@@ -57,12 +56,16 @@ protected:
 
 class Menu final : public GameScene
 {
-public:
-    Menu(const std::string &background, const std::string &music,
-         const std::vector<std::string> &sounds, const std::vector<lulu::Key> &inputKeys,
-         Game* game)
+    unsigned char transparency = 0;
+    bool growing = true;
+
+  public:
+    Menu(const std::string &background, const std::string &music, const std::vector<std::string> &sounds,
+         const std::vector<lulu::Key> &inputKeys, Game *game)
         : GameScene(background, music, sounds, inputKeys, game)
     {
+        _music.looping = false;
+        PlayMusicStream(_music);
     }
 
     void tick() override;
@@ -71,14 +74,19 @@ public:
         BeginDrawing();
         ClearBackground(BLACK);
         DrawTexture(_background, 0, 0, WHITE);
-        DrawText("Press SPACE to start", 225, 500, 30, WHITE);
+        DrawText("Press SPACE to start", 225, 500, 30, {255, 255, 255, transparency});
         EndDrawing();
+        if (transparency == 255)
+            growing = false;
+        else if (transparency == 0)
+            growing = true;
+        transparency += growing ? 15 : -15;
     }
 };
 
 class GameOn final : public GameScene
 {
-private:
+  private:
     static constexpr lulu::pair ARENA_SIZE{600, 350};
     static constexpr lulu::pair ARENA_POS{100, 100};
     static constexpr int CELL_SIZE = 50;
@@ -90,12 +98,10 @@ private:
     lulu::Link link;
     std::unordered_map<std::string, Texture2D> textureCache;
 
-public:
-    GameOn(const std::string &background, const std::string &music,
-           const std::vector<std::string> &sounds, const std::vector<lulu::Key> &inputKeys,
-           Game* game)
-        : GameScene(background, music, sounds, inputKeys, game),
-          arena(ARENA_POS, ARENA_SIZE),
+  public:
+    GameOn(const std::string &background, const std::string &music, const std::vector<std::string> &sounds,
+           const std::vector<lulu::Key> &inputKeys, Game *game)
+        : GameScene(background, music, sounds, inputKeys, game), arena(ARENA_POS, ARENA_SIZE),
           link(ARENA_POS + (ARENA_SIZE / 2), {50, 50}, 7, 12, 1, &arena)
     {
         initializeStaticActors();
@@ -117,13 +123,13 @@ public:
         ClearBackground(BLACK);
         DrawTexture(_background, 0, 0, WHITE);
 
-        Texture2D linkTexture = getTexture(link.sprite());
+        const Texture2D linkTexture = getTexture(link.sprite());
         DrawTexture(linkTexture, static_cast<int>(link.pos().x), static_cast<int>(link.pos().y), WHITE);
 
         EndDrawing();
     }
 
-private:
+  private:
     void initializeStaticActors()
     {
         staticActors.reserve(STATIC_ACTOR_POSITIONS.size());
@@ -138,7 +144,7 @@ private:
     {
         for (auto *actor : arena.actors())
             arena.kill(actor);
-        for (auto &[path, texture] : textureCache)
+        for (const auto &texture : textureCache | std::views::values)
             UnloadTexture(texture);
     }
 
@@ -153,7 +159,7 @@ private:
         return it->second;
     }
 
-    void drawRectOutline(const lulu::pair &pos, const lulu::pair &size, Color color)
+    static void drawRectOutline(const lulu::pair &pos, const lulu::pair &size, Color color)
     {
         DrawRectangleLines(static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(size.x),
                            static_cast<int>(size.y), color);
@@ -165,7 +171,7 @@ class Game final
     const lulu::pair SCREEN_SIZE{800, 550};
     std::unique_ptr<GameScene> _scene;
 
-public:
+  public:
     Game()
     {
         InitWindow(static_cast<int>(SCREEN_SIZE.x), static_cast<int>(SCREEN_SIZE.y), "The Legend of LuLù");
@@ -173,12 +179,8 @@ public:
         InitAudioDevice();
 
         // inizializzazione con una scena specifica
-        _scene = std::make_unique<Menu>(
-            "core/assets/menu.png",
-            "",
-            std::vector<std::string>(),
-            std::vector{lulu::K_SPACE},
-            this);
+        _scene = std::make_unique<Menu>("core/assets/menu.png", "core/assets/sound/music/menu.mp3",
+                                        std::vector<std::string>(), std::vector{lulu::K_SPACE}, this);
     }
 
     ~Game()
@@ -187,7 +189,7 @@ public:
         CloseWindow();
     }
 
-    void run()
+    void run() const
     {
         while (!WindowShouldClose())
         {
@@ -198,20 +200,18 @@ public:
 
     void changeToGameScene()
     {
-        _scene = std::make_unique<GameOn>(
-            "core/assets/rooms/dungeon hall.png",
-            "",
-            std::vector<std::string>(),
-            std::vector{lulu::K_W, lulu::K_A, lulu::K_S, lulu::K_D, lulu::K_DOWN, lulu::K_LEFT, lulu::K_RIGHT, lulu::K_UP, lulu::K_SPACE},
-            this);
+        _scene = std::make_unique<GameOn>("core/assets/rooms/dungeon hall.png", "", std::vector<std::string>(),
+                                          std::vector{lulu::K_W, lulu::K_A, lulu::K_S, lulu::K_D, lulu::K_DOWN,
+                                                      lulu::K_LEFT, lulu::K_RIGHT, lulu::K_UP, lulu::K_SPACE},
+                                          this);
     }
 };
 
 // Implementazione del metodo tick di Menu (deve essere dopo la definizione di Game)
 void Menu::tick()
 {
-    auto activeKeys = getActiveKeys();
-    for (auto key : activeKeys)
+    UpdateMusicStream(_music);
+    for (const auto activeKeys = getActiveKeys(); const auto key : activeKeys)
     {
         if (key == lulu::K_SPACE)
         {
