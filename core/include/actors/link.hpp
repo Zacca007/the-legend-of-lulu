@@ -3,25 +3,89 @@
 
 namespace lulu
 {
+/**
+ * @brief Main player character class
+ * * Link is the player-controlled character with movement, attack mechanics,
+ * and complex animation handling. Inherits combat abilities from Fighter.
+ */
 class Link final : public Fighter
 {
-    bool _isAttacking;
-    std::uint8_t _attackFrame;
-    std::uint8_t _previousFrame{};
+    bool _isAttacking;           // Whether currently performing attack
+    std::uint8_t _attackFrame;   // Current frame of attack animation
+    std::uint8_t _previousFrame{}; // Previous animation frame (for restoration)
 
+    /**
+     * @brief Initialize all animation sequences for Link
+     */
     void setupAnimations();
-    [[nodiscard]] state updateState() const;
-    [[nodiscard]] direction updateDirection() const;
-    [[nodiscard]] pair calculateMovement(direction dir) const;
-    void setupAttack();
-    void performAttack();
-    void endAttack();
-    //TODO: void handleAttackCollisions();
 
-public:
-    Link( pair position,  pair size, float speed, float hp, float damage, Arena *arena = nullptr);
+    /**
+     * @brief Determine current animation state based on input
+     * @return Current state (still, movement, or attack)
+     */
+    [[nodiscard]] state updateState() const;
+
+    /**
+     * @brief Determine facing direction based on input
+     * @return Current direction based on key presses
+     */
+    [[nodiscard]] direction updateDirection() const;
+
+    /**
+     * @brief Calculate movement vector for given direction
+     * @param dir Direction to move
+     * @return Movement vector (delta position)
+     */
+    [[nodiscard]] pair calculateMovement(direction dir) const;
+
+    /**
+     * @brief Initialize attack sequence
+     */
+    void setupAttack();
+
+    /**
+     * @brief Execute attack frame and handle damage
+     */
+    void performAttack();
+
+    /**
+     * @brief End attack sequence and restore normal state
+     */
+    void endAttack();
+
+    // TODO: void handleAttackCollisions();
+
+  public:
+    /**
+     * @brief Construct Link character
+     * @param position Initial position
+     * @param size Character size
+     * @param speed Movement speed
+     * @param hp Initial health points
+     * @param damage Attack damage
+     * @param arena Pointer to arena
+     */
+    Link(pair position, pair size, float speed, float hp, float damage, Arena *arena = nullptr);
+
+    /**
+     * @brief Update Link's position and animation
+     * Override from Movable base class
+     */
     void move() override;
+
+    /**
+     * @brief Handle collision responses
+     * @param collisions Vector of collisions to resolve
+     */
     void handleCollisions(const std::vector<collision> &collisions) override;
-    [[nodiscard]] bool isAttacking() const { return _isAttacking; }
+
+    /**
+     * @brief Check if Link is currently attacking
+     * @return True if in attack state
+     */
+    [[nodiscard]] bool isAttacking() const
+    {
+        return _isAttacking;
+    }
 };
 } // namespace lulu

@@ -102,7 +102,7 @@ class GameOn final : public GameScene
     GameOn(const std::string &background, const std::string &music, const std::vector<std::string> &sounds,
            const std::vector<lulu::Key> &inputKeys, Game *game)
         : GameScene(background, music, sounds, inputKeys, game), arena(ARENA_POS, ARENA_SIZE),
-          link(ARENA_POS + (ARENA_SIZE / 2), {50, 50}, 7, 12, 1, &arena)
+          link(ARENA_POS + (ARENA_SIZE / 2), {50, 50}, 6, 12, 1, &arena)
     {
         initializeStaticActors();
     }
@@ -200,10 +200,10 @@ class Game final
 
     void changeToGameScene()
     {
-        _scene = std::make_unique<GameOn>("core/assets/rooms/dungeon hall.png", "", std::vector<std::string>(),
-                                          std::vector{lulu::K_W, lulu::K_A, lulu::K_S, lulu::K_D, lulu::K_DOWN,
-                                                      lulu::K_LEFT, lulu::K_RIGHT, lulu::K_UP, lulu::K_SPACE},
-                                          this);
+        std::vector keys = {lulu::K_W,    lulu::K_A,     lulu::K_S,  lulu::K_D,    lulu::K_DOWN,
+                            lulu::K_LEFT, lulu::K_RIGHT, lulu::K_UP, lulu::K_SPACE};
+        std::string hallPath = "core/assets/rooms/dungeon hall.png";
+        _scene = std::make_unique<GameOn>(hallPath, "", std::vector<std::string>(), keys, this);
     }
 };
 
