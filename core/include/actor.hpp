@@ -21,8 +21,8 @@ class Actor
     std::string _sprite; // Path to the sprite image file
 
     /**
- * @brief Keep actor within arena boundaries
- */
+     * @brief Keep actor within arena boundaries
+     */
     void clampToArena();
 
   public:

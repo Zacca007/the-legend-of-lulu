@@ -22,7 +22,7 @@ class Movable
      * @param speed Movement speed
      * @param enableAnimation Whether to enable animation system
      */
-    explicit Movable(const pair speed, bool enableAnimation = false) : _speed(speed)
+    explicit Movable(const pair speed, const bool enableAnimation = false) : _speed(speed)
     {
         if (enableAnimation)
             _animation.enable();

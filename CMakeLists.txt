@@ -21,7 +21,6 @@ file(GLOB_RECURSE SOURCES
 add_executable(${PROJECT_NAME} ${SOURCES}
         core/include/animationHandler.hpp
         core/src/animationHandler.cpp
-        core/include/actors/bladeTrap.hpp
         core/src/movable.cpp)
 
 # === INCLUDES ===

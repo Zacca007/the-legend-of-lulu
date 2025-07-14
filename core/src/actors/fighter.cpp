@@ -86,8 +86,7 @@ bool Fighter::isCollidingWithStatic() const
  */
 void Fighter::damageCollidingFighters() const
 {
-    const auto collidingFighters = getCollidingFighters();
-    for (auto *fighter : collidingFighters)
+    for (const auto collidingFighters = getCollidingFighters(); auto *fighter : collidingFighters)
     {
         attack(*fighter);
     }
