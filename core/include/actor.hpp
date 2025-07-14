@@ -20,6 +20,11 @@ class Actor
     Arena *_arena;       // Pointer to the arena this actor belongs to
     std::string _sprite; // Path to the sprite image file
 
+    /**
+ * @brief Keep actor within arena boundaries
+ */
+    void clampToArena();
+
   public:
     /**
      * @brief Construct a new Actor

@@ -1,11 +1,13 @@
 #include "actors/link.hpp"
 #include "arena.hpp"
+#include <ranges>
 
 using namespace lulu;
 
 // Constructor: Initialize Link with position, size, speed, health, damage, and arena reference
 Link::Link(const pair position, const pair size, float speed, float hp, float damage, Arena *arena)
-    : Fighter(position, size, {speed, speed}, hp, damage, arena), _isAttacking(false), _attackFrame(0), _animationSwitch(0)
+    : Fighter(position, size, {speed, speed}, hp, damage, arena), _isAttacking(false), _attackFrame(0),
+      _animationSwitch(0)
 {
     setupAnimations();
     _animation.set(S_STILL, D_DOWN); // Start facing down in still state
@@ -68,6 +70,93 @@ void Link::setupAnimations()
     _animation.addAnimation(S_ATTACK, D_DOWNRIGHT, attackDown);
     _animation.addAnimation(S_ATTACK, D_LEFT, attackLeft);
     _animation.addAnimation(S_ATTACK, D_RIGHT, attackRight);
+}
+
+// INPUT HANDLING METHODS - specific to Link as player-controlled character
+
+/**
+ * @brief Check if input keys contain a specific key
+ */
+bool Link::hasKey(const std::vector<Key> &keys, Key key)
+{
+    return std::ranges::find(keys, key) != keys.end();
+}
+
+/**
+ * @brief Check if a key was just pressed (not held from previous frame)
+ */
+bool Link::isKeyJustPressed(Key key) const
+{
+    if (!_arena)
+        return false;
+
+    const auto &currKeys = _arena->currKeys();
+    const auto &prevKeys = _arena->prevKeys();
+
+    return hasKey(currKeys, key) && !hasKey(prevKeys, key);
+}
+
+/**
+ * @brief Get current directional input from arena
+ */
+direction Link::getCurrentDirection() const
+{
+    if (!_arena)
+        return D_STILL;
+
+    bool w = false, a = false, s = false, d = false;
+
+    // Check which directional keys are currently pressed
+    for (const Key key : _arena->currKeys())
+    {
+        switch (key)
+        {
+        case K_W:
+        case K_UP:
+            w = true;
+            break;
+        case K_A:
+        case K_LEFT:
+            a = true;
+            break;
+        case K_S:
+        case K_DOWN:
+            s = true;
+            break;
+        case K_D:
+        case K_RIGHT:
+            d = true;
+            break;
+        default:
+            break;
+        }
+    }
+
+    // Resolve conflicting inputs (opposite directions cancel out)
+    if (a && d)
+        a = d = false;
+    if (w && s)
+        w = s = false;
+
+    // Determine final direction (diagonal directions have priority)
+    if (w && a)
+        return D_UPLEFT;
+    if (w && d)
+        return D_UPRIGHT;
+    if (s && a)
+        return D_DOWNLEFT;
+    if (s && d)
+        return D_DOWNRIGHT;
+    if (w)
+        return D_UP;
+    if (s)
+        return D_DOWN;
+    if (a)
+        return D_LEFT;
+    if (d)
+        return D_RIGHT;
+
+    return D_STILL;
 }
 
 // Determine Link's current state based on input and attack status
@@ -163,9 +252,7 @@ void Link::adjustPositionForAttack(const pair &sizeDiff)
 // Main movement and animation update function
 void Link::move()
 {
-    const state newState = updateState();
-
-    if (newState == S_STILL)
+    if (const state newState = updateState(); newState == S_STILL)
     {
         if (_animation.currentState() != S_STILL)
             _animation.set(S_STILL, _animation.currentDirection());
@@ -184,7 +271,6 @@ void Link::move()
                 _animation.nextSprite();
                 _animationSwitch = 0;
             }
-
 
             // Update sprite every 4 frames for smooth movement animation
             if (_animationSwitch++ % 4 == 0)

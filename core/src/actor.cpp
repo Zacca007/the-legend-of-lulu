@@ -1,5 +1,7 @@
 #include "actor.hpp"
 #include "arena.hpp"
+
+#include <algorithm>
 #include <utility>
 
 using namespace lulu;
@@ -84,4 +86,17 @@ collisionType Actor::checkCollision(const Actor *other) const
         return thisCenter.x <= otherCenter.x ? C_RIGHT : C_LEFT;
 
     return thisCenter.y <= otherCenter.y ? C_BOTTOM : C_TOP;
+}
+
+void Actor::clampToArena()
+{
+    if (!_arena)
+        return;
+
+    const auto roomPos = _arena->pos();
+    const auto roomSize = _arena->size();
+    const auto roomEnd = roomPos + roomSize;
+
+    _pos.x = std::clamp(_pos.x, roomPos.x, roomEnd.x - _size.x);
+    _pos.y = std::clamp(_pos.y, roomPos.y, roomEnd.y - _size.y);
 }

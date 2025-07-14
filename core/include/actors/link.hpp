@@ -47,6 +47,29 @@ class Link final : public Fighter
      */
     void adjustPositionForAttack(const pair &sizeDiff);
 
+    // INPUT HANDLING METHODS - specific to player-controlled entities
+
+    /**
+     * @brief Check if input keys contain a specific key
+     * @param keys Vector of keys to check
+     * @param key Key to look for
+     * @return True if key is found
+     */
+    static bool hasKey(const std::vector<Key> &keys, Key key);
+
+    /**
+     * @brief Check if a key was just pressed (not held from previous frame)
+     * @param key Key to check
+     * @return True if key was just pressed
+     */
+    [[nodiscard]] bool isKeyJustPressed(Key key) const;
+
+    /**
+     * @brief Get current directional input from arena
+     * @return Direction based on current key presses
+     */
+    [[nodiscard]] direction getCurrentDirection() const;
+
   public:
     /**
      * @brief Construct Link character

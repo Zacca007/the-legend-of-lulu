@@ -2,6 +2,7 @@
 #include "animationHandler.hpp"
 #include "types.hpp"
 #include <vector>
+
 namespace lulu
 {
 /**
@@ -27,6 +28,14 @@ class Movable
             _animation.enable();
     }
 
+    /**
+     * @brief Calculate movement vector for given direction and speed
+     * @param dir Direction to move
+     * @param speedMultiplier Speed multiplier (defaults to 1.0f)
+     * @return Movement vector (delta position)
+     */
+    [[nodiscard]] pair calculateMovement(direction dir, float speedMultiplier = 1.0f) const;
+
   public:
     virtual ~Movable() = default;
 
@@ -47,4 +56,4 @@ class Movable
      */
     virtual void handleCollisions(const std::vector<collision> &collisions) = 0;
 };
-} // namespace lulu
+}
