@@ -6,5 +6,5 @@ pkgs.mkShell {
     pkg-config
   ];
 
-  #shellHook = "nohup clion >/dev/null 2>&1 &";
+  shellHook = "nohup clion >/dev/null 2>&1 &";
 }

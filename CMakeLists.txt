@@ -20,7 +20,8 @@ file(GLOB_RECURSE SOURCES
 # === CREATE EXECUTABLE ===
 add_executable(${PROJECT_NAME} ${SOURCES}
         core/include/animationHandler.hpp
-        core/src/animationHandler.cpp)
+        core/src/animationHandler.cpp
+        core/include/actors/bladeTrap.hpp)
 
 # === INCLUDES ===
 target_include_directories(${PROJECT_NAME} PRIVATE

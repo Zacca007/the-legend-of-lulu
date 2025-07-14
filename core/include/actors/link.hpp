@@ -5,13 +5,13 @@ namespace lulu
 {
 /**
  * @brief Main player character class
- * * Link is the player-controlled character with movement, attack mechanics,
+ * Link is the player-controlled character with movement, attack mechanics,
  * and complex animation handling. Inherits combat abilities from Fighter.
  */
 class Link final : public Fighter
 {
-    bool _isAttacking;           // Whether currently performing attack
-    std::uint8_t _attackFrame;   // Current frame of attack animation
+    bool _isAttacking;             // Whether currently performing attack
+    std::uint8_t _attackFrame;     // Current frame of attack animation
     std::uint8_t _previousFrame{}; // Previous animation frame (for restoration)
 
     /**
@@ -24,19 +24,6 @@ class Link final : public Fighter
      * @return Current state (still, movement, or attack)
      */
     [[nodiscard]] state updateState() const;
-
-    /**
-     * @brief Determine facing direction based on input
-     * @return Current direction based on key presses
-     */
-    [[nodiscard]] direction updateDirection() const;
-
-    /**
-     * @brief Calculate movement vector for given direction
-     * @param dir Direction to move
-     * @return Movement vector (delta position)
-     */
-    [[nodiscard]] pair calculateMovement(direction dir) const;
 
     /**
      * @brief Initialize attack sequence
@@ -53,7 +40,11 @@ class Link final : public Fighter
      */
     void endAttack();
 
-    // TODO: void handleAttackCollisions();
+    /**
+     * @brief Handle sprite size changes during attack animations
+     * @param sizeDiff Difference in size between current and new sprite
+     */
+    void adjustPositionForAttack(const pair &sizeDiff);
 
   public:
     /**

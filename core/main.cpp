@@ -104,6 +104,7 @@ class GameOn final : public GameScene
         : GameScene(background, music, sounds, inputKeys, game), arena(ARENA_POS, ARENA_SIZE),
           link(ARENA_POS + (ARENA_SIZE / 2), {50, 50}, 6, 12, 1, &arena)
     {
+        //arena.spawn(lulu::BladeTrap(arena.pos()+arena.size()/2, {50, 50}, link.speed().x, 1, &arena, "core/assets/enemies/spines.png"));
         initializeStaticActors();
     }
 
@@ -133,9 +134,9 @@ class GameOn final : public GameScene
     void initializeStaticActors()
     {
         staticActors.reserve(STATIC_ACTOR_POSITIONS.size());
-        for (const auto &gridPos : STATIC_ACTOR_POSITIONS)
+        for (const auto &[x, y] : STATIC_ACTOR_POSITIONS)
         {
-            const lulu::pair worldPos = ARENA_POS + lulu::pair{gridPos.x * CELL_SIZE, gridPos.y * CELL_SIZE};
+            const lulu::pair worldPos = ARENA_POS + lulu::pair{x * CELL_SIZE, y * CELL_SIZE};
             staticActors.emplace_back(worldPos, lulu::pair{CELL_SIZE, CELL_SIZE}, &arena);
         }
     }
