@@ -21,7 +21,9 @@ file(GLOB_RECURSE SOURCES
 add_executable(${PROJECT_NAME} ${SOURCES}
         core/include/animationHandler.hpp
         core/src/animationHandler.cpp
-        core/src/movable.cpp)
+        core/src/movable.cpp
+        core/include/actors/trapBlade.hpp
+        core/src/actors/trapBlade.cpp)
 
 # === INCLUDES ===
 target_include_directories(${PROJECT_NAME} PRIVATE

@@ -6,7 +6,7 @@
 #include "movable.hpp"
 #include "actors/fighter.hpp"
 #include "actors/link.hpp"
-#include "actors/bladeTrap.hpp"
+#include "actors/trapBlade.hpp"
 
 namespace lulu {
     // libreria
