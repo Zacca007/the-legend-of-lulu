@@ -13,6 +13,7 @@ class Link final : public Fighter
     bool _isAttacking;             // Whether currently performing attack
     std::uint8_t _attackFrame;     // Current frame of attack animation
     std::uint8_t _previousFrame{}; // Previous animation frame (for restoration)
+    long long int _animationSwitch;
 
     /**
      * @brief Initialize all animation sequences for Link

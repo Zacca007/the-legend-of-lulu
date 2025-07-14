@@ -25,6 +25,7 @@ class GameScene
     {
         _background = LoadTexture(background.c_str());
         _music = LoadMusicStream(music.c_str());
+        PlayMusicStream(_music);
         for (const auto &sound : sounds)
         {
             _sounds[sound] = LoadSound(sound.c_str());
@@ -65,7 +66,6 @@ class Menu final : public GameScene
         : GameScene(background, music, sounds, inputKeys, game)
     {
         _music.looping = false;
-        PlayMusicStream(_music);
     }
 
     void tick() override;
@@ -86,7 +86,6 @@ class Menu final : public GameScene
 
 class GameOn final : public GameScene
 {
-  private:
     static constexpr lulu::pair ARENA_SIZE{600, 350};
     static constexpr lulu::pair ARENA_POS{100, 100};
     static constexpr int CELL_SIZE = 50;
@@ -102,7 +101,7 @@ class GameOn final : public GameScene
     GameOn(const std::string &background, const std::string &music, const std::vector<std::string> &sounds,
            const std::vector<lulu::Key> &inputKeys, Game *game)
         : GameScene(background, music, sounds, inputKeys, game), arena(ARENA_POS, ARENA_SIZE),
-          link(ARENA_POS + (ARENA_SIZE / 2), {50, 50}, 6, 12, 1, &arena)
+          link(ARENA_POS + ARENA_SIZE / 2, {50, 50}, 6, 12, 1, &arena)
     {
         //arena.spawn(lulu::BladeTrap(arena.pos()+arena.size()/2, {50, 50}, link.speed().x, 1, &arena, "core/assets/enemies/spines.png"));
         initializeStaticActors();
@@ -115,6 +114,7 @@ class GameOn final : public GameScene
 
     void tick() override
     {
+        UpdateMusicStream(_music);
         arena.tick(getActiveKeys());
     }
 
@@ -204,7 +204,8 @@ class Game final
         std::vector keys = {lulu::K_W,    lulu::K_A,     lulu::K_S,  lulu::K_D,    lulu::K_DOWN,
                             lulu::K_LEFT, lulu::K_RIGHT, lulu::K_UP, lulu::K_SPACE};
         std::string hallPath = "core/assets/rooms/dungeon hall.png";
-        _scene = std::make_unique<GameOn>(hallPath, "", std::vector<std::string>(), keys, this);
+        std::string musicPath = "core/assets/sound/music/room.mp3";
+        _scene = std::make_unique<GameOn>(hallPath, musicPath, std::vector<std::string>(), keys, this);
     }
 };
 
@@ -224,7 +225,7 @@ void Menu::tick()
 
 int main()
 {
-    Game game;
+    const Game game;
     game.run();
     return 0;
 }
