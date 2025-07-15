@@ -15,6 +15,8 @@ class Fighter : public Actor, public Movable
   protected:
     float _hp;     // Current health points
     float _damage; // Damage dealt per attack
+    bool _isAttacking;             // Whether currently performing attack
+    bool _isHurt;
 
     /**
      * @brief Protected constructor for Fighter
@@ -28,7 +30,8 @@ class Fighter : public Actor, public Movable
      */
     Fighter(const pair position, const pair size, const pair speed, const float hp, const float damage,
             Arena *arena = nullptr, const std::string &sprite = "")
-        : Actor(position, size, arena, sprite), Movable(speed, true), _hp(hp), _damage(damage)
+        : Actor(position, size, arena, sprite), Movable(speed, true), _hp(hp), _damage(damage), _isAttacking(false),
+          _isHurt(false)
     {
     }
 
@@ -48,6 +51,16 @@ class Fighter : public Actor, public Movable
      * @brief Deal damage to all colliding fighters
      */
     void damageCollidingFighters() const;
+
+    /**
+ * @brief Execute attack frame and handle damage
+ */
+    virtual void performAttack() = 0;
+
+    /**
+     * @brief End attack sequence and restore normal state
+     */
+    virtual void endAttack() = 0;
 
   public:
     /**

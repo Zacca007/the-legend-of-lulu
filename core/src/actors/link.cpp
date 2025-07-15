@@ -6,8 +6,7 @@ using namespace lulu;
 
 // Constructor: Initialize Link with position, size, speed, health, damage, and arena reference
 Link::Link(const pair position, const pair size, float speed, float hp, float damage, Arena *arena)
-    : Fighter(position, size, {speed, speed}, hp, damage, arena), _isAttacking(false), _attackFrame(0),
-      _animationSwitch(0)
+    : Fighter(position, size, {speed, speed}, hp, damage, arena), _attackFrame(0), _animationSwitch(0)
 {
     setupAnimations();
     _animation.set(S_STILL, D_DOWN); // Start facing down in still state

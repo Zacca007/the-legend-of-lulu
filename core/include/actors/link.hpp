@@ -10,7 +10,6 @@ namespace lulu
  */
 class Link final : public Fighter
 {
-    bool _isAttacking;             // Whether currently performing attack
     std::uint8_t _attackFrame;     // Current frame of attack animation
     std::uint8_t _previousFrame{}; // Previous animation frame (for restoration)
     long long int _animationSwitch;
@@ -34,12 +33,12 @@ class Link final : public Fighter
     /**
      * @brief Execute attack frame and handle damage
      */
-    void performAttack();
+    void performAttack() override;
 
     /**
      * @brief End attack sequence and restore normal state
      */
-    void endAttack();
+    void endAttack() override;
 
     /**
      * @brief Handle sprite size changes during attack animations
