@@ -9,5 +9,5 @@
 #include "actors/bladeTrap.hpp"
 
 namespace lulu {
-    // libreria
+// libreria
 }

@@ -1,94 +1,86 @@
 #include "animationHandler.hpp"
 #include <cstring>
 
-using namespace lulu;
+namespace lulu
+{
 
-/**
- * @brief Default constructor - creates disabled animation handler
- */
 AnimationHandler::AnimationHandler()
-    : _currentDirection(D_STILL), _currentFrame(0), _currentState(S_STILL), _enabled(false)
+    : direction_(D_STILL), frame_(0), state_(S_STILL), enabled_(false)
 {
 }
 
-/**
- * @brief Constructor with initial state
- */
-AnimationHandler::AnimationHandler(bool enableAnimation, direction initialDirection, state initialState)
-    : _currentDirection(initialDirection), _currentFrame(0), _currentState(initialState), _enabled(enableAnimation)
+AnimationHandler::AnimationHandler(const bool enableAnimation, const direction initialDirection,
+                                   const state initialState)
+    : direction_(initialDirection), frame_(0), state_(initialState), enabled_(enableAnimation)
 {
     // Reset to default state if animation is disabled
     if (!enableAnimation)
     {
-        _currentState = S_STILL;
-        _currentDirection = D_STILL;
+        state_ = S_STILL;
+        direction_ = D_STILL;
     }
 }
 
-/**
- * @brief Read a 32-bit big-endian integer from file stream
- * Used for reading PNG header information
- */
+// === Getters ===
+direction AnimationHandler::currentDirection() const
+{
+    return direction_;
+}
+
+std::uint8_t AnimationHandler::currentFrame() const
+{
+    return frame_;
+}
+
+state AnimationHandler::currentState() const
+{
+    return state_;
+}
+
+// === Internal helpers ===
 std::uint32_t AnimationHandler::readBigEndian(std::ifstream &file)
 {
     uint8_t bytes[4];
     file.read(reinterpret_cast<char *>(bytes), 4);
- // Convert from big-endian to host byte order
-    return (static_cast<uint32_t>(bytes[0]) << 24) | (static_cast<uint32_t>(bytes[1]) << 16) |
-           (static_cast<uint32_t>(bytes[2]) << 8) | (static_cast<uint32_t>(bytes[3]));
+    // Convert from big-endian to host byte order
+    return static_cast<uint32_t>(bytes[0]) << 24 | static_cast<uint32_t>(bytes[1]) << 16 |
+           static_cast<uint32_t>(bytes[2]) << 8 | static_cast<uint32_t>(bytes[3]);
 }
 
-/**
- * @brief Enable the animation system
- */
-void AnimationHandler::enable()
+// === Animation control ===
+const std::vector<std::string> &AnimationHandler::currentAnimation() const
 {
-    _enabled = true;
+    return animationSet_.at(state_).at(direction_);
 }
 
-/**
- * @brief Add animation sequence for a state/direction combination
- */
-void AnimationHandler::addAnimation(state state, direction direction, const std::vector<std::string> &animation)
+void AnimationHandler::addAnimation(const state state, const direction direction,
+                                    const std::vector<std::string> &animation)
 {
-    _animationSet[state][direction] = animation;
+    animationSet_[state][direction] = animation;
 }
 
-/**
- * @brief Set current animation state and direction
- * Resets frame counter to start of new animation
- */
-void AnimationHandler::set(state newState, direction newDirection)
+void AnimationHandler::set(const state newState, const direction newDirection)
 {
-    _currentState = newState;
-    _currentDirection = newDirection;
-    _currentFrame = 0;
+    state_ = newState;
+    direction_ = newDirection;
+    frame_ = 0;
 }
 
-/**
- * @brief Get next sprite in current animation sequence
- * Automatically loops back to start when reaching end of sequence
- */
 std::string AnimationHandler::nextSprite()
 {
     // Validate animation data exists
-    if (_animationSet.empty() || _animationSet[_currentState].empty() ||
-        _animationSet[_currentState][_currentDirection].empty())
+    if (animationSet_.empty() || animationSet_[state_].empty() ||
+        animationSet_[state_][direction_].empty())
     {
         return "";
     }
 
     // Get current sprite and advance frame counter
-    std::string sprite = _animationSet[_currentState][_currentDirection][_currentFrame];
-    _currentFrame = (_currentFrame + 1) % _animationSet[_currentState][_currentDirection].size();
+    std::string sprite = animationSet_[state_][direction_][frame_];
+    frame_ = (frame_ + 1) % animationSet_[state_][direction_].size();
     return sprite;
 }
 
-/**
- * @brief Get dimensions of a PNG sprite file by reading header
- * @param filepath Path to PNG file
- * @return Optional pair with width/height, nullopt if file invalid or not PNG
- */
 std::optional<pair> AnimationHandler::getSpriteDimension(const std::string &filepath)
 {
     std::ifstream file(filepath, std::ios::binary);
@@ -107,14 +99,16 @@ std::optional<pair> AnimationHandler::getSpriteDimension(const std::string &file
     file.ignore(4); // Skip chunk length (4 bytes)
 
     // Read chunk type (should be "IHDR" for header)
-    char chunkType[5] = {0};
+    char chunkType[5] = {};
     file.read(chunkType, 4);
     if (std::string(chunkType) != "IHDR")
         return std::nullopt;
 
     // Read width and height from IHDR chunk
-    uint32_t width = readBigEndian(file);
-    uint32_t height = readBigEndian(file);
+    const uint32_t width = readBigEndian(file);
+    const uint32_t height = readBigEndian(file);
 
     return pair{static_cast<float>(width), static_cast<float>(height)};
 }
+
+} // namespace lulu

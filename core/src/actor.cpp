@@ -1,53 +1,57 @@
 #include "actor.hpp"
-#include "arena.hpp"
 
 #include <algorithm>
 #include <utility>
 
-using namespace lulu;
-
-/**
- * @brief Construct a new Actor
- * Initializes position, size, and optionally sets arena and sprite
- */
+#include "arena.hpp"
+namespace lulu
+{
 Actor::Actor(const pair position, const pair size, Arena *arena, std::string sprite)
-    : _pos(position), _size(size), _arena(nullptr), _sprite(std::move(sprite))
+    : pos_(position), size_(size), arena_(nullptr), sprite_(std::move(sprite))
 {
     setArena(arena);
 }
+// Getters for actor properties
+const pair &Actor::pos() const
+{
+    return pos_;
+}
+const pair &Actor::size() const
+{
+    return size_;
+}
+const Arena *Actor::arena() const
+{
+    return arena_;
+}
+const std::string &Actor::sprite() const
+{
+    return sprite_;
+}
 
-/**
- * @brief Set the arena this actor belongs to
- * Handles proper cleanup from old arena and registration with new one
- */
 void Actor::setArena(Arena *arena)
 {
     // Early return if arena is the same
-    if (_arena == arena)
+    if (arena_ == arena)
         return;
 
     // Clean up from old arena
-    if (_arena)
+    if (arena_)
     {
-        auto *old = std::exchange(_arena, nullptr);
+        auto *old = std::exchange(arena_, nullptr);
         old->kill(this);
     }
 
     // Set new arena
-    _arena = arena;
+    arena_ = arena;
 
     // Register with new arena
-    if (_arena)
+    if (arena_)
     {
-        _arena->spawn(this);
+        arena_->spawn(this);
     }
 }
 
-/**
- * @brief Check collision with another actor using AABB collision detection
- * @param other The other actor to check collision with
- * @return Type of collision based on penetration depth
- */
 collisionType Actor::checkCollision(const Actor *other) const
 {
     // Null check and arena validation
@@ -57,28 +61,28 @@ collisionType Actor::checkCollision(const Actor *other) const
     // Get other actor's bounds
     const auto &[ox, oy] = other->pos();
     const auto &[ow, oh] = other->size();
- // Calculate bounding box corners
-    const pair thisMax = _pos + _size;
+    // Calculate bounding box corners
+    const pair thisMax = pos_ + size_;
     const pair otherMax = {ox + ow, oy + oh};
 
     // AABB collision detection - check if boxes don't overlap
-    if (thisMax.x < ox || otherMax.x < _pos.x || thisMax.y < oy || otherMax.y < _pos.y)
+    if (thisMax.x < ox || otherMax.x < pos_.x || thisMax.y < oy || otherMax.y < pos_.y)
     {
         return C_NONE;
     }
 
     // Calculate penetration depths for each side
     const float leftDist = std::abs(thisMax.x - ox);        // Distance from our right to their left
-    const float rightDist = std::abs(otherMax.x - _pos.x);  // Distance from our left to their right
+    const float rightDist = std::abs(otherMax.x - pos_.x);  // Distance from our left to their right
     const float topDist = std::abs(thisMax.y - oy);         // Distance from our bottom to their top
-    const float bottomDist = std::abs(otherMax.y - _pos.y); // Distance from our top to their bottom
+    const float bottomDist = std::abs(otherMax.y - pos_.y); // Distance from our top to their bottom
 
     // Find minimum penetration distances
     const float minH = std::min(leftDist, rightDist); // Minimum horizontal penetration
     const float minV = std::min(topDist, bottomDist); // Minimum vertical penetration
 
     // Calculate centers to determine collision direction
-    const pair thisCenter = _pos + _size / 2.0f;
+    const pair thisCenter = pos_ + size_ / 2.0f;
     const pair otherCenter = other->pos() + other->size() / 2.0f;
 
     // Return collision type based on minimum penetration
@@ -90,13 +94,15 @@ collisionType Actor::checkCollision(const Actor *other) const
 
 void Actor::clampToArena()
 {
-    if (!_arena)
+    if (!arena_)
         return;
 
-    const auto roomPos = _arena->pos();
-    const auto roomSize = _arena->size();
+    const auto roomPos = arena_->pos();
+    const auto roomSize = arena_->size();
     const auto roomEnd = roomPos + roomSize;
 
-    _pos.x = std::clamp(_pos.x, roomPos.x, roomEnd.x - _size.x);
-    _pos.y = std::clamp(_pos.y, roomPos.y, roomEnd.y - _size.y);
+    pos_.x = std::clamp(pos_.x, roomPos.x, roomEnd.x - size_.x);
+    pos_.y = std::clamp(pos_.y, roomPos.y, roomEnd.y - size_.y);
 }
+
+} // namespace lulu

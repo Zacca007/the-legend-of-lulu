@@ -180,7 +180,7 @@ class Game final
         InitAudioDevice();
 
         // inizializzazione con una scena specifica
-        _scene = std::make_unique<Menu>("core/assets/menu.png", "core/assets/sound/music/menu.mp3",
+        _scene = std::make_unique<Menu>("assets/menu.png", "assets/sound/music/menu.mp3",
                                         std::vector<std::string>(), std::vector{lulu::K_SPACE}, this);
     }
 
@@ -203,8 +203,8 @@ class Game final
     {
         std::vector keys = {lulu::K_W,    lulu::K_A,     lulu::K_S,  lulu::K_D,    lulu::K_DOWN,
                             lulu::K_LEFT, lulu::K_RIGHT, lulu::K_UP, lulu::K_SPACE};
-        std::string hallPath = "core/assets/rooms/dungeon hall.png";
-        std::string musicPath = "core/assets/sound/music/room.mp3";
+        std::string hallPath = "assets/rooms/dungeon hall.png";
+        std::string musicPath = "assets/sound/music/room.mp3";
         _scene = std::make_unique<GameOn>(hallPath, musicPath, std::vector<std::string>(), keys, this);
     }
 };

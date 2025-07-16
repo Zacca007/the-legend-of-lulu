@@ -1,7 +1,6 @@
 #pragma once
 #include "animationHandler.hpp"
 #include "types.hpp"
-#include <vector>
 
 namespace lulu
 {
@@ -14,46 +13,27 @@ namespace lulu
 class Movable
 {
   protected:
-    pair _speed;                 // Movement speed (x, y components)
-    AnimationHandler _animation; // Animation handler for sprite management
+    // attributes
+    pair speed_;                 // Movement speed (x, y components)
+    AnimationHandler movement_; // Animation handler for sprite management
 
-    /**
-     * @brief Construct a new Movable
-     * @param speed Movement speed
-     * @param enableAnimation Whether to enable animation system
-     */
-    explicit Movable(const pair speed, const bool enableAnimation = false) : _speed(speed)
-    {
-        if (enableAnimation)
-            _animation.enable();
-    }
+    // constructors
+    explicit Movable(pair speed, bool enableAnimation = false);
 
-    /**
-     * @brief Calculate movement vector for given direction and speed
-     * @param dir Direction to move
-     * @param speedMultiplier Speed multiplier (defaults to 1.0f)
-     * @return Movement vector (delta position)
-     */
-    [[nodiscard]] pair calculateMovement(direction dir, float speedMultiplier = 1.0f) const;
+    // internal movement methods
+    virtual void setupAnimation() = 0;
+    [[nodiscard]] virtual state updatedState() const = 0;
+    [[nodiscard]] virtual direction updatedDirection() const = 0;
+    [[nodiscard]] virtual pair calculateMovement(direction dir) const = 0;
 
   public:
     virtual ~Movable() = default;
 
-    [[nodiscard]] const pair &speed() const
-    {
-        return _speed;
-    }
+    // getter
+    [[nodiscard]] const pair &speed() const;
 
-    /**
-     * @brief Update actor position and state
-     * Pure virtual function that must be implemented by derived classes
-     */
+    // movement methods (used in arena)
     virtual void move() = 0;
-
-    /**
-     * @brief Handle collision responses
-     * @param collisions Vector of collisions to handle
-     */
     virtual void handleCollisions(const std::vector<collision> &collisions) = 0;
 };
-}
+} // namespace lulu
