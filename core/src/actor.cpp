@@ -1,25 +1,34 @@
 #include "actor.hpp"
-#include "arena.hpp"
 
 #include <algorithm>
 #include <utility>
 
-using namespace lulu;
-
-/**
- * @brief Construct a new Actor
- * Initializes position, size, and optionally sets arena and sprite
- */
+#include "arena.hpp"
+namespace lulu
+{
 Actor::Actor(const pair position, const pair size, Arena *arena, std::string sprite)
     : _pos(position), _size(size), _arena(nullptr), _sprite(std::move(sprite))
 {
     setArena(arena);
 }
+// Getters for actor properties
+const pair &Actor::pos() const
+{
+    return _pos;
+}
+const pair &Actor::size() const
+{
+    return _size;
+}
+const Arena *Actor::arena() const
+{
+    return _arena;
+}
+const std::string &Actor::sprite() const
+{
+    return _sprite;
+}
 
-/**
- * @brief Set the arena this actor belongs to
- * Handles proper cleanup from old arena and registration with new one
- */
 void Actor::setArena(Arena *arena)
 {
     // Early return if arena is the same
@@ -43,11 +52,6 @@ void Actor::setArena(Arena *arena)
     }
 }
 
-/**
- * @brief Check collision with another actor using AABB collision detection
- * @param other The other actor to check collision with
- * @return Type of collision based on penetration depth
- */
 collisionType Actor::checkCollision(const Actor *other) const
 {
     // Null check and arena validation
@@ -57,7 +61,7 @@ collisionType Actor::checkCollision(const Actor *other) const
     // Get other actor's bounds
     const auto &[ox, oy] = other->pos();
     const auto &[ow, oh] = other->size();
- // Calculate bounding box corners
+    // Calculate bounding box corners
     const pair thisMax = _pos + _size;
     const pair otherMax = {ox + ow, oy + oh};
 
@@ -100,3 +104,5 @@ void Actor::clampToArena()
     _pos.x = std::clamp(_pos.x, roomPos.x, roomEnd.x - _size.x);
     _pos.y = std::clamp(_pos.y, roomPos.y, roomEnd.y - _size.y);
 }
+
+} // namespace lulu

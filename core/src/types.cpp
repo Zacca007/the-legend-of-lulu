@@ -1,9 +1,8 @@
 #include "types.hpp"
+
 #include <cmath>
-
-using lulu::pair;
-
-// Arithmetic operations with another pair
+namespace lulu
+{
 pair pair::operator+(const pair &other) const
 {
     return {x + other.x, y + other.y};
@@ -58,10 +57,6 @@ pair &pair::operator-=(const pair &other)
     return *this;
 }
 
-/**
- * @brief Calculate diagonal components for equal x and y values
- * Used for diagonal movement to maintain consistent speed
- */
 std::optional<pair> pair::diagonal() const
 {
     if (x == y)
@@ -72,3 +67,4 @@ std::optional<pair> pair::diagonal() const
     }
     return std::nullopt;
 }
+} // namespace lulu

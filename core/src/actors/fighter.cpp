@@ -1,93 +1,35 @@
 #include "actors/fighter.hpp"
-#include "arena.hpp"
-#include <algorithm>
+namespace lulu
+{
+Fighter::Fighter(const pair position, const pair size, const pair speed, const float hp, const float damage,
+                 Arena *arena, const std::string &sprite)
+    : Actor(position, size, arena, sprite), Movable(speed, true), _hp(hp), _damage(damage)
+{
+}
 
-using namespace lulu;
-
-/**
- * @brief Reduce health points by damage amount
- */
 void Fighter::takeDamage(const float damage)
 {
     _hp -= damage;
 }
 
-/**
- * @brief Attack another fighter, dealing damage
- */
 void Fighter::attack(Fighter &fighter) const
 {
     fighter.takeDamage(_damage);
 }
 
-/**
- * @brief Check if fighter is still alive
- */
 bool Fighter::isAlive() const
 {
     return _hp > 0;
 }
 
-/**
- * @brief Get all colliding fighters from current collision map
- */
-std::vector<Fighter *> Fighter::getCollidingFighters() const
+float Fighter::hp() const
 {
-    std::vector<Fighter *> collidingFighters;
-
-    if (!_arena)
-        return collidingFighters;
-
-    const auto &collisionMap = _arena->collisions();
-    auto it = collisionMap.find(std::map<Actor *, std::vector<collision>>::key_type(this));
-
-    if (it != collisionMap.end())
-    {
-        for (const auto &[target, type] : it->second)
-        {
-            if (auto *fighter = dynamic_cast<Fighter *>(target))
-            {
-                collidingFighters.push_back(fighter);
-            }
-        }
-    }
-
-    return collidingFighters;
+    return _hp;
 }
 
-/**
- * @brief Check if actor is colliding with any static objects
- */
-bool Fighter::isCollidingWithStatic() const
+float Fighter::damage() const
 {
-    if (!_arena)
-        return false;
-
-    const auto &collisionMap = _arena->collisions();
-    auto it = collisionMap.find(std::map<Actor *, std::vector<collision>>::key_type(this));
-
-    if (it != collisionMap.end())
-    {
-        for (const auto &[target, type] : it->second)
-        {
-            // Check if target is not a Movable (i.e., static)
-            if (!dynamic_cast<Movable *>(target))
-            {
-                return true;
-            }
-        }
-    }
-
-    return false;
+    return _damage;
 }
 
-/**
- * @brief Deal damage to all colliding fighters
- */
-void Fighter::damageCollidingFighters() const
-{
-    for (const auto collidingFighters = getCollidingFighters(); auto *fighter : collidingFighters)
-    {
-        attack(*fighter);
-    }
-}
+} // namespace lulu

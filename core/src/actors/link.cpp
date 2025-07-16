@@ -1,44 +1,45 @@
 #include "actors/link.hpp"
 #include "arena.hpp"
-#include <ranges>
+#include <cmath>
 
 using namespace lulu;
 
 // Constructor: Initialize Link with position, size, speed, health, damage, and arena reference
 Link::Link(const pair position, const pair size, float speed, float hp, float damage, Arena *arena)
-    : Fighter(position, size, {speed, speed}, hp, damage, arena), _attackFrame(0), _animationSwitch(0)
+    : Fighter(position, size, {speed, speed}, hp, damage, arena), _attackFrame(0), _previousFrame(0),
+      _animationSwitch(0)
 {
-    setupAnimations();
+    setupAnimation();
     _animation.set(S_STILL, D_DOWN); // Start facing down in still state
     _sprite = _animation.nextSprite();
 }
 
 // Setup all animation sequences for Link's different states and directions
-void Link::setupAnimations()
+void Link::setupAnimation()
 {
     // Movement animation sprites for each direction
-    const std::vector<std::string> up = {"core/assets/link/movement/link up 1.png",
-                                         "core/assets/link/movement/link up 2.png"};
-    const std::vector<std::string> down = {"core/assets/link/movement/link front 1.png",
-                                           "core/assets/link/movement/link front 2.png"};
-    const std::vector<std::string> left = {"core/assets/link/movement/link left 1.png",
-                                           "core/assets/link/movement/link left 2.png"};
-    const std::vector<std::string> right = {"core/assets/link/movement/link right 1.png",
-                                            "core/assets/link/movement/link right 2.png"};
+    const std::vector<std::string> up = {"assets/link/movement/link up 1.png",
+                                         "assets/link/movement/link up 2.png"};
+    const std::vector<std::string> down = {"assets/link/movement/link front 1.png",
+                                           "assets/link/movement/link front 2.png"};
+    const std::vector<std::string> left = {"assets/link/movement/link left 1.png",
+                                           "assets/link/movement/link left 2.png"};
+    const std::vector<std::string> right = {"assets/link/movement/link right 1.png",
+                                            "assets/link/movement/link right 2.png"};
 
     // Attack animation sprites for all directions
     const std::vector<std::string> attackUp = {
-        "core/assets/link/attack/link attack up 1.png", "core/assets/link/attack/link attack up 2.png",
-        "core/assets/link/attack/link attack up 3.png", "core/assets/link/attack/link attack up 4.png"};
+        "assets/link/attack/link attack up 1.png", "assets/link/attack/link attack up 2.png",
+        "assets/link/attack/link attack up 3.png", "assets/link/attack/link attack up 4.png"};
     const std::vector<std::string> attackDown = {
-        "core/assets/link/attack/link attack down 1.png", "core/assets/link/attack/link attack down 2.png",
-        "core/assets/link/attack/link attack down 3.png", "core/assets/link/attack/link attack down 4.png"};
+        "assets/link/attack/link attack down 1.png", "assets/link/attack/link attack down 2.png",
+        "assets/link/attack/link attack down 3.png", "assets/link/attack/link attack down 4.png"};
     const std::vector<std::string> attackLeft = {
-        "core/assets/link/attack/link attack left 1.png", "core/assets/link/attack/link attack left 2.png",
-        "core/assets/link/attack/link attack left 3.png", "core/assets/link/attack/link attack left 4.png"};
+        "assets/link/attack/link attack left 1.png", "assets/link/attack/link attack left 2.png",
+        "assets/link/attack/link attack left 3.png", "assets/link/attack/link attack left 4.png"};
     const std::vector<std::string> attackRight = {
-        "core/assets/link/attack/link attack right 1.png", "core/assets/link/attack/link attack right 2.png",
-        "core/assets/link/attack/link attack right 3.png", "core/assets/link/attack/link attack right 4.png"};
+        "assets/link/attack/link attack right 1.png", "assets/link/attack/link attack right 2.png",
+        "assets/link/attack/link attack right 3.png", "assets/link/attack/link attack right 4.png"};
 
     // Register movement animations for all 8 directions
     _animation.addAnimation(S_MOVEMENT, D_UP, up);
@@ -71,34 +72,27 @@ void Link::setupAnimations()
     _animation.addAnimation(S_ATTACK, D_RIGHT, attackRight);
 }
 
-// INPUT HANDLING METHODS - specific to Link as player-controlled character
-
-/**
- * @brief Check if input keys contain a specific key
- */
-bool Link::hasKey(const std::vector<Key> &keys, Key key)
+// Determine Link's current state based on input and attack status
+state Link::updatedState() const
 {
-    return std::ranges::find(keys, key) != keys.end();
+    // If currently in attack animation, maintain attack state
+    if (_attackFrame > 0)
+        return S_ATTACK;
+
+    // Check if attack key was just pressed
+    if (_arena && _arena->isKeyJustPressed(K_SPACE))
+        return S_ATTACK;
+
+    // Check if movement keys are pressed
+    if (updatedDirection() != D_STILL)
+        return S_MOVEMENT;
+
+    // Default to still state
+    return S_STILL;
 }
 
-/**
- * @brief Check if a key was just pressed (not held from previous frame)
- */
-bool Link::isKeyJustPressed(Key key) const
-{
-    if (!_arena)
-        return false;
-
-    const auto &currKeys = _arena->currKeys();
-    const auto &prevKeys = _arena->prevKeys();
-
-    return hasKey(currKeys, key) && !hasKey(prevKeys, key);
-}
-
-/**
- * @brief Get current directional input from arena
- */
-direction Link::getCurrentDirection() const
+// Get current directional input from arena
+direction Link::updatedDirection() const
 {
     if (!_arena)
         return D_STILL;
@@ -158,30 +152,57 @@ direction Link::getCurrentDirection() const
     return D_STILL;
 }
 
-// Determine Link's current state based on input and attack status
-state Link::updateState() const
+// Calculate movement vector based on direction and speed
+pair Link::calculateMovement(direction dir) const
 {
-    // If currently attacking, maintain attack state
-    if (_isAttacking)
-        return S_ATTACK;
+    pair movement;
 
-    // Check if attack key was just pressed
-    if (isKeyJustPressed(K_SPACE))
-        return S_ATTACK;
+    switch (dir)
+    {
+    case D_UP:
+        movement = {0, -_speed.y};
+        break;
+    case D_DOWN:
+        movement = {0, _speed.y};
+        break;
+    case D_LEFT:
+        movement = {-_speed.x, 0};
+        break;
+    case D_RIGHT:
+        movement = {_speed.x, 0};
+        break;
+    case D_UPLEFT:
+        movement = {-_speed.x, -_speed.y};
+        break;
+    case D_UPRIGHT:
+        movement = {_speed.x, -_speed.y};
+        break;
+    case D_DOWNLEFT:
+        movement = {-_speed.x, _speed.y};
+        break;
+    case D_DOWNRIGHT:
+        movement = {_speed.x, _speed.y};
+        break;
+    case D_STILL:
+    default:
+        movement = {0, 0};
+        break;
+    }
 
-    // Check if movement keys are pressed
-    if (getCurrentDirection() != D_STILL)
-        return S_MOVEMENT;
+    // Normalize diagonal movement to prevent faster diagonal movement
+    if (dir == D_UPLEFT || dir == D_UPRIGHT || dir == D_DOWNLEFT || dir == D_DOWNRIGHT)
+    {
+        const float diagonalFactor = 1.0f / std::sqrt(2.0f);
+        movement = movement * diagonalFactor;
+    }
 
-    // Default to still state
-    return S_STILL;
+    return movement;
 }
 
 // Initialize attack sequence
 void Link::setupAttack()
 {
-    _isAttacking = true;
-    _attackFrame = 0;
+    _attackFrame = 1; // Start attack sequence
     _previousFrame = _animation.currentFrame();
     _animation.set(S_ATTACK, _animation.currentDirection());
 }
@@ -192,25 +213,43 @@ void Link::performAttack()
     // Deal damage on frame 2 of attack animation (mid-swing)
     if (_attackFrame == 2)
     {
-        damageCollidingFighters();
+        // Find colliding fighters and damage them
+        if (_arena)
+        {
+            const auto &collisions = _arena->collisions();
+            auto it = collisions.find(this);
+            if (it != collisions.end())
+            {
+                for (const auto &collision : it->second)
+                {
+                    if (auto *fighter = dynamic_cast<Fighter *>(collision.target))
+                    {
+                        fighter->takeDamage(_damage);
+                    }
+                }
+            }
+        }
     }
 
     // Advance to next sprite frame
     _sprite = _animation.nextSprite();
 
     // Adjust position based on sprite size changes during attack animation
-    const pair spriteSize = AnimationHandler::getSpriteDimension(_sprite).value();
-    const pair sizeDiff = spriteSize - _size;
-    adjustPositionForAttack(sizeDiff);
+    const auto spriteDimension = AnimationHandler::getSpriteDimension(_sprite);
+    if (spriteDimension.has_value())
+    {
+        const pair spriteSize = spriteDimension.value();
+        const pair sizeDiff = spriteSize - _size;
+        adjustPositionForAttack(sizeDiff);
+        _size = spriteSize;
+    }
 
-    _size = spriteSize;
     ++_attackFrame;
 }
 
 // Clean up after attack animation completes
 void Link::endAttack()
 {
-    _isAttacking = false;
     _attackFrame = 0;
 
     // Return to movement animation state
@@ -223,11 +262,14 @@ void Link::endAttack()
     _sprite = _animation.nextSprite();
 
     // Readjust position and size back to normal movement sprites
-    const pair spriteSize = AnimationHandler::getSpriteDimension(_sprite).value();
-    const pair sizeDiff = spriteSize - _size;
-    adjustPositionForAttack(sizeDiff);
-
-    _size = spriteSize;
+    const auto spriteDimension = AnimationHandler::getSpriteDimension(_sprite);
+    if (spriteDimension.has_value())
+    {
+        const pair spriteSize = spriteDimension.value();
+        const pair sizeDiff = spriteSize - _size;
+        adjustPositionForAttack(sizeDiff);
+        _size = spriteSize;
+    }
 }
 
 // Handle sprite size changes during attack animations
@@ -251,15 +293,16 @@ void Link::adjustPositionForAttack(const pair &sizeDiff)
 // Main movement and animation update function
 void Link::move()
 {
-    if (const state newState = updateState(); newState == S_STILL)
+    const state newState = updatedState();
+    const direction newDirection = updatedDirection();
+
+    if (newState == S_STILL)
     {
         if (_animation.currentState() != S_STILL)
             _animation.set(S_STILL, _animation.currentDirection());
     }
     else if (newState == S_MOVEMENT)
     {
-        const direction newDirection = getCurrentDirection();
-
         if (newDirection != D_STILL)
         {
             _pos += calculateMovement(newDirection);
@@ -279,13 +322,13 @@ void Link::move()
     else if (newState == S_ATTACK)
     {
         // Initialize attack if just starting
-        if (!_attackFrame)
+        if (_attackFrame == 0)
             setupAttack();
 
         performAttack();
 
         // End attack when animation sequence is complete
-        if (_attackFrame == _animation.currentAnimation().size())
+        if (_attackFrame > _animation.currentAnimation().size())
         {
             endAttack();
             _animationSwitch = 0;
@@ -297,7 +340,7 @@ void Link::move()
 void Link::handleCollisions(const std::vector<collision> &collisions)
 {
     // Don't handle collisions during attack to prevent interrupting attack animation
-    if (_isAttacking)
+    if (_attackFrame > 0)
         return;
 
     // Process each collision

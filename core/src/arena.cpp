@@ -1,16 +1,42 @@
 #include "arena.hpp"
 #include "actor.hpp"
 #include "movable.hpp"
-#include <algorithm>
 #include <ranges>
 #include <utility>
 
-using namespace lulu;
+namespace lulu
+{
+// constructors
+Arena::Arena(pair position, pair size) : _pos(position), _size(size)
+{
+}
 
-/**
- * @brief Add an actor to the arena
- * Handles actor registration and collision map initialization
- */
+// getters
+[[nodiscard]] const pair &Arena::pos() const
+{
+    return _pos;
+}
+[[nodiscard]] const pair &Arena::size() const
+{
+    return _size;
+}
+[[nodiscard]] const std::vector<Key> &Arena::currKeys() const
+{
+    return _currKeys;
+}
+[[nodiscard]] const std::vector<Key> &Arena::prevKeys() const
+{
+    return _prevKeys;
+}
+[[nodiscard]] const std::vector<Actor *> &Arena::actors() const
+{
+    return _actors;
+}
+[[nodiscard]] const std::map<Actor *, std::vector<collision>> &Arena::collisions() const
+{
+    return _collisions;
+}
+
 void Arena::spawn(Actor *actor)
 {
     if (!actor)
@@ -28,10 +54,6 @@ void Arena::spawn(Actor *actor)
     _collisions[actor] = {};
 }
 
-/**
- * @brief Remove an actor from the arena
- * Handles cleanup of actor references and collision data
- */
 void Arena::kill(Actor *actor)
 {
     if (!actor)
@@ -43,10 +65,6 @@ void Arena::kill(Actor *actor)
     actor->setArena(nullptr);
 }
 
-/**
- * @brief Update arena state for one game tick
- * Processes input, updates movable actors, and handles collisions
- */
 void Arena::tick(const std::vector<Key> &keys)
 {
     // Store previous keys and update current keys
@@ -64,10 +82,6 @@ void Arena::tick(const std::vector<Key> &keys)
     }
 }
 
-/**
- * @brief Detect collisions for a specific actor
- * More efficient than checking all actors - only called for movable actors
- */
 void Arena::detectCollisionsFor(Actor *actor)
 {
     auto &collisions = _collisions[actor];
@@ -87,10 +101,6 @@ void Arena::detectCollisionsFor(Actor *actor)
     }
 }
 
-/**
- * @brief Detect collisions for all actors
- * Currently unused - detectCollisionsFor is more efficient for movable actors only
- */
 void Arena::detectCollisions()
 {
     for (const auto &actor : _collisions | std::views::keys)
@@ -98,3 +108,18 @@ void Arena::detectCollisions()
         detectCollisionsFor(actor);
     }
 }
+
+bool Arena::hasKey(const std::vector<Key> &keys, Key key)
+{
+    return std::ranges::find(keys, key) != keys.end();
+}
+
+bool Arena::isKeyJustPressed(Key key) const
+{
+
+    const auto &currKeys = _currKeys;
+    const auto &prevKeys = _prevKeys;
+
+    return hasKey(currKeys, key) && !hasKey(prevKeys, key);
+}
+} // namespace lulu

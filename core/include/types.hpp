@@ -30,7 +30,7 @@ struct pair
 
     /**
      * @brief Calculate diagonal components for movement (when x == y)
-     * @return Optional pair with diagonal values, nullopt if x != y
+     * @return Optional pair with diagonal values, nullptr if x != y
      */
     [[nodiscard]] std::optional<pair> diagonal() const;
 };
