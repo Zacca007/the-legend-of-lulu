@@ -10,9 +10,10 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# === FIND RAYLIB ===
+# === FIND LIBRARIES ===
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(RAYLIB REQUIRED raylib)
+pkg_check_modules(NLOHMANN_JSON REQUIRED nlohmann_json)
 
 # === SOURCES ===
 file(GLOB_RECURSE SRC_FILES ${CMAKE_SOURCE_DIR}/core/src/*.cpp)
@@ -31,11 +32,14 @@ target_include_directories(${PROJECT_NAME}
         PRIVATE
         ${CMAKE_SOURCE_DIR}/core/include
         ${RAYLIB_INCLUDE_DIRS}
+        ${NLOHMANN_JSON_INCLUDE_DIRS}
 )
 
 # === LINK LIBRARIES ===
 target_link_libraries(${PROJECT_NAME}
-        PRIVATE ${RAYLIB_LIBRARIES}
+        PRIVATE
+        ${RAYLIB_LIBRARIES}
+        ${NLOHMANN_JSON_LIBRARIES}
 )
 
 # === COMPILER FLAGS ===
@@ -44,6 +48,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
         -Wextra
         -pedantic
         ${RAYLIB_CFLAGS_OTHER}
+        ${NLOHMANN_JSON_CFLAGS_OTHER}
 )
 
 # Ottimizzazioni per tipo di build
@@ -61,3 +66,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "Found nlohmann_json: ${NLOHMANN_JSON_FOUND}")
+message(STATUS "nlohmann_json include dirs: ${NLOHMANN_JSON_INCLUDE_DIRS}")
+message(STATUS "nlohmann_json libraries: ${NLOHMANN_JSON_LIBRARIES}")

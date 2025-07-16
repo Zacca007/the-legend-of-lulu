@@ -12,18 +12,18 @@ class AnimationHandler
 {
   private:
     // Attributes
-    direction _currentDirection; // Current facing direction
-    std::uint8_t _currentFrame;  // Current frame in animation sequence
-    state _currentState;         // Current animation state
+    direction direction_; // Current facing direction
+    std::uint8_t frame_;  // Current frame in animation sequence
+    state state_;         // Current animation state
     std::map<state, std::map<direction, std::vector<std::string>>>
-        _animationSet; // Animation storage: state -> direction -> sprite sequence
+        animationSet_; // Animation storage: state -> direction -> sprite sequence
 
     // Internal helpers
     static std::uint32_t readBigEndian(std::ifstream &file);
 
   public:
     // attributes
-    bool _enabled;
+    bool enabled_;
 
     // Constructors
     AnimationHandler();

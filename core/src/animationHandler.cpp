@@ -5,36 +5,36 @@ namespace lulu
 {
 
 AnimationHandler::AnimationHandler()
-    : _currentDirection(D_STILL), _currentFrame(0), _currentState(S_STILL), _enabled(false)
+    : direction_(D_STILL), frame_(0), state_(S_STILL), enabled_(false)
 {
 }
 
 AnimationHandler::AnimationHandler(const bool enableAnimation, const direction initialDirection,
                                    const state initialState)
-    : _currentDirection(initialDirection), _currentFrame(0), _currentState(initialState), _enabled(enableAnimation)
+    : direction_(initialDirection), frame_(0), state_(initialState), enabled_(enableAnimation)
 {
     // Reset to default state if animation is disabled
     if (!enableAnimation)
     {
-        _currentState = S_STILL;
-        _currentDirection = D_STILL;
+        state_ = S_STILL;
+        direction_ = D_STILL;
     }
 }
 
 // === Getters ===
 direction AnimationHandler::currentDirection() const
 {
-    return _currentDirection;
+    return direction_;
 }
 
 std::uint8_t AnimationHandler::currentFrame() const
 {
-    return _currentFrame;
+    return frame_;
 }
 
 state AnimationHandler::currentState() const
 {
-    return _currentState;
+    return state_;
 }
 
 // === Internal helpers ===
@@ -50,34 +50,34 @@ std::uint32_t AnimationHandler::readBigEndian(std::ifstream &file)
 // === Animation control ===
 const std::vector<std::string> &AnimationHandler::currentAnimation() const
 {
-    return _animationSet.at(_currentState).at(_currentDirection);
+    return animationSet_.at(state_).at(direction_);
 }
 
 void AnimationHandler::addAnimation(const state state, const direction direction,
                                     const std::vector<std::string> &animation)
 {
-    _animationSet[state][direction] = animation;
+    animationSet_[state][direction] = animation;
 }
 
 void AnimationHandler::set(const state newState, const direction newDirection)
 {
-    _currentState = newState;
-    _currentDirection = newDirection;
-    _currentFrame = 0;
+    state_ = newState;
+    direction_ = newDirection;
+    frame_ = 0;
 }
 
 std::string AnimationHandler::nextSprite()
 {
     // Validate animation data exists
-    if (_animationSet.empty() || _animationSet[_currentState].empty() ||
-        _animationSet[_currentState][_currentDirection].empty())
+    if (animationSet_.empty() || animationSet_[state_].empty() ||
+        animationSet_[state_][direction_].empty())
     {
         return "";
     }
 
     // Get current sprite and advance frame counter
-    std::string sprite = _animationSet[_currentState][_currentDirection][_currentFrame];
-    _currentFrame = (_currentFrame + 1) % _animationSet[_currentState][_currentDirection].size();
+    std::string sprite = animationSet_[state_][direction_][frame_];
+    frame_ = (frame_ + 1) % animationSet_[state_][direction_].size();
     return sprite;
 }
 

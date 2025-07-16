@@ -2,14 +2,14 @@
 
 namespace lulu
 {
-Movable::Movable(const pair speed, bool enableAnimation) : _speed(speed)
+Movable::Movable(const pair speed, bool enableAnimation) : speed_(speed)
 {
     if (enableAnimation)
-        _animation._enabled = true;
+        movement_.enabled_ = true;
 }
 
 const pair &Movable::speed() const
 {
-    return _speed;
+    return speed_;
 }
 } // namespace lulu

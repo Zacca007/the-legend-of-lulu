@@ -1,0 +1,179 @@
+{
+  "room": {
+    "name": "Dungeon Hall",
+    "background": "assets/rooms/dungeon hall.png",
+    "music": "assets/sound/music/room.mp3",
+    "sounds": [],
+    "arena": {
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "size": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    "player": {
+      "spawn_position": {
+        "x": 400,
+        "y": 275
+      },
+      "size": {
+        "x": 50,
+        "y": 50
+      },
+      "speed": 6,
+      "hp": 12,
+      "damage": 1
+    },
+    "static_actors": [
+      {
+        "type": "wall",
+        "position": {
+          "x": 150,
+          "y": 150
+        },
+        "size": {
+          "x": 50,
+          "y": 50
+        },
+        "sprite": ""
+      },
+      {
+        "type": "wall",
+        "position": {
+          "x": 150,
+          "y": 250
+        },
+        "size": {
+          "x": 50,
+          "y": 50
+        },
+        "sprite": ""
+      },
+      {
+        "type": "wall",
+        "position": {
+          "x": 150,
+          "y": 350
+        },
+        "size": {
+          "x": 50,
+          "y": 50
+        },
+        "sprite": ""
+      },
+      {
+        "type": "wall",
+        "position": {
+          "x": 300,
+          "y": 150
+        },
+        "size": {
+          "x": 50,
+          "y": 50
+        },
+        "sprite": ""
+      },
+      {
+        "type": "wall",
+        "position": {
+          "x": 300,
+          "y": 250
+        },
+        "size": {
+          "x": 50,
+          "y": 50
+        },
+        "sprite": ""
+      },
+      {
+        "type": "wall",
+        "position": {
+          "x": 300,
+          "y": 350
+        },
+        "size": {
+          "x": 50,
+          "y": 50
+        },
+        "sprite": ""
+      },
+      {
+        "type": "wall",
+        "position": {
+          "x": 450,
+          "y": 150
+        },
+        "size": {
+          "x": 50,
+          "y": 50
+        },
+        "sprite": ""
+      },
+      {
+        "type": "wall",
+        "position": {
+          "x": 450,
+          "y": 250
+        },
+        "size": {
+          "x": 50,
+          "y": 50
+        },
+        "sprite": ""
+      },
+      {
+        "type": "wall",
+        "position": {
+          "x": 450,
+          "y": 350
+        },
+        "size": {
+          "x": 50,
+          "y": 50
+        },
+        "sprite": ""
+      },
+      {
+        "type": "wall",
+        "position": {
+          "x": 600,
+          "y": 150
+        },
+        "size": {
+          "x": 50,
+          "y": 50
+        },
+        "sprite": ""
+      },
+      {
+        "type": "wall",
+        "position": {
+          "x": 600,
+          "y": 250
+        },
+        "size": {
+          "x": 50,
+          "y": 50
+        },
+        "sprite": ""
+      },
+      {
+        "type": "wall",
+        "position": {
+          "x": 600,
+          "y": 350
+        },
+        "size": {
+          "x": 50,
+          "y": 50
+        },
+        "sprite": ""
+      }
+    ],
+    "enemies": [
+    ]
+  }
+}

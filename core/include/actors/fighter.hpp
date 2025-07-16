@@ -8,8 +8,8 @@ namespace lulu
 class Fighter : public Actor, public Movable
 {
   protected:
-    float _hp;     // Current health points
-    float _damage; // Damage dealt per attack
+    float hp_;     // Current health points
+    float damage_; // Damage dealt per attack
 
     virtual void setupAttack() = 0;
     virtual void performAttack() = 0;

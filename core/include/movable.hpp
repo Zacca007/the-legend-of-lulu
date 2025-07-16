@@ -14,8 +14,8 @@ class Movable
 {
   protected:
     // attributes
-    pair _speed;                 // Movement speed (x, y components)
-    AnimationHandler _animation; // Animation handler for sprite management
+    pair speed_;                 // Movement speed (x, y components)
+    AnimationHandler movement_; // Animation handler for sprite management
 
     // constructors
     explicit Movable(pair speed, bool enableAnimation = false);

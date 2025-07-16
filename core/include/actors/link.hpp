@@ -10,9 +10,9 @@ namespace lulu
  */
 class Link final : public Fighter
 {
-    std::uint8_t _attackFrame;     // Current frame of attack animation
-    std::uint8_t _previousFrame; // Previous animation frame (for restoration)
-    long long int _animationSwitch;
+    std::uint8_t attackFrame_;     // Current frame of attack animation
+    std::uint8_t previousFrame_; // Previous animation frame (for restoration)
+    long long int animationSwitch_;
 
     void setupAnimation() override;
     state updatedState() const override;

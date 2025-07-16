@@ -12,12 +12,12 @@ class Arena
 {
   private:
     // attributes
-    pair _pos;                                             // Arena position
-    pair _size;                                            // Arena size
-    std::vector<Key> _currKeys;                            // Current frame input
-    std::vector<Key> _prevKeys;                            // Previous frame input
-    std::vector<Actor *> _actors;                          // All actors in the arena
-    std::map<Actor *, std::vector<collision>> _collisions; // Collision data per actor
+    pair pos_;                                             // Arena position
+    pair size_;                                            // Arena size
+    std::vector<Key> currKeys_;                            // Current frame input
+    std::vector<Key> prevKeys_;                            // Previous frame input
+    std::vector<Actor *> actors_;                          // All actors in the arena
+    std::map<Actor *, std::vector<collision>> collisions_; // Collision data per actor
 
     // internal methods for collisions
     void detectCollisionsFor(Actor *actor);

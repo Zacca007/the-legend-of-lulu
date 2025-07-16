@@ -8,10 +8,10 @@ class Arena;
 class Actor
 {
   protected:
-    pair _pos;           // Position in world coordinates
-    pair _size;          // Size (width, height) of the actor
-    Arena *_arena;       // Pointer to the arena this actor belongs to
-    std::string _sprite; // Path to the sprite image file
+    pair pos_;           // Position in world coordinates
+    pair size_;          // Size (width, height) of the actor
+    Arena *arena_;       // Pointer to the arena this actor belongs to
+    std::string sprite_; // Path to the sprite image file
 
     void clampToArena();
 
