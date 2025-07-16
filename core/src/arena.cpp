@@ -7,34 +7,34 @@
 namespace lulu
 {
 // constructors
-Arena::Arena(pair position, pair size) : _pos(position), _size(size)
+Arena::Arena(pair position, pair size) : pos_(position), size_(size)
 {
 }
 
 // getters
 [[nodiscard]] const pair &Arena::pos() const
 {
-    return _pos;
+    return pos_;
 }
 [[nodiscard]] const pair &Arena::size() const
 {
-    return _size;
+    return size_;
 }
 [[nodiscard]] const std::vector<Key> &Arena::currKeys() const
 {
-    return _currKeys;
+    return currKeys_;
 }
 [[nodiscard]] const std::vector<Key> &Arena::prevKeys() const
 {
-    return _prevKeys;
+    return prevKeys_;
 }
 [[nodiscard]] const std::vector<Actor *> &Arena::actors() const
 {
-    return _actors;
+    return actors_;
 }
 [[nodiscard]] const std::map<Actor *, std::vector<collision>> &Arena::collisions() const
 {
-    return _collisions;
+    return collisions_;
 }
 
 void Arena::spawn(Actor *actor)
@@ -46,12 +46,12 @@ void Arena::spawn(Actor *actor)
     actor->setArena(this);
 
     // Prevent duplicate additions
-    if (std::ranges::find(_actors, actor) != _actors.end())
+    if (std::ranges::find(actors_, actor) != actors_.end())
         return;
 
     // Add to actor list and initialize collision map
-    _actors.emplace_back(actor);
-    _collisions[actor] = {};
+    actors_.emplace_back(actor);
+    collisions_[actor] = {};
 }
 
 void Arena::kill(Actor *actor)
@@ -60,35 +60,35 @@ void Arena::kill(Actor *actor)
         return;
 
     // Clean up collision data and remove from actor list
-    _collisions.erase(actor);
-    std::erase(_actors, actor);
+    collisions_.erase(actor);
+    std::erase(actors_, actor);
     actor->setArena(nullptr);
 }
 
 void Arena::tick(const std::vector<Key> &keys)
 {
     // Store previous keys and update current keys
-    _prevKeys = std::exchange(_currKeys, keys);
+    prevKeys_ = std::exchange(currKeys_, keys);
 
     // Process all actors - only movable actors get updated
-    for (auto *actor : _actors)
+    for (auto *actor : actors_)
     {
         if (auto *movable = dynamic_cast<Movable *>(actor))
         {
             movable->move();                               // Update position and animation
             detectCollisionsFor(actor);                    // Check collisions for this actor
-            movable->handleCollisions(_collisions[actor]); // Handle collision responses
+            movable->handleCollisions(collisions_[actor]); // Handle collision responses
         }
     }
 }
 
 void Arena::detectCollisionsFor(Actor *actor)
 {
-    auto &collisions = _collisions[actor];
+    auto &collisions = collisions_[actor];
     collisions.clear();
 
     // Check collision with all other actors
-    for (auto *other : _actors)
+    for (auto *other : actors_)
     {
         if (actor == other)
             continue;
@@ -103,7 +103,7 @@ void Arena::detectCollisionsFor(Actor *actor)
 
 void Arena::detectCollisions()
 {
-    for (const auto &actor : _collisions | std::views::keys)
+    for (const auto &actor : collisions_ | std::views::keys)
     {
         detectCollisionsFor(actor);
     }
@@ -117,8 +117,8 @@ bool Arena::hasKey(const std::vector<Key> &keys, Key key)
 bool Arena::isKeyJustPressed(Key key) const
 {
 
-    const auto &currKeys = _currKeys;
-    const auto &prevKeys = _prevKeys;
+    const auto &currKeys = currKeys_;
+    const auto &prevKeys = prevKeys_;
 
     return hasKey(currKeys, key) && !hasKey(prevKeys, key);
 }
