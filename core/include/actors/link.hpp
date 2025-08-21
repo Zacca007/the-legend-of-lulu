@@ -10,11 +10,10 @@ namespace lulu
  */
 class Link final : public Fighter
 {
-    std::uint8_t attackFrame_;     // Current frame of attack animation
+    std::uint8_t attackFrame_;   // Current frame of attack animation
     std::uint8_t previousFrame_; // Previous animation frame (for restoration)
     long long int animationSwitch_;
 
-    void setupAnimation() override;
     state updatedState() const override;
     direction updatedDirection() const override;
     pair calculateMovement(direction dir) const override;
@@ -24,9 +23,9 @@ class Link final : public Fighter
     void endAttack() override;
     void adjustPositionForAttack(const pair &sizeDiff);
 
-
   public:
-    Link(pair position, pair size, float speed, float hp, float damage, Arena *arena = nullptr);
+    Link(pair position, pair size, float speed, float hp, float damage, Arena *arena = nullptr,
+         const std::string &animationConfig = "assets/link/link.json");
 
     void move() override;
     void handleCollisions(const std::vector<collision> &collisions) override;

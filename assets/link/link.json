@@ -1,0 +1,119 @@
+{
+  "character": {
+    "name": "Link",
+    "default_state": "S_STILL",
+    "default_direction": "D_DOWN",
+    "animations": {
+      "S_MOVEMENT": {
+        "D_UP": [
+          "assets/link/movement/link up 1.png",
+          "assets/link/movement/link up 2.png"
+        ],
+        "D_UPLEFT": [
+          "assets/link/movement/link up 1.png",
+          "assets/link/movement/link up 2.png"
+        ],
+        "D_UPRIGHT": [
+          "assets/link/movement/link up 1.png",
+          "assets/link/movement/link up 2.png"
+        ],
+        "D_DOWN": [
+          "assets/link/movement/link front 1.png",
+          "assets/link/movement/link front 2.png"
+        ],
+        "D_DOWNLEFT": [
+          "assets/link/movement/link front 1.png",
+          "assets/link/movement/link front 2.png"
+        ],
+        "D_DOWNRIGHT": [
+          "assets/link/movement/link front 1.png",
+          "assets/link/movement/link front 2.png"
+        ],
+        "D_LEFT": [
+          "assets/link/movement/link left 1.png",
+          "assets/link/movement/link left 2.png"
+        ],
+        "D_RIGHT": [
+          "assets/link/movement/link right 1.png",
+          "assets/link/movement/link right 2.png"
+        ]
+      },
+      "S_STILL": {
+        "D_UP": [
+          "assets/link/movement/link up 1.png"
+        ],
+        "D_UPLEFT": [
+          "assets/link/movement/link up 1.png"
+        ],
+        "D_UPRIGHT": [
+          "assets/link/movement/link up 1.png"
+        ],
+        "D_DOWN": [
+          "assets/link/movement/link front 1.png"
+        ],
+        "D_DOWNLEFT": [
+          "assets/link/movement/link front 1.png"
+        ],
+        "D_DOWNRIGHT": [
+          "assets/link/movement/link front 1.png"
+        ],
+        "D_LEFT": [
+          "assets/link/movement/link left 1.png"
+        ],
+        "D_RIGHT": [
+          "assets/link/movement/link right 1.png"
+        ]
+      },
+      "S_ATTACK": {
+        "D_UP": [
+          "assets/link/attack/link attack up 1.png",
+          "assets/link/attack/link attack up 2.png",
+          "assets/link/attack/link attack up 3.png",
+          "assets/link/attack/link attack up 4.png"
+        ],
+        "D_UPLEFT": [
+          "assets/link/attack/link attack up 1.png",
+          "assets/link/attack/link attack up 2.png",
+          "assets/link/attack/link attack up 3.png",
+          "assets/link/attack/link attack up 4.png"
+        ],
+        "D_UPRIGHT": [
+          "assets/link/attack/link attack up 1.png",
+          "assets/link/attack/link attack up 2.png",
+          "assets/link/attack/link attack up 3.png",
+          "assets/link/attack/link attack up 4.png"
+        ],
+        "D_DOWN": [
+          "assets/link/attack/link attack down 1.png",
+          "assets/link/attack/link attack down 2.png",
+          "assets/link/attack/link attack down 3.png",
+          "assets/link/attack/link attack down 4.png"
+        ],
+        "D_DOWNLEFT": [
+          "assets/link/attack/link attack down 1.png",
+          "assets/link/attack/link attack down 2.png",
+          "assets/link/attack/link attack down 3.png",
+          "assets/link/attack/link attack down 4.png"
+        ],
+        "D_DOWNRIGHT": [
+          "assets/link/attack/link attack down 1.png",
+          "assets/link/attack/link attack down 2.png",
+          "assets/link/attack/link attack down 3.png",
+          "assets/link/attack/link attack down 4.png"
+        ],
+        "D_LEFT": [
+          "assets/link/attack/link attack left 1.png",
+          "assets/link/attack/link attack left 2.png",
+          "assets/link/attack/link attack left 3.png",
+          "assets/link/attack/link attack left 4.png"
+        ],
+        "D_RIGHT": [
+          "assets/link/attack/link attack right 1.png",
+          "assets/link/attack/link attack right 2.png",
+          "assets/link/attack/link attack right 3.png",
+          "assets/link/attack/link attack right 4.png"
+        ]
+      }
+    }
+  }
+}

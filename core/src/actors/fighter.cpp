@@ -2,8 +2,8 @@
 namespace lulu
 {
 Fighter::Fighter(const pair position, const pair size, const pair speed, const float hp, const float damage,
-                 Arena *arena, const std::string &sprite)
-    : Actor(position, size, arena, sprite), Movable(speed, true), hp_(hp), damage_(damage)
+                 Arena *arena, const std::string &sprite, const std::string &animationConfig)
+    : Actor(position, size, arena, sprite), Movable(speed, animationConfig, true), hp_(hp), damage_(damage)
 {
 }
 

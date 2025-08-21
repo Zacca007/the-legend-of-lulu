@@ -1,6 +1,7 @@
 #pragma once
 #include "animationHandler.hpp"
 #include "types.hpp"
+#include <string>
 
 namespace lulu
 {
@@ -14,17 +15,25 @@ class Movable
 {
   protected:
     // attributes
-    pair speed_;                 // Movement speed (x, y components)
+    pair speed_;                // Movement speed (x, y components)
     AnimationHandler movement_; // Animation handler for sprite management
 
     // constructors
-    explicit Movable(pair speed, bool enableAnimation = false);
+    explicit Movable(pair speed, const std::string &animationConfigPath = "", bool enableAnimation = false);
 
     // internal movement methods
-    virtual void setupAnimation() = 0;
     [[nodiscard]] virtual state updatedState() const = 0;
     [[nodiscard]] virtual direction updatedDirection() const = 0;
     [[nodiscard]] virtual pair calculateMovement(direction dir) const = 0;
+
+  private:
+    // Animation configuration loading (now private and automatic)
+    void setupAnimation(const std::string &configPath);
+    void loadAnimationsFromJson(const std::string &filepath);
+
+    // Helper methods for JSON parsing
+    static state parseState(const std::string &stateStr);
+    static direction parseDirection(const std::string &dirStr);
 
   public:
     virtual ~Movable() = default;

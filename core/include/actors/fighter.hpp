@@ -15,9 +15,8 @@ class Fighter : public Actor, public Movable
     virtual void performAttack() = 0;
     virtual void endAttack() = 0;
 
-    Fighter(pair position, pair size, pair speed, float hp, float damage,
-            Arena *arena = nullptr, const std::string &sprite = "");
-
+    Fighter(pair position, pair size, pair speed, float hp, float damage, Arena *arena = nullptr,
+            const std::string &sprite = "", const std::string &animationConfig = "");
 
   public:
     [[nodiscard]] bool isAlive() const;
@@ -27,4 +26,4 @@ class Fighter : public Actor, public Movable
     void takeDamage(float damage);
     void attack(Fighter &fighter) const;
 };
-}
+} // namespace lulu

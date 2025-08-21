@@ -5,78 +5,21 @@
 using namespace lulu;
 
 // Constructor: Initialize Link with position, size, speed, health, damage, and arena reference
-Link::Link(const pair position, const pair size, const float speed, const float hp, float damage, Arena *arena)
-    : Fighter(position, size, {speed, speed}, hp, damage, arena), attackFrame_(0), previousFrame_(0),
-      animationSwitch_(0)
+Link::Link(pair position, pair size, float speed, float hp, float damage, Arena *arena,
+           const std::string &animationConfig)
+    : Fighter(position, size, {speed, speed}, hp, damage, arena, "", animationConfig), attackFrame_(0),
+      previousFrame_(0), animationSwitch_(0)
 {
-    setupAnimation();
+    // Set initial animation state
     movement_.set(S_STILL, D_DOWN); // Start facing down in still state
     sprite_ = movement_.nextSprite();
-}
-
-// Setup all animation sequences for Link's different states and directions
-void Link::setupAnimation()
-{
-    // Movement animation sprites for each direction
-    const std::vector<std::string> up = {"assets/link/movement/link up 1.png",
-                                         "assets/link/movement/link up 2.png"};
-    const std::vector<std::string> down = {"assets/link/movement/link front 1.png",
-                                           "assets/link/movement/link front 2.png"};
-    const std::vector<std::string> left = {"assets/link/movement/link left 1.png",
-                                           "assets/link/movement/link left 2.png"};
-    const std::vector<std::string> right = {"assets/link/movement/link right 1.png",
-                                            "assets/link/movement/link right 2.png"};
-
-    // Attack animation sprites for all directions
-    const std::vector<std::string> attackUp = {
-        "assets/link/attack/link attack up 1.png", "assets/link/attack/link attack up 2.png",
-        "assets/link/attack/link attack up 3.png", "assets/link/attack/link attack up 4.png"};
-    const std::vector<std::string> attackDown = {
-        "assets/link/attack/link attack down 1.png", "assets/link/attack/link attack down 2.png",
-        "assets/link/attack/link attack down 3.png", "assets/link/attack/link attack down 4.png"};
-    const std::vector<std::string> attackLeft = {
-        "assets/link/attack/link attack left 1.png", "assets/link/attack/link attack left 2.png",
-        "assets/link/attack/link attack left 3.png", "assets/link/attack/link attack left 4.png"};
-    const std::vector<std::string> attackRight = {
-        "assets/link/attack/link attack right 1.png", "assets/link/attack/link attack right 2.png",
-        "assets/link/attack/link attack right 3.png", "assets/link/attack/link attack right 4.png"};
-
-    // Register movement animations for all 8 directions
-    movement_.addAnimation(S_MOVEMENT, D_UP, up);
-    movement_.addAnimation(S_MOVEMENT, D_UPLEFT, up);
-    movement_.addAnimation(S_MOVEMENT, D_UPRIGHT, up);
-    movement_.addAnimation(S_MOVEMENT, D_DOWN, down);
-    movement_.addAnimation(S_MOVEMENT, D_DOWNLEFT, down);
-    movement_.addAnimation(S_MOVEMENT, D_DOWNRIGHT, down);
-    movement_.addAnimation(S_MOVEMENT, D_LEFT, left);
-    movement_.addAnimation(S_MOVEMENT, D_RIGHT, right);
-
-    // Register idle/still animations
-    movement_.addAnimation(S_STILL, D_UP, up);
-    movement_.addAnimation(S_STILL, D_UPLEFT, up);
-    movement_.addAnimation(S_STILL, D_UPRIGHT, up);
-    movement_.addAnimation(S_STILL, D_DOWN, down);
-    movement_.addAnimation(S_STILL, D_DOWNLEFT, down);
-    movement_.addAnimation(S_STILL, D_DOWNRIGHT, down);
-    movement_.addAnimation(S_STILL, D_LEFT, left);
-    movement_.addAnimation(S_STILL, D_RIGHT, right);
-
-    // Register attack animations for all directions
-    movement_.addAnimation(S_ATTACK, D_UP, attackUp);
-    movement_.addAnimation(S_ATTACK, D_UPLEFT, attackUp);
-    movement_.addAnimation(S_ATTACK, D_UPRIGHT, attackUp);
-    movement_.addAnimation(S_ATTACK, D_DOWN, attackDown);
-    movement_.addAnimation(S_ATTACK, D_DOWNLEFT, attackDown);
-    movement_.addAnimation(S_ATTACK, D_DOWNRIGHT, attackDown);
-    movement_.addAnimation(S_ATTACK, D_LEFT, attackLeft);
-    movement_.addAnimation(S_ATTACK, D_RIGHT, attackRight);
 }
 
 // Determine Link's current state based on input and attack status
 state Link::updatedState() const
 {
     // If currently in attack animation, maintain attack state
-    if (movement_.currentState()==S_ATTACK)
+    if (movement_.currentState() == S_ATTACK)
         return S_ATTACK;
 
     // Check if attack key was just pressed

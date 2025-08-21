@@ -27,15 +27,15 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd97c24d-ed72-4f75-b4d7-0bfd3188b1fb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/link/link.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/rooms/dungeon_hall.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/include/roomLoader.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/src/roomLoader.cpp" afterDir="false" />
+    <list default="true" id="dd97c24d-ed72-4f75-b4d7-0bfd3188b1fb" name="Changes" comment="json parsing for rooms">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/include/lulu.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/include/lulu.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/link/link.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/link/link.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/include/actors/fighter.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/include/actors/fighter.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/include/actors/link.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/include/actors/link.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/include/movable.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/include/movable.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/actors/fighter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/actors/fighter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/actors/link.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/actors/link.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/movable.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/movable.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,8 +119,17 @@
       <option name="presentableId" value="Default" />
       <updated>1752704037890</updated>
       <workItem from="1752704041435" duration="1638000" />
-      <workItem from="1755807022317" duration="1471000" />
+      <workItem from="1755807022317" duration="2656000" />
     </task>
+    <task id="LOCAL-00001" summary="json parsing for rooms">
+      <option name="closed" value="true" />
+      <created>1755814201301</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1755814201301</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -130,5 +139,10 @@
     <isAutomaticCheckingOnLaunch value="false" />
     <isAutomaticFoundErrors value="true" />
     <isAutomaticReloadCMake value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="variables naming changed" />
+    <MESSAGE value="json parsing for rooms" />
+    <option name="LAST_COMMIT_MESSAGE" value="json parsing for rooms" />
   </component>
 </project>
