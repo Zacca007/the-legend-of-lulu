@@ -29,13 +29,7 @@
   <component name="ChangeListManager">
     <list default="true" id="dd97c24d-ed72-4f75-b4d7-0bfd3188b1fb" name="Changes" comment="json parsing for rooms">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/link/link.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/link/link.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/include/actors/fighter.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/include/actors/fighter.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/include/actors/link.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/include/actors/link.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/include/movable.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/include/movable.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/actors/fighter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/actors/fighter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/actors/link.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/actors/link.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/movable.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/movable.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/core/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +52,12 @@
     "accountId": "aa104e8f-f8c6-4a00-b8f6-fce55d4a1a54"
   }
 }]]></component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///home/pietro/Desktop/projects/the-legend-of-lulu/core/main.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/pietro/Desktop/projects/the-legend-of-lulu/core/main.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/pietro/Desktop/projects/the-legend-of-lulu/core/main.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/pietro/Desktop/projects/the-legend-of-lulu/core/main.cpp" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="ProjectColorInfo"><![CDATA[{
   "customColor": "",
   "associatedIndex": 1
@@ -119,7 +119,7 @@
       <option name="presentableId" value="Default" />
       <updated>1752704037890</updated>
       <workItem from="1752704041435" duration="1638000" />
-      <workItem from="1755807022317" duration="2656000" />
+      <workItem from="1755807022317" duration="4273000" />
     </task>
     <task id="LOCAL-00001" summary="json parsing for rooms">
       <option name="closed" value="true" />
@@ -129,7 +129,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755814201301</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="json parsing for rooms">
+      <option name="closed" value="true" />
+      <created>1755815371262</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1755815371262</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
