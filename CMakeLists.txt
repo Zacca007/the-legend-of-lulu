@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(legend_of_lulu LANGUAGES CXX)
+project(the_legend_of_lulu LANGUAGES CXX)
 
 # === CONFIG ===
 if(NOT CMAKE_BUILD_TYPE)
@@ -16,9 +16,9 @@ pkg_check_modules(RAYLIB REQUIRED raylib)
 pkg_check_modules(NLOHMANN_JSON REQUIRED nlohmann_json)
 
 # === SOURCES ===
-file(GLOB_RECURSE SRC_FILES ${CMAKE_SOURCE_DIR}/core/src/*.cpp)
-file(GLOB_RECURSE HEADER_FILES ${CMAKE_SOURCE_DIR}/core/include/*.hpp)
-set(MAIN_FILE ${CMAKE_SOURCE_DIR}/core/main.cpp)
+file(GLOB_RECURSE SRC_FILES ${CMAKE_SOURCE_DIR}/lulu/src/*.cpp ${CMAKE_SOURCE_DIR}/game/src/*.cpp)
+file(GLOB_RECURSE HEADER_FILES ${CMAKE_SOURCE_DIR}/lulu/include/*.hpp ${CMAKE_SOURCE_DIR}/game/include/*.hpp)
+set(MAIN_FILE ${CMAKE_SOURCE_DIR}/game/main.cpp)
 
 # === TARGET ===
 add_executable(${PROJECT_NAME}
@@ -30,7 +30,9 @@ add_executable(${PROJECT_NAME}
 # === INCLUDE PATHS ===
 target_include_directories(${PROJECT_NAME}
         PRIVATE
-        ${CMAKE_SOURCE_DIR}/core/include
+        ${CMAKE_SOURCE_DIR}/lulu
+        ${CMAKE_SOURCE_DIR}/lulu/include
+        ${CMAKE_SOURCE_DIR}/game/include
         ${RAYLIB_INCLUDE_DIRS}
         ${NLOHMANN_JSON_INCLUDE_DIRS}
 )
