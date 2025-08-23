@@ -2,8 +2,8 @@
 
 namespace game
 {
-GameScene::GameScene(const std::string &background, const std::string &music, const std::vector<int> &inputs)
-    : inputs_(inputs)
+GameScene::GameScene(Game *game, const std::string &background, const std::string &music, const std::vector<lulu::Key> &inputs)
+    : inputs_(inputs), game_(game)
 {
     background_ = LoadTexture(background.c_str());
     music_ = LoadMusicStream(music.c_str());
@@ -16,14 +16,13 @@ GameScene::~GameScene()
     UnloadMusicStream(music_);
 }
 
-std::vector<int> GameScene::activeInputs() const
+std::vector<lulu::Key> GameScene::activeInputs() const
 {
-    // TODO: replace int with lulu::key
-    std::vector<int> keys;
+    std::vector<lulu::Key> keys;
     keys.reserve(inputs_.size());
-    for (int key : inputs_)
+    for (lulu::Key key : inputs_)
         if (IsKeyDown(key))
             keys.push_back(key);
     return keys;
 }
-} // namespace game
+}
