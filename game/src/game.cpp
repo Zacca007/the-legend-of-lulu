@@ -5,11 +5,11 @@ namespace game
 {
 Game::Game()
 {
-    InitWindow(SCREEN_X, SCREEN_Y, "The Legend of LuLù");
+    InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "The Legend of LuLù");
     SetTargetFPS(30);
     InitAudioDevice();
 
-    scene_ = std::make_unique<Menu>();
+    scene_ = std::make_unique<Menu>(this);
 }
 
 Game::~Game()
@@ -25,5 +25,10 @@ void Game::run() const
         scene_->tick();
         scene_->render();
     }
+}
+
+void Game::switchScene(std::unique_ptr<GameScene> &newScene)
+{
+    scene_ = std::move(newScene);
 }
 }

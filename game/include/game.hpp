@@ -1,13 +1,14 @@
 #pragma once
-#include "gameScene.hpp"
+#include "lulu.hpp"
 #include <memory>
 
 namespace game
 {
+class GameScene;
 class Game final
 {
-    // TODO: replace with lulu::pair
-    const int SCREEN_X = 800, SCREEN_Y = 550;
+  private:
+    const lulu::Vec2<int> SCREEN_SIZE{800, 550};
     std::unique_ptr<GameScene> scene_;
 
   public:
@@ -15,5 +16,6 @@ class Game final
     ~Game();
 
     void run() const;
+    void switchScene(std::unique_ptr<GameScene> &newScene);
 };
 }

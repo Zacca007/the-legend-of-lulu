@@ -1,26 +1,28 @@
 #pragma once
-
+#include "lulu.hpp"
 #include <raylib.h>
 #include <string>
 #include <vector>
 
 namespace game
 {
-// TODO: replace int with lulu::key
+class Game;
 class GameScene
 {
   protected:
-    Texture2D background_;
-    Music music_;
-    std::vector<int> inputs_;
+    Texture2D background_{};
+    Music music_{};
+    std::vector<lulu::Key> inputs_;
+    Game *game_;
 
-    std::vector<int> activeInputs() const;
+    [[nodiscard]] std::vector<lulu::Key> activeInputs() const;
 
   public:
-    GameScene(const std::string &background, const std::string &music, const std::vector<int> &inputs);
+    GameScene(Game *game, const std::string &background, const std::string &music, const std::vector<lulu::Key> &inputs);
+    GameScene(Game *game, const std::string &configPath);
     virtual ~GameScene();
 
     virtual void tick() = 0;
     virtual void render() = 0;
 };
-} // namespace game
+}

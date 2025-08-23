@@ -5,16 +5,16 @@ namespace game
 {
 class Menu final : public GameScene
 {
+  private:
     unsigned char transparency;
     bool growing;
 
   public:
-    // TODO: replace int with lulu::key
-    explicit Menu(const std::string &background = "assets/menu/menu.png",
+    explicit Menu(Game *game, const std::string &background = "assets/menu/menu.png",
                   const std::string &music = "assets/menu/menu.mp3",
-                  const std::vector<int> &inputs = std::vector{32});
+                  const std::vector<lulu::Key> &inputs = std::vector{lulu::K_ENTER});
 
     void tick() override;
     void render() override;
 };
-} // namespace game
+}

@@ -1,121 +1,195 @@
 # The Legend of Lulu 🎮
 
-A 2D action-adventure game engine built in C++ with Raylib, created as a heartfelt gift for someone special.
+A modular 2D game engine built in C++ with Raylib, featuring a clean separation between core game engine (`lulu`) and game implementation (`game`).
 
 ## Overview
 
-The Legend of Lulu is a Zelda-inspired game featuring Link as the main character navigating through dungeon environments, battling enemies, and solving puzzles. The game is built with a modular architecture that separates game logic from rendering, making it extensible and maintainable.
+The Legend of Lulu consists of two main components:
+- **Lulu Engine**: A lightweight, reusable 2D game engine core
+- **Game Implementation**: A Zelda-inspired action-adventure game built on top of the engine
 
-## Features
+The project demonstrates modern C++ design principles with clean architecture, modular components, and JSON-based configuration system.
 
-### Core Systems
-- **Actor-based Architecture**: Modular system where all game entities inherit from a base `Actor` class
-- **Animation System**: Sophisticated sprite animation handling with state-based transitions
-- **Collision Detection**: Comprehensive collision system with different collision types
-- **Arena Management**: Game world container that manages actors and game state
-- **Input Handling**: Flexible keyboard input system with support for multiple keys
-
-### Game Elements
-- **Player Character (Link)**: Fully animated character with movement, attack mechanics, and collision handling
-- **Combat System**: Fighter base class providing health, damage, and attack mechanics
-- **Trap Enemies**: Intelligent BladeTrap enemies with state-based AI (idle, charging, returning)
-- **Static Objects**: Environmental obstacles and decorative elements
-- **Scene Management**: Menu system and game state transitions
-
-### Technical Features
-- **PNG Sprite Support**: Direct PNG file reading for sprite dimensions
-- **Music and Sound**: Integrated audio system with background music and sound effects
-- **Texture Caching**: Efficient texture loading and management
-- **Real-time Updates**: 30 FPS game loop with smooth animation transitions
-
-## Architecture
+## Architecture Overview
 
 ```
-core/
-├── include/
-│   ├── actor.hpp              # Base class for all game entities
-│   ├── movable.hpp            # Interface for movable actors
-│   ├── animationHandler.hpp   # Sprite animation management
-│   ├── arena.hpp              # Game world container
-│   ├── types.hpp              # Core data structures and enums
-│   ├── lulu.hpp               # Main library header
-│   └── actors/
-│       ├── fighter.hpp        # Base class for combat entities
-│       ├── link.hpp           # Player character
-│       └── bladeTrap.hpp      # Trap enemy AI
-├── assets/                    # Game assets (sprites, music, sounds)
-└── main.cpp                   # Game entry point and scene management
+project/
+├── lulu/                      # Core game engine library
+│   ├── include/
+│   │   ├── actor.hpp          # Base entity class
+│   │   ├── arena.hpp          # Game world container
+│   │   ├── types.hpp          # Core data structures
+│   │   └── lulu.hpp           # Main engine header
+│   └── src/                   # Engine implementation
+├── game/                      # Game-specific implementation
+│   ├── include/
+│   │   ├── game.hpp           # Main game controller
+│   │   ├── gameScene.hpp      # Scene base class
+│   │   ├── menu.hpp           # Menu scene
+│   │   └── gameplay.hpp       # Gameplay scene
+│   ├── src/                   # Game implementation
+│   └── main.cpp               # Application entry point
+└── assets/                    # Game resources
+```
+
+## Core Engine Features (Lulu)
+
+### Actor System
+- **Actor**: Base class for all game entities with position, size, and sprite handling
+- **Arena**: Game world container managing actors and input state
+- **Smart Memory Management**: Uses `std::unique_ptr` for automatic memory management
+
+### Input System
+- Cross-platform key mapping with custom `Key` enum
+- Input state tracking (current and previous frame)
+- Key press detection with "just pressed" functionality
+
+### Utilities
+- **Vec2 Template**: Generic 2D vector with arithmetic operations
+- **Arena Boundaries**: Automatic actor constraint within arena bounds
+- **Collision Detection**: Foundation for collision system (expandable)
+
+## Game Implementation Features
+
+### Scene Management
+- **GameScene**: Abstract base class for all game scenes
+- **Menu**: Animated start screen with pulsing text effect
+- **Gameplay**: Main game scene with JSON-configured arenas
+- **Scene Transitions**: Smooth switching between different game states
+
+### Configuration System
+- **JSON-Based Setup**: Scenes and arenas configured through JSON files
+- **Asset Management**: Centralized loading of textures and audio
+- **Flexible Input Mapping**: Scene-specific input configurations
+
+### Audio & Graphics
+- **Raylib Integration**: Modern graphics and audio through Raylib
+- **Music Streaming**: Background music with proper resource management
+- **Texture Loading**: Efficient texture handling with automatic cleanup
+
+## JSON Configuration Example
+
+```json
+{
+  "background": "assets/dungeon/hall.png",
+  "music": "assets/dungeon/hall.mp3",
+  "inputs": [65, 68, 83, 87, 32],
+  "arena": {
+    "pos": {"x": 100, "y": 100},
+    "size": {"width": 600, "height": 350},
+    "actors": [
+      {
+        "pos": {"x": 200, "y": 200},
+        "size": {"width": 32, "height": 32}
+      }
+    ]
+  }
+}
 ```
 
 ## Class Hierarchy
 
 ```
+Engine (Lulu):
 Actor (base class)
-├── Static Objects
-└── Movable (interface)
-    └── Fighter
-        ├── Link (player)
-        └── BladeTrap (enemy)
+└── [Extensible for specific actor types]
+
+Arena (world container)
+└── manages std::vector<std::unique_ptr<Actor>>
+
+Game Implementation:
+Game (main controller)
+└── GameScene (abstract base)
+    ├── Menu (start screen)
+    └── Gameplay (main game)
 ```
 
-## Key Components
+## Key Design Principles
 
-### Actor System
-- **Actor**: Base class providing position, size, collision detection, and sprite handling
-- **Movable**: Interface for actors that can move with animation support
-- **Fighter**: Combat-capable actors with health, damage, and attack mechanics
+### Memory Safety
+- **RAII**: Automatic resource management for textures and audio
+- **Smart Pointers**: `std::unique_ptr` for actor ownership
+- **Exception Safety**: Proper resource cleanup in destructors
 
-### Animation System
-- State-based animations (still, movement, attack, hurt)
-- Direction-aware sprite sequences
-- Smooth frame transitions
-- PNG dimension reading for proper sprite handling
+### Modularity
+- **Engine/Game Separation**: Core engine reusable for different games
+- **Scene System**: Easily extensible scene management
+- **JSON Configuration**: Game content separated from code
 
-### Collision System
-- Directional collision detection (top, bottom, left, right)
-- Collision response handling
-- Static vs dynamic actor differentiation
-
-### Game Scenes
-- **Menu**: Animated start screen with music
-- **GameOn**: Main gameplay scene with arena, player, and enemies
+### Modern C++
+- **C++20 Features**: Modern language constructs and standard library
+- **Templates**: Generic Vec2 for different numeric types
+- **Move Semantics**: Efficient transfer of ownership
 
 ## Controls
 
-- **WASD** / **Arrow Keys**: Character movement
-- **Space**: Attack / Menu selection
-- **Enter**: Confirm actions
+- **WASD** / **Arrow Keys**: Movement (configurable)
+- **Space**: Action/Confirm (configurable)
+- **Enter**: Menu selection (configurable)
 
 ## Dependencies
 
 - **Raylib**: Graphics, audio, and input handling
-- **C++20**: Modern C++ features including ranges and concepts
+- **nlohmann/json**: JSON parsing for configuration files
+- **C++20**: Modern C++ standard library features
 
 ## Building and Running
 
-The project uses modern C++ features and requires:
+Requirements:
 - C++20 compatible compiler
 - Raylib library
-- Standard library support for ranges and concepts
+- nlohmann/json library
 
-## Game Design Philosophy
+The modular architecture allows for:
+```cpp
+// Using the engine in your own game
+#include "lulu.hpp"
+lulu::Arena gameWorld{{0, 0}, {800, 600}};
+auto player = std::make_unique<lulu::Actor>(position, size);
+gameWorld.spawn(std::move(player));
+```
 
-This game engine emphasizes:
-- **Modularity**: Clean separation of concerns with reusable components
-- **Extensibility**: Easy to add new actors, animations, and game mechanics
-- **Performance**: Efficient collision detection and texture caching
-- **Maintainability**: Well-documented code with clear inheritance hierarchies
+## Extensibility
+
+The engine is designed for easy extension:
+
+### Adding New Scenes
+```cpp
+class NewScene : public GameScene {
+    // Implement tick() and render()
+};
+```
+
+### Adding New Actor Types
+```cpp
+class Enemy : public lulu::Actor {
+    // Add custom behavior
+};
+```
+
+### JSON-Driven Content
+- Add new arena layouts without recompiling
+- Configure different input schemes per scene
+- Easy asset swapping and management
 
 ## Future Enhancements
 
-The architecture supports easy addition of:
-- New enemy types with custom AI
-- Additional player abilities and weapons
-- More complex level designs
-- Inventory and item systems
-- Save/load functionality
-- Multiplayer support
+The architecture supports:
+- **Enhanced Actor System**: Movable actors, fighters, AI behaviors
+- **Animation System**: Sprite-based animations with state management
+- **Physics Integration**: Collision detection and response
+- **Save System**: JSON-based game state persistence
+- **Scripting Support**: Lua or Python integration for gameplay logic
+- **Multiplayer**: Network-based multiplayer support
 
 ---
 
-*Made with ❤️ for someone special*
+## Technical Notes
+
+The project demonstrates several advanced C++ concepts:
+- Template metaprogramming with Vec2
+- RAII and smart pointer usage
+- Modern exception handling
+- JSON integration with type safety
+- Cross-platform input abstraction
+- Modular library design
