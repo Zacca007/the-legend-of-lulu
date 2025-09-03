@@ -18,4 +18,4 @@ class Game final
     void run() const;
     void switchScene(std::unique_ptr<GameScene> &newScene);
 };
-}
+} // namespace game

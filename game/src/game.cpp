@@ -31,4 +31,4 @@ void Game::switchScene(std::unique_ptr<GameScene> &newScene)
 {
     scene_ = std::move(newScene);
 }
-}
+} // namespace game

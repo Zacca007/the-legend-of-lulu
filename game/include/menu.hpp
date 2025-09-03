@@ -17,4 +17,4 @@ class Menu final : public GameScene
     void tick() override;
     void render() override;
 };
-}
+} // namespace game

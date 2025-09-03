@@ -8,21 +8,25 @@ class Arena;
 class Actor
 {
   protected:
-    Vec2<int> pos_, size_;
+    Vec2<float> pos_, size_{};
     std::string sprite_;
     Arena *arena_;
 
     void keepInsideArena();
 
   public:
-    Actor(Vec2<int> pos, Vec2<int> size, const std::string &sprite = "", Arena *room = nullptr);
+    Actor(Vec2<float> pos, Vec2<float> size, const std::string &sprite = "");
+    explicit Actor(Vec2<float> pos, const std::string &configPath);
     virtual ~Actor() = default;
 
-    [[nodiscard]] const Vec2<int> &pos() const;
-    [[nodiscard]] const Vec2<int> &size() const;
+    [[nodiscard]] const Vec2<float> &pos() const;
+    [[nodiscard]] const Vec2<float> &size() const;
     [[nodiscard]] const std::string &sprite() const;
     [[nodiscard]] Arena *arena() const;
 
     void setArena(Arena *arena);
+
+    Direction checkCollision(const Actor* other) const;
+    virtual void handleCollision(Collision collision);
 };
 } // namespace lulu

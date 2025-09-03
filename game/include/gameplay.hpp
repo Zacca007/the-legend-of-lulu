@@ -6,11 +6,13 @@ namespace game
 class Gameplay final : public GameScene
 {
     lulu::Arena arena_;
+    std::unordered_map<std::string, Texture2D> textureCache_;
 
-    // TODO: define method to parse arena and then call it in this constructor
-    static lulu::Arena parserArena(const std::string &configPath);
+    Texture2D getTexture(const std::string &path);
+
   public:
     explicit Gameplay(Game *game, const std::string &configPath = "assets/dungeon/configs/hall.json");
+    ~Gameplay() override;
 
     void tick() override;
     void render() override;

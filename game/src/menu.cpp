@@ -21,7 +21,6 @@ void Menu::tick()
         growing = true;
     transparency += growing ? 15 : -15;
 
-
     for (const auto keys = activeInputs(); const auto key : keys)
     {
         if (key == lulu::K_ENTER)
@@ -41,4 +40,4 @@ void Menu::render()
     DrawText("Press SPACE to start", 225, 500, 30, {255, 255, 255, transparency});
     EndDrawing();
 }
-}
+} // namespace game

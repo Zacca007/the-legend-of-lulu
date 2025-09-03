@@ -1,10 +1,11 @@
 #include "gameScene.hpp"
-#include <nlohmann/json.hpp>
 #include <fstream>
+#include <nlohmann/json.hpp>
 
 namespace game
 {
-GameScene::GameScene(Game *game, const std::string &background, const std::string &music, const std::vector<lulu::Key> &inputs)
+GameScene::GameScene(Game *game, const std::string &background, const std::string &music,
+                     const std::vector<lulu::Key> &inputs)
     : inputs_(inputs), game_(game)
 {
     background_ = LoadTexture(background.c_str());
@@ -12,8 +13,7 @@ GameScene::GameScene(Game *game, const std::string &background, const std::strin
     PlayMusicStream(music_);
 }
 
-GameScene::GameScene(Game *game, const std::string &configPath)
-    : game_(game)
+GameScene::GameScene(Game *game, const std::string &configPath) : game_(game)
 {
     std::ifstream f(configPath);
     if (!f.is_open())
@@ -30,7 +30,8 @@ GameScene::GameScene(Game *game, const std::string &configPath)
 
     // array -> vector<lulu::Key>
     inputs_.clear();
-    for (const auto &val : j.at("inputs")) {
+    for (const auto &val : j.at("inputs"))
+    {
         inputs_.push_back(static_cast<lulu::Key>(val.get<int>()));
     }
 
@@ -55,4 +56,4 @@ std::vector<lulu::Key> GameScene::activeInputs() const
             keys.push_back(key);
     return keys;
 }
-}
+} // namespace game

@@ -1,0 +1,257 @@
+#include "fighters/link.hpp"
+
+#include "arena.hpp"
+
+#include <fstream>
+#include <nlohmann/json.hpp>
+
+namespace lulu
+{
+
+Link::Link(Vec2<float> pos, const std::string &configPath) : Fighter(pos, configPath)
+{
+    // Leggi il JSON
+    std::ifstream f(configPath);
+    nlohmann::json j;
+    f >> j;
+
+    // Parse dei dati base (se non sono già stati letti dai costruttori padre)
+    const auto &actorData = j["actor"];
+    const auto &movableData = j["movable"];
+    const auto &fighterData = j["fighter"];
+
+    // Inizializza sprite base
+    sprite_ = actorData["sprite"];
+
+    // Inizializza size
+    size_ = Vec2{actorData["size"]["width"].get<float>(), actorData["size"]["height"].get<float>()};
+
+    // Inizializza velocità
+    speed_ = Vec2{movableData["speed"]["x"].get<float>(), movableData["speed"]["y"].get<float>()};
+
+    // Inizializza hp e damage
+    hp_ = fighterData["hp"].get<float>();
+    damage_ = fighterData["damage"].get<float>();
+
+    // Abilita animazioni
+    movement_.enabled_ = movableData["enableAnimation"].get<bool>();
+
+    const auto &animations = j["animations"];
+
+    // Setup animazioni movimento
+    const auto &movement = animations["movement"];
+    std::vector<std::string> up = movement["up"];
+    std::vector<std::string> down = movement["down"];
+    std::vector<std::string> left = movement["left"];
+    std::vector<std::string> right = movement["right"];
+
+    // Aggiungi animazioni movimento per tutte le direzioni
+    movement_.addAnimation(S_MOVING, D_UP, up);
+    movement_.addAnimation(S_MOVING, D_UPLEFT, up);
+    movement_.addAnimation(S_MOVING, D_UPRIGHT, up);
+    movement_.addAnimation(S_MOVING, D_DOWN, down);
+    movement_.addAnimation(S_MOVING, D_DOWNLEFT, down);
+    movement_.addAnimation(S_MOVING, D_DOWNRIGHT, down);
+    movement_.addAnimation(S_MOVING, D_LEFT, left);
+    movement_.addAnimation(S_MOVING, D_RIGHT, right);
+
+    // Aggiungi animazioni still (uguali a quelle di movimento)
+    movement_.addAnimation(S_STILL, D_UP, up);
+    movement_.addAnimation(S_STILL, D_UPLEFT, up);
+    movement_.addAnimation(S_STILL, D_UPRIGHT, up);
+    movement_.addAnimation(S_STILL, D_DOWN, down);
+    movement_.addAnimation(S_STILL, D_DOWNLEFT, down);
+    movement_.addAnimation(S_STILL, D_DOWNRIGHT, down);
+    movement_.addAnimation(S_STILL, D_LEFT, left);
+    movement_.addAnimation(S_STILL, D_RIGHT, right);
+
+    // Setup animazioni attacco
+    const auto &attack = animations["attack"];
+    std::vector<std::string> attackUp = attack["up"];
+    std::vector<std::string> attackDown = attack["down"];
+    std::vector<std::string> attackLeft = attack["left"];
+    std::vector<std::string> attackRight = attack["right"];
+
+    // Aggiungi animazioni attacco per tutte le direzioni
+    movement_.addAnimation(S_ATTACK, D_UP, attackUp);
+    movement_.addAnimation(S_ATTACK, D_UPLEFT, attackUp);
+    movement_.addAnimation(S_ATTACK, D_UPRIGHT, attackUp);
+    movement_.addAnimation(S_ATTACK, D_DOWN, attackDown);
+    movement_.addAnimation(S_ATTACK, D_DOWNLEFT, attackDown);
+    movement_.addAnimation(S_ATTACK, D_DOWNRIGHT, attackDown);
+    movement_.addAnimation(S_ATTACK, D_LEFT, attackLeft);
+    movement_.addAnimation(S_ATTACK, D_RIGHT, attackRight);
+
+    // Inizializza animazione
+    movement_.set(S_STILL, D_UP);
+    sprite_ = movement_.nextSprite();
+}
+
+// Implementazioni base per i metodi virtuali, aggiungere controllo su hurt
+State Link::updatedState() const
+{
+    if (const State state = movement_.currentState(); state == S_ATTACK || state == S_HURT)
+        return state;
+
+    if (arena_->isKeyJustPressed(K_SPACE))
+        return S_ATTACK;
+
+    if (updatedDirection() != S_STILL)
+        return S_MOVING;
+
+    return S_STILL;
+}
+
+Direction Link::updatedDirection() const
+{
+    bool w = false, a = false, s = false, d = false;
+
+    // Check which directional keys are currently pressed
+    for (const Key key : arena_->currInputs())
+    {
+        switch (key)
+        {
+        case K_W:
+        case K_UP:
+            w = true;
+            break;
+        case K_A:
+        case K_LEFT:
+            a = true;
+            break;
+        case K_S:
+        case K_DOWN:
+            s = true;
+            break;
+        case K_D:
+        case K_RIGHT:
+            d = true;
+            break;
+        default:
+            break;
+        }
+    }
+
+    // Resolve conflicting inputs (opposite directions cancel out)
+    if (a && d)
+        a = d = false;
+    if (w && s)
+        w = s = false;
+
+    // Determine final direction (diagonal directions have priority)
+    if (w && a)
+        return D_UPLEFT;
+    if (w && d)
+        return D_UPRIGHT;
+    if (s && a)
+        return D_DOWNLEFT;
+    if (s && d)
+        return D_DOWNRIGHT;
+    if (w)
+        return D_UP;
+    if (s)
+        return D_DOWN;
+    if (a)
+        return D_LEFT;
+    if (d)
+        return D_RIGHT;
+
+    return D_NONE;
+}
+
+Vec2<float> Link::calculateMovement(const Direction dir) const
+{
+    Vec2<float> movement{};
+    switch (dir)
+    {
+    case D_UP:
+        movement = {0, -speed_.y};
+        break;
+    case D_DOWN:
+        movement = {0, speed_.y};
+        break;
+    case D_LEFT:
+        movement = {-speed_.x, 0};
+        break;
+    case D_RIGHT:
+        movement = {speed_.x, 0};
+        break;
+    case D_UPLEFT:
+        movement = {-speed_.x, -speed_.y};
+        break;
+    case D_UPRIGHT:
+        movement = {speed_.x, -speed_.y};
+        break;
+    case D_DOWNLEFT:
+        movement = {-speed_.x, speed_.y};
+        break;
+    case D_DOWNRIGHT:
+        movement = {speed_.x, speed_.y};
+        break;
+    case D_NONE:
+    default:
+        break;
+    }
+
+    // Normalize diagonal movement to prevent faster diagonal movement
+    if (const auto diagonal = movement.diagonal();
+        (dir == D_UPLEFT || dir == D_UPRIGHT || dir == D_DOWNLEFT || dir == D_DOWNRIGHT) && diagonal.has_value())
+    {
+        movement = diagonal.value();
+    }
+
+    return movement;
+}
+
+void Link::move()
+{
+    const State newState = updatedState();
+    const Direction newDirection = updatedDirection();
+    static uint8_t animationSwitch;
+
+    if (newState == S_STILL)
+    {
+        if (movement_.currentState() != S_STILL)
+            movement_.set(S_STILL, movement_.currentDirection());
+    }
+    else if (newState == S_MOVING)
+    {
+        if (newDirection != D_NONE)
+        {
+            pos_ += calculateMovement(newDirection);
+            keepInsideArena();
+
+            if (movement_.currentDirection() != newDirection)
+            {
+                movement_.set(S_MOVING, newDirection);
+                movement_.nextSprite();
+                animationSwitch = 0;
+            }
+
+            // Update sprite every 4 frames for smooth movement animation
+            if (animationSwitch++ % 4 == 0)
+                sprite_ = movement_.nextSprite();
+        }
+    }
+}
+
+void Link::setupAttack()
+{
+    // TODO: implementa setup attacco
+}
+
+void Link::performAttack()
+{
+    // TODO: implementa attacco
+}
+
+void Link::endAttack()
+{
+    // TODO: implementa fine attacco
+}
+
+void Link::adjustPositionForAttack(const Vec2<float> &sizeDiff)
+{
+    // TODO: implementa aggiustamento posizione
+}
+} // namespace lulu

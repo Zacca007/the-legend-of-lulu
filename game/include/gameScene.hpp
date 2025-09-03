@@ -18,11 +18,13 @@ class GameScene
     [[nodiscard]] std::vector<lulu::Key> activeInputs() const;
 
   public:
-    GameScene(Game *game, const std::string &background, const std::string &music, const std::vector<lulu::Key> &inputs);
+    GameScene(Game *game, const std::string &background, const std::string &music,
+              const std::vector<lulu::Key> &inputs);
     GameScene(Game *game, const std::string &configPath);
+
     virtual ~GameScene();
 
     virtual void tick() = 0;
     virtual void render() = 0;
 };
-}
+} // namespace game

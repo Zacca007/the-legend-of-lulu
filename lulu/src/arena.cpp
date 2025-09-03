@@ -1,18 +1,77 @@
 #include "arena.hpp"
 #include "actor.hpp"
+#include "fighters/link.hpp"
+
+#include <fstream>
+#include <nlohmann/json.hpp>
+#include <nlohmann/json_fwd.hpp>
+#include <utility>
 
 namespace lulu
 {
-Arena::Arena(const Vec2<int> pos, const Vec2<int> size) : pos_(pos), size_(size)
+Arena::Arena(const Vec2<float> pos, const Vec2<float> size) : pos_(pos), size_(size)
 {
 }
 
-const Vec2<int> &Arena::pos() const
+Arena::Arena(const std::string &configPath)
+{
+    std::ifstream f(configPath);
+    if (!f.is_open())
+    {
+        throw std::runtime_error("Could not open config file: " + configPath + "from arena");
+    }
+
+    nlohmann::json j;
+    f >> j;
+
+    // sezione arena
+    auto arenaJson = j.at("arena");
+
+    // posizione dell'arena
+    int arenaX = arenaJson.at("pos").at("x").get<int>();
+    int arenaY = arenaJson.at("pos").at("y").get<int>();
+    pos_ = Vec2{arenaX, arenaY}.convert<float>();
+
+    // dimensioni dell'arena
+    int arenaW = arenaJson.at("size").at("width").get<int>();
+    int arenaH = arenaJson.at("size").at("height").get<int>();
+    size_ = Vec2{arenaW, arenaH}.convert<float>();
+
+    for (const auto &actorJson : arenaJson.at("actors"))
+    {
+        int ax = actorJson.at("pos").at("x").get<int>();
+        int ay = actorJson.at("pos").at("y").get<int>();
+        Vec2 pos{ax, ay};
+
+        int aw = actorJson.at("size").at("width").get<int>();
+        int ah = actorJson.at("size").at("height").get<int>();
+        Vec2 size{aw, ah};
+
+        auto actorPtr = std::make_unique<Actor>(pos.convert<float>(), size.convert<float>());
+        spawn(std::move(actorPtr)); // ownership -> vector
+    }
+
+    for (const auto &actorJson : arenaJson.at("characters"))
+    {
+        float x = actorJson.at("pos").at("x").get<float>();
+        float y = actorJson.at("pos").at("y").get<float>();
+        auto pos = Vec2{x, y};
+
+        if (auto type = actorJson.at("type").get<std::string>(); type == "Link")
+        {
+            auto link = std::make_unique<Link>(pos);
+            collisions_[link.get()] = {};
+            spawn(std::move(link));
+        }
+    }
+}
+
+const Vec2<float> &Arena::pos() const
 {
     return pos_;
 }
 
-const Vec2<int> &Arena::size() const
+const Vec2<float> &Arena::size() const
 {
     return size_;
 }
@@ -32,24 +91,21 @@ const std::vector<std::unique_ptr<Actor>> &Arena::actors() const
     return actors_;
 }
 
+const std::unordered_map<const Actor *, std::vector<Collision>> &Arena::collisions() const
+{
+    return collisions_;
+}
+
 /* Prendo un unique_ptr per valore perché non è copiabile:
  * Il chiamante deve fare std::move() per trasferire ownership.
  * La funzione spawn sposta il puntatore nel vector, che diventa il nuovo proprietario.
  */
 void Arena::spawn(std::unique_ptr<Actor> actor)
 {
-    if (!actor) return;
+    if (!actor)
+        return;
 
-    // Se l'attore appartiene già a un'altra arena, rimuovilo da lì
-    if (actor->arena() && actor->arena() != this)
-    {
-        actor->arena()->kill(actor.get());
-    }
-
-    // Imposta l'arena sull'Actor
     actor->setArena(this);
-
-    // Aggiungi al vector (ownership trasferita)
     actors_.push_back(std::move(actor));
 }
 
@@ -66,18 +122,56 @@ void Arena::kill(Actor *actor)
         return;
 
     // collisions_.erase(actor);
-    for (auto& act : actors_)
+    for (auto &act : actors_)
     {
         if (act.get() == actor)
         {
+            collisions_.erase(actor);
             std::erase(actors_, act);
-            act->setArena(nullptr);
+            return;
         }
     }
 }
 
 void Arena::tick(const std::vector<Key> &keys)
 {
+    prevInputs_ = std::exchange(currInputs_, keys);
+    for (const auto &act : actors_)
+        if (auto *movable = dynamic_cast<Movable *>(act.get()))
+        {
+            movable->move();
+            detectCollisionsFor(act.get());
+            handleCollisionsFor(act.get());
+        }
+}
+
+void Arena::detectCollisionsFor(const Actor *actor)
+{
+    auto &collisions = collisions_.at(actor);
+    collisions.clear();
+
+    // Check collision with all other actors
+    for (auto &other : actors_)
+    {
+        if (actor == other.get())
+            continue;
+
+        // Check collision and add to collision list if found
+        if (const auto coll = actor->checkCollision(other.get()); coll != D_NONE)
+        {
+            collisions.emplace_back(other.get(), coll);
+        }
+    }
+}
+
+void Arena::handleCollisionsFor(Actor *actor) const
+{
+
+    // Handle each collision for this actor
+    for (const auto &actorCollisions = collisions_.at(actor); const auto& collision : actorCollisions)
+    {
+        actor->handleCollision(collision);
+    }
 }
 
 bool Arena::hasKey(const std::vector<Key> &keys, const Key key)
