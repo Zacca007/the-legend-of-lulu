@@ -1,13 +1,12 @@
 #include "gameplay.hpp"
-#include <fstream>
 #include <nlohmann/json.hpp>
-//#include <print>
 
 namespace game
 {
 Gameplay::Gameplay(Game *game, const std::string &configPath)
     : GameScene(game, configPath), arena_(configPath)
 {
+    arena_.spawn(std::make_unique<lulu::Link>(lulu::Vec2{375, 400}.convert<float>()));
 }
  Gameplay::~Gameplay()
 {
@@ -30,25 +29,14 @@ void Gameplay::tick()
 {
     UpdateMusicStream(music_);
     arena_.tick(activeInputs());
-    /*std::print("the current number or actors is: {}\n", arena_.actors().size());
-    std::print("the current number of collisions are: {}\n\n", arena_.collisions().size());
-    for (const auto keys = activeInputs(); const auto key : keys)
-    {
-        if (key == lulu::K_ENTER && arena_.isKeyJustPressed(key) && !arena_.actors().empty())
-        {
-            const auto& ptr = arena_.actors()[0];
-            arena_.kill(ptr.get());
-        }
-    }*/
 }
-
 void Gameplay::render()
 {
     BeginDrawing();
     ClearBackground(BLACK);
     DrawTexture(background_, 0, 0, WHITE);
 
-    /*auto [ax, ay] = arena_.pos().convert<int>();
+    auto [ax, ay] = arena_.pos().convert<int>();
     auto [aw, ah] = arena_.size().convert<int>();
     DrawRectangleLines(ax, ay, aw, ah, WHITE);
     for (const auto &actor : arena_.actors())
@@ -56,7 +44,7 @@ void Gameplay::render()
         auto [ax, ay] = actor->pos().convert<int>();
         auto [aw, ah] = actor->size().convert<int>();
         DrawRectangleLines(ax, ay, aw, ah, WHITE);
-    }*/
+    }
 
     for (const auto& actor : arena_.actors())
     {

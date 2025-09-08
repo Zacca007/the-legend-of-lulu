@@ -1,7 +1,6 @@
 #pragma once
 #include "animationHandler.hpp"
 #include "types.hpp"
-#include <vector>
 
 namespace lulu
 {

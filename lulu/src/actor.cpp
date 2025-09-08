@@ -1,8 +1,8 @@
 #include "actor.hpp"
 #include "arena.hpp"
 #include <algorithm>
-#include <nlohmann/json.hpp>
 #include <fstream>
+#include <nlohmann/json.hpp>
 
 namespace lulu
 {
@@ -37,7 +37,6 @@ Actor::Actor(Vec2<float> pos, const std::string &configPath) : pos_(pos), arena_
     */
 }
 
-
 const Vec2<float> &Actor::pos() const
 {
     return pos_;
@@ -67,19 +66,6 @@ void Actor::setArena(Arena *arena)
     arena_ = arena;
 }
 
-void Actor::keepInsideArena()
-{
-    if (!arena_)
-        return;
-
-    const auto roomPos = arena_->pos();
-    const auto roomSize = arena_->size();
-    const auto [x, y] = roomPos + roomSize;
-
-    pos_.x = std::clamp(pos_.x, roomPos.x, x - size_.x);
-    pos_.y = std::clamp(pos_.y, roomPos.y, y - size_.y);
-}
-
 Direction Actor::checkCollision(const Actor *other) const
 {
     // Null check and arena validation
@@ -94,15 +80,15 @@ Direction Actor::checkCollision(const Actor *other) const
     const Vec2 otherMax = {ox + ow, oy + oh};
 
     // AABB collision detection - check if boxes don't overlap
-    if (x < ox || otherMax.x < pos_.x || y < oy || otherMax.y < pos_.y)
+    if (x <= ox || otherMax.x <= pos_.x || y <= oy || otherMax.y <= pos_.y)
     {
         return D_NONE;
     }
 
     // Calculate penetration depths for each side
-    const float leftDist = std::abs(x - ox);        // Distance from our right to their left
+    const float leftDist = std::abs(x - ox);                // Distance from our right to their left
     const float rightDist = std::abs(otherMax.x - pos_.x);  // Distance from our left to their right
-    const float topDist = std::abs(y - oy);         // Distance from our bottom to their top
+    const float topDist = std::abs(y - oy);                 // Distance from our bottom to their top
     const float bottomDist = std::abs(otherMax.y - pos_.y); // Distance from our top to their bottom
 
     // Find minimum penetration distances
@@ -120,12 +106,12 @@ Direction Actor::checkCollision(const Actor *other) const
     return thisCenter.y <= otherCenter.y ? D_DOWN : D_UP;
 }
 
-void Actor::handleCollision(const Collision collision)
+void Actor::handleCollision(Collision collision)
 {
     const Actor *other = collision.target;
 
-    const auto& otherPos = other->pos();
-    const auto& otherSize = other->size();
+    const auto &otherPos = other->pos();
+    const auto &otherSize = other->size();
 
     // Adjust position based on collision direction to prevent overlap
     switch (collision.collisionDirection)

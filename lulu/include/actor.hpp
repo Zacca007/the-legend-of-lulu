@@ -12,8 +12,6 @@ class Actor
     std::string sprite_;
     Arena *arena_;
 
-    void keepInsideArena();
-
   public:
     Actor(Vec2<float> pos, Vec2<float> size, const std::string &sprite = "");
     explicit Actor(Vec2<float> pos, const std::string &configPath);
@@ -26,7 +24,7 @@ class Actor
 
     void setArena(Arena *arena);
 
-    Direction checkCollision(const Actor* other) const;
+    Direction checkCollision(const Actor *other) const;
     virtual void handleCollision(Collision collision);
 };
 } // namespace lulu

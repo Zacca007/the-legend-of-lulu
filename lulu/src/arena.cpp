@@ -1,10 +1,9 @@
 #include "arena.hpp"
 #include "actor.hpp"
 #include "fighters/link.hpp"
-
+#include "utility actors/door.hpp"
 #include <fstream>
 #include <nlohmann/json.hpp>
-#include <nlohmann/json_fwd.hpp>
 #include <utility>
 
 namespace lulu
@@ -51,19 +50,29 @@ Arena::Arena(const std::string &configPath)
         spawn(std::move(actorPtr)); // ownership -> vector
     }
 
-    for (const auto &actorJson : arenaJson.at("characters"))
+    for (const auto &doorJson : arenaJson.at("doors"))
+    {
+        Vec2 pos = {doorJson.at("pos").at("x").get<float>(), doorJson.at("pos").at("y").get<float>()};
+        Vec2 size = {doorJson.at("size").at("width").get<float>(), doorJson.at("size").at("height").get<float>()};
+        Vec2 spawn = {doorJson.at("spawn").at("x").get<float>(), doorJson.at("spawn").at("y").get<float>()};
+        auto destination = doorJson.at("destination").get<std::string>();
+        this->spawn(std::make_unique<Door>(pos, size, spawn, destination));
+    }
+
+    /*for (const auto &actorJson : arenaJson.at("characters"))
     {
         float x = actorJson.at("pos").at("x").get<float>();
         float y = actorJson.at("pos").at("y").get<float>();
         auto pos = Vec2{x, y};
 
-        if (auto type = actorJson.at("type").get<std::string>(); type == "Link")
-        {
-            auto link = std::make_unique<Link>(pos);
-            collisions_[link.get()] = {};
-            spawn(std::move(link));
-        }
-    }
+
+         else if (type == "Zol")
+         {
+             auto zol = std::make_unique<Zol>(pos);
+             collisions_[zol.get()] = {};
+             spawn(std::move(zol));
+         }
+    }*/
 }
 
 const Vec2<float> &Arena::pos() const
@@ -106,6 +115,10 @@ void Arena::spawn(std::unique_ptr<Actor> actor)
         return;
 
     actor->setArena(this);
+    if (dynamic_cast<Movable *>(actor.get()))
+    {
+        collisions_[actor.get()] = {};
+    }
     actors_.push_back(std::move(actor));
 }
 
@@ -168,7 +181,7 @@ void Arena::handleCollisionsFor(Actor *actor) const
 {
 
     // Handle each collision for this actor
-    for (const auto &actorCollisions = collisions_.at(actor); const auto& collision : actorCollisions)
+    for (const auto &actorCollisions = collisions_.at(actor); const auto &collision : actorCollisions)
     {
         actor->handleCollision(collision);
     }

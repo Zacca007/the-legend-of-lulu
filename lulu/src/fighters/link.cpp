@@ -237,21 +237,17 @@ void Link::move()
 
 void Link::setupAttack()
 {
-    // TODO: implementa setup attacco
 }
 
 void Link::performAttack()
 {
-    // TODO: implementa attacco
 }
 
 void Link::endAttack()
 {
-    // TODO: implementa fine attacco
 }
 
 void Link::adjustPositionForAttack(const Vec2<float> &sizeDiff)
 {
-    // TODO: implementa aggiustamento posizione
 }
 } // namespace lulu
