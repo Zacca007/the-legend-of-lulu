@@ -1,195 +1,102 @@
 # The Legend of Lulu 🎮
 
-A modular 2D game engine built in C++ with Raylib, featuring a clean separation between core game engine (`lulu`) and game implementation (`game`).
+A 2D action-adventure game built in C++23 with Raylib, inspired by classic Zelda games. The project demonstrates clean architecture with a modular engine core (`lulu`) that powers the game implementation.
 
-## Overview
+## What is it
 
-The Legend of Lulu consists of two main components:
-- **Lulu Engine**: A lightweight, reusable 2D game engine core
-- **Game Implementation**: A Zelda-inspired action-adventure game built on top of the engine
+The Legend of Lulu is a complete game featuring:
+- **Menu system** with animated transitions
+- **Room-based exploration** with configurable layouts
+- **Player character (Link)** with movement and combat animations
+- **JSON-driven configuration** for easy room customization
 
-The project demonstrates modern C++ design principles with clean architecture, modular components, and JSON-based configuration system.
-
-## Architecture Overview
+## Architecture
 
 ```
 project/
-├── lulu/                      # Core game engine library
-│   ├── include/
-│   │   ├── actor.hpp          # Base entity class
-│   │   ├── arena.hpp          # Game world container
-│   │   ├── types.hpp          # Core data structures
-│   │   └── lulu.hpp           # Main engine header
-│   └── src/                   # Engine implementation
-├── game/                      # Game-specific implementation
-│   ├── include/
-│   │   ├── game.hpp           # Main game controller
-│   │   ├── gameScene.hpp      # Scene base class
-│   │   ├── menu.hpp           # Menu scene
-│   │   └── gameplay.hpp       # Gameplay scene
-│   ├── src/                   # Game implementation
-│   └── main.cpp               # Application entry point
-└── assets/                    # Game resources
+├── lulu/              # Game engine core
+│   ├── include/       # Engine headers
+│   └── src/          # Engine implementation  
+├── game/             # Game implementation
+│   ├── include/      # Game headers
+│   ├── src/         # Game logic
+│   └── main.cpp     # Entry point
+└── assets/          # Sprites, music, JSON configs
 ```
 
-## Core Engine Features (Lulu)
+## How it works
 
-### Actor System
-- **Actor**: Base class for all game entities with position, size, and sprite handling
-- **Arena**: Game world container managing actors and input state
-- **Smart Memory Management**: Uses `std::unique_ptr` for automatic memory management
+### Core Engine (lulu)
+- **Actor**: Base class for all game entities (position, size, sprite, collision)
+- **Arena**: Game world container that manages actors and handles input
+- **Vec2 template**: 2D vector with arithmetic operations
+- **Animation system**: State-based sprite animations (moving, still, attack)
+- **Collision detection**: AABB collision with directional response
 
-### Input System
-- Cross-platform key mapping with custom `Key` enum
-- Input state tracking (current and previous frame)
-- Key press detection with "just pressed" functionality
+### Game Implementation
+- **Scene system**: Menu and Gameplay scenes with background/music
+- **JSON configuration**: Rooms defined in JSON files with actors and doors
+- **Link character**: Player with 8-direction movement and combat states
+- **Resource management**: Texture caching and automatic cleanup
 
-### Utilities
-- **Vec2 Template**: Generic 2D vector with arithmetic operations
-- **Arena Boundaries**: Automatic actor constraint within arena bounds
-- **Collision Detection**: Foundation for collision system (expandable)
+### Key Classes
 
-## Game Implementation Features
+```cpp
+// Engine core
+lulu::Actor          // Base entity
+lulu::Arena          // World container  
+lulu::Link           // Player character
+lulu::AnimationHandler // Sprite management
 
-### Scene Management
-- **GameScene**: Abstract base class for all game scenes
-- **Menu**: Animated start screen with pulsing text effect
-- **Gameplay**: Main game scene with JSON-configured arenas
-- **Scene Transitions**: Smooth switching between different game states
+// Game scenes
+game::GameScene      // Base scene class
+game::Menu           // Start screen
+game::Gameplay       // Main game
+```
 
-### Configuration System
-- **JSON-Based Setup**: Scenes and arenas configured through JSON files
-- **Asset Management**: Centralized loading of textures and audio
-- **Flexible Input Mapping**: Scene-specific input configurations
+## Room Configuration
 
-### Audio & Graphics
-- **Raylib Integration**: Modern graphics and audio through Raylib
-- **Music Streaming**: Background music with proper resource management
-- **Texture Loading**: Efficient texture handling with automatic cleanup
-
-## JSON Configuration Example
+Rooms are defined in JSON files:
 
 ```json
 {
   "background": "assets/dungeon/hall.png",
-  "music": "assets/dungeon/hall.mp3",
+  "music": "assets/dungeon/hall.mp3", 
   "inputs": [65, 68, 83, 87, 32],
   "arena": {
     "pos": {"x": 100, "y": 100},
     "size": {"width": 600, "height": 350},
     "actors": [
+      {"pos": {"x": 200, "y": 200}, "size": {"width": 32, "height": 32}}
+    ],
+    "doors": [
       {
-        "pos": {"x": 200, "y": 200},
-        "size": {"width": 32, "height": 32}
+        "pos": {"x": 300, "y": 100}, 
+        "size": {"width": 32, "height": 32},
+        "spawn": {"x": 400, "y": 200},
+        "destination": "assets/dungeon/configs/room2.json"
       }
     ]
   }
 }
 ```
 
-## Class Hierarchy
-
-```
-Engine (Lulu):
-Actor (base class)
-└── [Extensible for specific actor types]
-
-Arena (world container)
-└── manages std::vector<std::unique_ptr<Actor>>
-
-Game Implementation:
-Game (main controller)
-└── GameScene (abstract base)
-    ├── Menu (start screen)
-    └── Gameplay (main game)
-```
-
-## Key Design Principles
-
-### Memory Safety
-- **RAII**: Automatic resource management for textures and audio
-- **Smart Pointers**: `std::unique_ptr` for actor ownership
-- **Exception Safety**: Proper resource cleanup in destructors
-
-### Modularity
-- **Engine/Game Separation**: Core engine reusable for different games
-- **Scene System**: Easily extensible scene management
-- **JSON Configuration**: Game content separated from code
-
-### Modern C++
-- **C++20 Features**: Modern language constructs and standard library
-- **Templates**: Generic Vec2 for different numeric types
-- **Move Semantics**: Efficient transfer of ownership
-
 ## Controls
 
-- **WASD** / **Arrow Keys**: Movement (configurable)
-- **Space**: Action/Confirm (configurable)
-- **Enter**: Menu selection (configurable)
+- **WASD/Arrow Keys**: Move Link in 8 directions
+- **Space**: Attack
+- **Enter**: Confirm in menus
 
 ## Dependencies
 
-- **Raylib**: Graphics, audio, and input handling
-- **nlohmann/json**: JSON parsing for configuration files
-- **C++20**: Modern C++ standard library features
+- **C++23** compiler
+- **Raylib** for graphics and audio
+- **nlohmann/json** for configuration parsing
 
-## Building and Running
+## Building
 
-Requirements:
-- C++20 compatible compiler
-- Raylib library
-- nlohmann/json library
-
-The modular architecture allows for:
-```cpp
-// Using the engine in your own game
-#include "lulu.hpp"
-lulu::Arena gameWorld{{0, 0}, {800, 600}};
-auto player = std::make_unique<lulu::Actor>(position, size);
-gameWorld.spawn(std::move(player));
-```
-
-## Extensibility
-
-The engine is designed for easy extension:
-
-### Adding New Scenes
-```cpp
-class NewScene : public GameScene {
-    // Implement tick() and render()
-};
-```
-
-### Adding New Actor Types
-```cpp
-class Enemy : public lulu::Actor {
-    // Add custom behavior
-};
-```
-
-### JSON-Driven Content
-- Add new arena layouts without recompiling
-- Configure different input schemes per scene
-- Easy asset swapping and management
-
-## Future Enhancements
-
-The architecture supports:
-- **Enhanced Actor System**: Movable actors, fighters, AI behaviors
-- **Animation System**: Sprite-based animations with state management
-- **Physics Integration**: Collision detection and response
-- **Save System**: JSON-based game state persistence
-- **Scripting Support**: Lua or Python integration for gameplay logic
-- **Multiplayer**: Network-based multiplayer support
+Standard C++ build with the required libraries. The game loads the menu scene first, then transitions to gameplay when you press Enter.
 
 ---
 
-## Technical Notes
-
-The project demonstrates several advanced C++ concepts:
-- Template metaprogramming with Vec2
-- RAII and smart pointer usage
-- Modern exception handling
-- JSON integration with type safety
-- Cross-platform input abstraction
-- Modular library design
+*A demonstration of modern C++ game development with clean separation between engine and game logic, JSON-driven content, and component-based architecture.*
