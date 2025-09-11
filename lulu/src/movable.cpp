@@ -9,7 +9,7 @@ Movable::Movable(const Vec2<float> speed, bool enableAnimation) : speed_(speed)
         movement_.enabled_ = true;
 }
 
- Movable::Movable(const std::string &configPath)
+Movable::Movable(const std::string &configPath)
 {
     std::ifstream f(configPath);
     if (!f.is_open())
@@ -31,7 +31,7 @@ Movable::Movable(const Vec2<float> speed, bool enableAnimation) : speed_(speed)
             const auto &speedJson = movableJson["speed"];
             float x = speedJson["x"].get<float>();
             float y = speedJson["y"].get<float>();
-            speed_ = Vec2<float>{x, y};
+            speed_ = Vec2{x, y};
         }
 
         // Enable animation
@@ -47,7 +47,6 @@ Movable::Movable(const Vec2<float> speed, bool enableAnimation) : speed_(speed)
         }
     }
 }
-
 
 const Vec2<float> &Movable::speed() const
 {

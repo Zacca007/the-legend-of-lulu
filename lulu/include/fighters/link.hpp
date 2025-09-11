@@ -9,7 +9,7 @@ class Link final : public Fighter
     [[nodiscard]] Direction updatedDirection() const override;
     [[nodiscard]] Vec2<float> calculateMovement(Direction dir) const override;
 
-    //TODO: implement these things
+    // TODO: implement these things
     void setupAttack() override;
     void performAttack() override;
     void endAttack() override;

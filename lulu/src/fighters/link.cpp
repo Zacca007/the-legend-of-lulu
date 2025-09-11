@@ -219,7 +219,6 @@ void Link::move()
         if (newDirection != D_NONE)
         {
             pos_ += calculateMovement(newDirection);
-            keepInsideArena();
 
             if (movement_.currentDirection() != newDirection)
             {

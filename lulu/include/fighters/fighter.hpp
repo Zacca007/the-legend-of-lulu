@@ -15,8 +15,7 @@ class Fighter : public Actor, public Movable
     virtual void performAttack() = 0;
     virtual void endAttack() = 0;
 
-    //TODO: bisogna aggiungere metodi in questa classe o nella figlia link, per le collisioni con muri e attori statici
-
+    // TODO: bisogna aggiungere metodi in questa classe o nella figlia link, per le collisioni con muri e attori statici
     Fighter(Vec2<float> position, Vec2<float> size, Vec2<float> speed, float hp, float damage,
             const std::string &sprite = "");
     explicit Fighter(Vec2<float> pos, const std::string &configPath);

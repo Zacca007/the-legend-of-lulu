@@ -8,8 +8,8 @@
   },
   "movable": {
     "speed": {
-      "x": 6,
-      "y": 6
+      "x": 5,
+      "y": 5
     },
     "enableAnimation": true
   },
