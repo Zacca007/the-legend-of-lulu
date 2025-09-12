@@ -23,6 +23,7 @@ class Actor
     [[nodiscard]] Arena *arena() const;
 
     void setArena(Arena *arena);
+    void setPos(Vec2<float> pos);
 
     Direction checkCollision(const Actor *other) const;
     virtual void handleCollision(Collision collision);

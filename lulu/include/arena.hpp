@@ -42,7 +42,7 @@ class Arena final
 
     // main methods
     void spawn(std::unique_ptr<Actor> actor);
-    void kill(Actor *actor);
+    std::unique_ptr<Actor> kill(Actor *actor);
     void tick(const std::vector<Key> &keys);
 
     // utility methods

@@ -15,8 +15,9 @@
       {
         "pos": {"x":  375, "y":  0},
         "size": {"width":  50, "height": 50},
-        "destination": "room1.json",
-        "spawn": {"x": 375, "y": 399}
+        "destination": "assets/dungeon/configs/room 1.json",
+        "spawn": {"x": 375, "y": 449},
+        "changeMusic": false
       }
     ],
     "actors": [

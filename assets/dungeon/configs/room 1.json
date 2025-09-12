@@ -1,0 +1,53 @@
+{
+  "background": "assets/dungeon/room 1.png",
+  "music": "assets/dungeon/dungeon.mp3",
+  "inputs": [65, 68, 83, 87, 257, 262, 263, 264, 265],
+  "arena": {
+    "pos": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 800,
+      "height": 550
+    },
+    "doors": [
+      {
+        "pos": {"x": 375, "y": 500},
+        "size": {"width": 50, "height": 50},
+        "destination": "assets/dungeon/configs/hall.json",
+        "spawn": {"x": 375, "y": 51},
+        "changeMusic": false
+      },
+      {
+        "pos": {"x": 0, "y": 250},
+        "size": {"width": 50, "height": 50},
+        "destination": "room2.json",
+        "spawn": {"x": 700, "y": 275},
+        "changeMusic": true
+      }
+    ],
+    "actors": [
+      {"pos": {"x": 0, "y": 0}, "size": {"width": 800, "height":  100}},
+      {"pos": {"x": 0, "y": 0}, "size": {"width": 100, "height":  250}},
+      {"pos": {"x": 0, "y": 300}, "size": {"width":  100, "height": 250}},
+      {"pos": {"x": 700, "y": 0}, "size": {"width": 100, "height":  550}},
+      {"pos": {"x": 0, "y": 450}, "size": {"width": 375, "height":  100}},
+      {"pos": {"x": 425, "y": 450}, "size": {"width": 375, "height":  100}},
+
+      {"pos": {"x": 150, "y": 150}, "size": {"width": 50, "height": 50}},
+      {"pos": {"x": 200, "y": 150}, "size": {"width": 50, "height": 50}},
+      {"pos": {"x": 550, "y": 150}, "size": {"width": 50, "height": 50}},
+      {"pos": {"x": 600, "y": 150}, "size": {"width": 50, "height": 50}},
+
+      {"pos": {"x": 150, "y": 350}, "size": {"width": 50, "height": 50}},
+      {"pos": {"x": 200, "y": 350}, "size": {"width": 50, "height": 50}},
+      {"pos": {"x": 550, "y": 350}, "size": {"width": 50, "height": 50}},
+      {"pos": {"x": 600, "y": 350}, "size": {"width": 50, "height": 50}},
+
+      {"pos": {"x": 350, "y": 250}, "size": {"width": 50, "height": 50}},
+      {"pos": {"x": 400, "y": 250}, "size": {"width": 50, "height": 50}}
+    ],
+    "characters": []
+  }
+}

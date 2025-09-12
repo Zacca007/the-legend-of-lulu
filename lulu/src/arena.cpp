@@ -55,8 +55,9 @@ Arena::Arena(const std::string &configPath)
         Vec2 pos = {doorJson.at("pos").at("x").get<float>(), doorJson.at("pos").at("y").get<float>()};
         Vec2 size = {doorJson.at("size").at("width").get<float>(), doorJson.at("size").at("height").get<float>()};
         Vec2 spawn = {doorJson.at("spawn").at("x").get<float>(), doorJson.at("spawn").at("y").get<float>()};
+        bool changeMusic = doorJson.at("changeMusic").get<bool>();
         auto destination = doorJson.at("destination").get<std::string>();
-        this->spawn(std::make_unique<Door>(pos, size, spawn, destination));
+        this->spawn(std::make_unique<Door>(pos, size, spawn, destination, changeMusic));
     }
 
     /*for (const auto &actorJson : arenaJson.at("characters"))
@@ -129,21 +130,29 @@ void Arena::spawn(std::unique_ptr<Actor> actor)
  * Non voglio farli ritornare non const perchè sarebbe una pratica poco sicura.
  * Quindi passo un raw pointer e va bene così, tutti contenti.
  */
-void Arena::kill(Actor *actor)
+std::unique_ptr<Actor> Arena::kill(Actor *actor)
 {
     if (!actor)
-        return;
+        return nullptr;
 
-    // collisions_.erase(actor);
-    for (auto &act : actors_)
+    // Trova l'attore nel vector
+    for (auto it = actors_.begin(); it != actors_.end(); ++it)
     {
-        if (act.get() == actor)
+        if (it->get() == actor)
         {
+            // Rimuovi dalle collisioni
             collisions_.erase(actor);
-            std::erase(actors_, act);
-            return;
+
+            // Estrai l'unique_ptr dal vector e lo restituisce
+            std::unique_ptr<Actor> extracted = std::move(*it);
+            actors_.erase(it);
+
+            return extracted;
         }
     }
+
+    // Se non trovato, ritorna nullptr
+    return nullptr;
 }
 
 void Arena::tick(const std::vector<Key> &keys)

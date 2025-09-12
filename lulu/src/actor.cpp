@@ -56,6 +56,10 @@ Arena *Actor::arena() const
 {
     return arena_;
 }
+void Actor::setPos(Vec2<float> pos)
+{
+    pos_ = pos;
+}
 
 void Actor::setArena(Arena *arena)
 {

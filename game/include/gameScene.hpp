@@ -17,6 +17,10 @@ class GameScene
 
     [[nodiscard]] std::vector<lulu::Key> activeInputs() const;
 
+    void setBackground(const std::string &configPath);
+    void setMusic(const std::string &configPath);
+    void setInputs(const std::string &configPath);
+
   public:
     GameScene(Game *game, const std::string &background, const std::string &music,
               const std::vector<lulu::Key> &inputs);
