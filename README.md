@@ -1,121 +1,102 @@
 # The Legend of Lulu 🎮
 
-A 2D action-adventure game engine built in C++ with Raylib, created as a heartfelt gift for someone special.
+A 2D action-adventure game built in C++23 with Raylib, inspired by classic Zelda games. The project demonstrates clean architecture with a modular engine core (`lulu`) that powers the game implementation.
 
-## Overview
+## What is it
 
-The Legend of Lulu is a Zelda-inspired game featuring Link as the main character navigating through dungeon environments, battling enemies, and solving puzzles. The game is built with a modular architecture that separates game logic from rendering, making it extensible and maintainable.
-
-## Features
-
-### Core Systems
-- **Actor-based Architecture**: Modular system where all game entities inherit from a base `Actor` class
-- **Animation System**: Sophisticated sprite animation handling with state-based transitions
-- **Collision Detection**: Comprehensive collision system with different collision types
-- **Arena Management**: Game world container that manages actors and game state
-- **Input Handling**: Flexible keyboard input system with support for multiple keys
-
-### Game Elements
-- **Player Character (Link)**: Fully animated character with movement, attack mechanics, and collision handling
-- **Combat System**: Fighter base class providing health, damage, and attack mechanics
-- **Trap Enemies**: Intelligent BladeTrap enemies with state-based AI (idle, charging, returning)
-- **Static Objects**: Environmental obstacles and decorative elements
-- **Scene Management**: Menu system and game state transitions
-
-### Technical Features
-- **PNG Sprite Support**: Direct PNG file reading for sprite dimensions
-- **Music and Sound**: Integrated audio system with background music and sound effects
-- **Texture Caching**: Efficient texture loading and management
-- **Real-time Updates**: 30 FPS game loop with smooth animation transitions
+The Legend of Lulu is a complete game featuring:
+- **Menu system** with animated transitions
+- **Room-based exploration** with configurable layouts
+- **Player character (Link)** with movement and combat animations
+- **JSON-driven configuration** for easy room customization
 
 ## Architecture
 
 ```
-core/
-├── include/
-│   ├── actor.hpp              # Base class for all game entities
-│   ├── movable.hpp            # Interface for movable actors
-│   ├── animationHandler.hpp   # Sprite animation management
-│   ├── arena.hpp              # Game world container
-│   ├── types.hpp              # Core data structures and enums
-│   ├── lulu.hpp               # Main library header
-│   └── actors/
-│       ├── fighter.hpp        # Base class for combat entities
-│       ├── link.hpp           # Player character
-│       └── bladeTrap.hpp      # Trap enemy AI
-├── assets/                    # Game assets (sprites, music, sounds)
-└── main.cpp                   # Game entry point and scene management
+project/
+├── lulu/              # Game engine core
+│   ├── include/       # Engine headers
+│   └── src/          # Engine implementation  
+├── game/             # Game implementation
+│   ├── include/      # Game headers
+│   ├── src/         # Game logic
+│   └── main.cpp     # Entry point
+└── assets/          # Sprites, music, JSON configs
 ```
 
-## Class Hierarchy
+## How it works
 
+### Core Engine (lulu)
+- **Actor**: Base class for all game entities (position, size, sprite, collision)
+- **Arena**: Game world container that manages actors and handles input
+- **Vec2 template**: 2D vector with arithmetic operations
+- **Animation system**: State-based sprite animations (moving, still, attack)
+- **Collision detection**: AABB collision with directional response
+
+### Game Implementation
+- **Scene system**: Menu and Gameplay scenes with background/music
+- **JSON configuration**: Rooms defined in JSON files with actors and doors
+- **Link character**: Player with 8-direction movement and combat states
+- **Resource management**: Texture caching and automatic cleanup
+
+### Key Classes
+
+```cpp
+// Engine core
+lulu::Actor          // Base entity
+lulu::Arena          // World container  
+lulu::Link           // Player character
+lulu::AnimationHandler // Sprite management
+
+// Game scenes
+game::GameScene      // Base scene class
+game::Menu           // Start screen
+game::Gameplay       // Main game
 ```
-Actor (base class)
-├── Static Objects
-└── Movable (interface)
-    └── Fighter
-        ├── Link (player)
-        └── BladeTrap (enemy)
+
+## Room Configuration
+
+Rooms are defined in JSON files:
+
+```json
+{
+  "background": "assets/dungeon/hall.png",
+  "music": "assets/dungeon/hall.mp3", 
+  "inputs": [65, 68, 83, 87, 32],
+  "arena": {
+    "pos": {"x": 100, "y": 100},
+    "size": {"width": 600, "height": 350},
+    "actors": [
+      {"pos": {"x": 200, "y": 200}, "size": {"width": 32, "height": 32}}
+    ],
+    "doors": [
+      {
+        "pos": {"x": 300, "y": 100}, 
+        "size": {"width": 32, "height": 32},
+        "spawn": {"x": 400, "y": 200},
+        "destination": "assets/dungeon/configs/room2.json"
+      }
+    ]
+  }
+}
 ```
-
-## Key Components
-
-### Actor System
-- **Actor**: Base class providing position, size, collision detection, and sprite handling
-- **Movable**: Interface for actors that can move with animation support
-- **Fighter**: Combat-capable actors with health, damage, and attack mechanics
-
-### Animation System
-- State-based animations (still, movement, attack, hurt)
-- Direction-aware sprite sequences
-- Smooth frame transitions
-- PNG dimension reading for proper sprite handling
-
-### Collision System
-- Directional collision detection (top, bottom, left, right)
-- Collision response handling
-- Static vs dynamic actor differentiation
-
-### Game Scenes
-- **Menu**: Animated start screen with music
-- **GameOn**: Main gameplay scene with arena, player, and enemies
 
 ## Controls
 
-- **WASD** / **Arrow Keys**: Character movement
-- **Space**: Attack / Menu selection
-- **Enter**: Confirm actions
+- **WASD/Arrow Keys**: Move Link in 8 directions
+- **Space**: Attack
+- **Enter**: Confirm in menus
 
 ## Dependencies
 
-- **Raylib**: Graphics, audio, and input handling
-- **C++20**: Modern C++ features including ranges and concepts
+- **C++23** compiler
+- **Raylib** for graphics and audio
+- **nlohmann/json** for configuration parsing
 
-## Building and Running
+## Building
 
-The project uses modern C++ features and requires:
-- C++20 compatible compiler
-- Raylib library
-- Standard library support for ranges and concepts
-
-## Game Design Philosophy
-
-This game engine emphasizes:
-- **Modularity**: Clean separation of concerns with reusable components
-- **Extensibility**: Easy to add new actors, animations, and game mechanics
-- **Performance**: Efficient collision detection and texture caching
-- **Maintainability**: Well-documented code with clear inheritance hierarchies
-
-## Future Enhancements
-
-The architecture supports easy addition of:
-- New enemy types with custom AI
-- Additional player abilities and weapons
-- More complex level designs
-- Inventory and item systems
-- Save/load functionality
-- Multiplayer support
+Standard C++ build with the required libraries. The game loads the menu scene first, then transitions to gameplay when you press Enter.
 
 ---
 
-*Made with ❤️ for someone special*
+*A demonstration of modern C++ game development with clean separation between engine and game logic, JSON-driven content, and component-based architecture.*

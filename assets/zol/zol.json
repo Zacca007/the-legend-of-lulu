@@ -1,0 +1,26 @@
+{
+  "actor": {
+    "sprite": "assets/zol/zol 1.png",
+    "size": {
+      "width": 50,
+      "height": 50
+    }
+  },
+  "movable": {
+    "speed": {
+      "x": 2,
+      "y": 2
+    },
+    "enableAnimation": true
+  },
+  "fighter": {
+    "hp": 1.0,
+    "damage": 0.5
+  },
+  "animations": {
+    "movement": [
+      "assets/zol/zol 1.png",
+      "assets/zol/zol 2.png"
+    ]
+  }
+}
