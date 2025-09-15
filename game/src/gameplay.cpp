@@ -29,7 +29,6 @@ void Gameplay::tick()
 {
     UpdateMusicStream(music_);
     arena_.tick(activeInputs());
-
     lulu::Link* pLink = nullptr;
     for (const auto &actor : arena_.actors())
     {
