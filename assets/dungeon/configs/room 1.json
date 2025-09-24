@@ -16,14 +16,14 @@
         "pos": {"x": 375, "y": 500},
         "size": {"width": 50, "height": 50},
         "destination": "assets/dungeon/configs/hall.json",
-        "spawn": {"x": 375, "y": 51},
+        "spawn": {"x": 375, "y": 50},
         "changeMusic": false
       },
       {
         "pos": {"x": 0, "y": 250},
         "size": {"width": 50, "height": 50},
-        "destination": "room2.json",
-        "spawn": {"x": 700, "y": 275},
+        "destination": "assets/dungeon/configs/zelda's room.json",
+        "spawn": {"x": 700, "y": 250},
         "changeMusic": true
       }
     ],
@@ -35,18 +35,13 @@
       {"pos": {"x": 0, "y": 450}, "size": {"width": 375, "height":  100}},
       {"pos": {"x": 425, "y": 450}, "size": {"width": 375, "height":  100}},
 
-      {"pos": {"x": 150, "y": 150}, "size": {"width": 50, "height": 50}},
-      {"pos": {"x": 200, "y": 150}, "size": {"width": 50, "height": 50}},
-      {"pos": {"x": 550, "y": 150}, "size": {"width": 50, "height": 50}},
-      {"pos": {"x": 600, "y": 150}, "size": {"width": 50, "height": 50}},
+      {"pos": {"x": 150, "y": 150}, "size": {"width": 100, "height": 50}},
+      {"pos": {"x": 550, "y": 150}, "size": {"width": 100, "height": 50}},
 
-      {"pos": {"x": 150, "y": 350}, "size": {"width": 50, "height": 50}},
-      {"pos": {"x": 200, "y": 350}, "size": {"width": 50, "height": 50}},
-      {"pos": {"x": 550, "y": 350}, "size": {"width": 50, "height": 50}},
-      {"pos": {"x": 600, "y": 350}, "size": {"width": 50, "height": 50}},
+      {"pos": {"x": 150, "y": 350}, "size": {"width": 100, "height": 50}},
+      {"pos": {"x": 550, "y": 350}, "size": {"width": 100, "height": 50}},
 
-      {"pos": {"x": 350, "y": 250}, "size": {"width": 50, "height": 50}},
-      {"pos": {"x": 400, "y": 250}, "size": {"width": 50, "height": 50}}
+      {"pos": {"x": 350, "y": 250}, "size": {"width": 100, "height": 50}}
     ],
     "characters": []
   }
