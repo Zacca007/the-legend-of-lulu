@@ -1,0 +1,87 @@
+{
+	"kind" : "toolchains",
+	"toolchains" : 
+	[
+		{
+			"compiler" : 
+			{
+				"id" : "GNU",
+				"implicit" : 
+				{
+					"includeDirectories" : 
+					[
+						"/nix/store/pia38917zmilsf5xcyk8d4mvk6ngcfsx-gdb-16.2/include",
+						"/nix/store/v172zs5wdv59gqjpmkl5mrz4530x1g8j-raylib-5.5/include",
+						"/nix/store/vywrcd6bq9znh1xmql9l1dz29kphg6k8-glu-9.0.3-dev/include",
+						"/nix/store/n26psrbrfci8m9b35cd2090lirjchd05-libglvnd-1.7.0-dev/include",
+						"/nix/store/dfg6nawjdqqrb4cm0lasgzw08wrrkvkq-libX11-1.8.12-dev/include",
+						"/nix/store/w0qf0w82rcrqr4yr94nfs59fizcgdad1-xorgproto-2024.1/include",
+						"/nix/store/pji7sn0wc1yw9kzxlrs8gysb12j8dm5v-libxcb-1.17.0-dev/include",
+						"/nix/store/vgi5jkglabcvmhsrp8wixg1r2dhjyvva-nlohmann_json-3.11.3/include",
+						"/nix/store/8adzgnxs3s0pbj22qhk9zjxi1fqmz3xv-gcc-14.3.0/include/c++/14.3.0",
+						"/nix/store/8adzgnxs3s0pbj22qhk9zjxi1fqmz3xv-gcc-14.3.0/include/c++/14.3.0/x86_64-unknown-linux-gnu",
+						"/nix/store/8adzgnxs3s0pbj22qhk9zjxi1fqmz3xv-gcc-14.3.0/include/c++/14.3.0/backward",
+						"/nix/store/8adzgnxs3s0pbj22qhk9zjxi1fqmz3xv-gcc-14.3.0/lib/gcc/x86_64-unknown-linux-gnu/14.3.0/include",
+						"/nix/store/8adzgnxs3s0pbj22qhk9zjxi1fqmz3xv-gcc-14.3.0/include",
+						"/nix/store/8adzgnxs3s0pbj22qhk9zjxi1fqmz3xv-gcc-14.3.0/lib/gcc/x86_64-unknown-linux-gnu/14.3.0/include-fixed",
+						"/nix/store/m3n0h7646c7qwf6dbvdqhslmxmv2dg3z-glibc-2.40-66-dev/include",
+						"/usr/include"
+					],
+					"linkDirectories" : 
+					[
+						"/usr/lib",
+						"/usr/lib32",
+						"/nix/store/pia38917zmilsf5xcyk8d4mvk6ngcfsx-gdb-16.2/lib",
+						"/nix/store/v172zs5wdv59gqjpmkl5mrz4530x1g8j-raylib-5.5/lib",
+						"/nix/store/45hwsgjwa6nxxb5rzz2kl68g3ikfprm6-libglvnd-1.7.0/lib",
+						"/nix/store/yb2sk6szaqazppa0lqylqrp2r6p5jkw2-glu-9.0.3/lib",
+						"/nix/store/ck4f1lhzmbbrpharmzxnqzw4vfbgzkr7-libxcb-1.17.0/lib",
+						"/nix/store/ayswhp8g569mhb0gbgxrvqw53hsq59mz-libX11-1.8.12/lib",
+						"/nix/store/g8zyryr9cr6540xsyg4avqkwgxpnwj2a-glibc-2.40-66/lib",
+						"/nix/store/8adzgnxs3s0pbj22qhk9zjxi1fqmz3xv-gcc-14.3.0/lib/gcc/x86_64-unknown-linux-gnu/14.3.0",
+						"/nix/store/dj06r96j515npcqi9d8af1d1c60bx2vn-gcc-14.3.0-lib/lib",
+						"/nix/store/87zpmcmwvn48z4lbrfba74b312h22s6c-binutils-wrapper-2.44/bin",
+						"/nix/store/8adzgnxs3s0pbj22qhk9zjxi1fqmz3xv-gcc-14.3.0/lib"
+					],
+					"linkFrameworkDirectories" : [],
+					"linkLibraries" : 
+					[
+						"stdc++",
+						"m",
+						"gcc_s",
+						"gcc",
+						"c",
+						"gcc_s",
+						"gcc"
+					]
+				},
+				"path" : "/run/current-system/sw/bin/g++",
+				"version" : "14.3.0"
+			},
+			"language" : "CXX",
+			"sourceFileExtensions" : 
+			[
+				"C",
+				"M",
+				"c++",
+				"cc",
+				"cpp",
+				"cxx",
+				"m",
+				"mm",
+				"mpp",
+				"CPP",
+				"ixx",
+				"cppm",
+				"ccm",
+				"cxxm",
+				"c++m"
+			]
+		}
+	],
+	"version" : 
+	{
+		"major" : 1,
+		"minor" : 0
+	}
+}

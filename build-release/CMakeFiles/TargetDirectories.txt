@@ -1,0 +1,3 @@
+/home/pietro/Desktop/projects/the-legend-of-lulu/build-release/CMakeFiles/the_legend_of_lulu.dir
+/home/pietro/Desktop/projects/the-legend-of-lulu/build-release/CMakeFiles/edit_cache.dir
+/home/pietro/Desktop/projects/the-legend-of-lulu/build-release/CMakeFiles/rebuild_cache.dir

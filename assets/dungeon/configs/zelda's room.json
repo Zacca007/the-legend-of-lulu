@@ -1,0 +1,39 @@
+{
+  "background": "assets/dungeon/zelda's room.png",
+  "music": "assets/dungeon/zelda's lullaby.mp3",
+  "inputs": [],
+  "arena": {
+    "pos": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 800,
+      "height": 550
+    },
+    "doors": [
+      {
+        "pos": {"x": 750, "y": 250},
+        "size": {"width": 50, "height": 50},
+        "destination": "assets/dungeon/configs/room 1.json",
+        "spawn": {"x": 50, "y": 250},
+        "changeMusic": true
+      }
+    ],
+    "actors": [
+      {"pos": {"x": 0, "y": 0}, "size": {"width": 800, "height":  100}},
+      {"pos": {"x": 0, "y": 450}, "size": {"width": 800, "height":  100}},
+      {"pos": {"x": 0, "y": 0}, "size": {"width": 100, "height":  550}},
+      {"pos": {"x": 700, "y": 0}, "size": {"width": 100, "height":  250}},
+      {"pos": {"x": 700, "y": 300}, "size": {"width": 100, "height":  250}},
+
+      {"pos": {"x": 150, "y": 150}, "size": {"width": 500, "height": 50}},
+      {"pos": {"x": 150, "y": 200}, "size": {"width": 50, "height": 150}},
+
+      {"pos": {"x": 600, "y": 200}, "size": {"width": 50, "height": 150}},
+      {"pos": {"x": 150, "y": 350}, "size": {"width": 200, "height": 50}},
+      {"pos": {"x": 450, "y": 350}, "size": {"width": 200, "height": 50}}
+    ],
+    "characters": []
+  }
+}
