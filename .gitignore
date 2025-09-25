@@ -35,5 +35,5 @@
 .clang-format
 .vscode/
 .idea/
-.build/
-.build-release/
+build/
+build-release/
