@@ -13,7 +13,10 @@ class Actor
     Arena *arena_;
 
   public:
+    //si usa per attori e figli di attori, che hanno diverse configurazioni per ogni istanza (oggetti di scena, porte)
     Actor(Vec2<float> pos, Vec2<float> size, const std::string &sprite = "");
+
+    //si usa per attori complessi (giocatore, personaggi, nemici) che hanno sempre la stessa configurazione (json unico)
     explicit Actor(Vec2<float> pos, const std::string &configPath);
     virtual ~Actor() = default;
 
