@@ -162,6 +162,7 @@ Direction Link::updatedDirection() const
 Vec2<float> Link::calculateMovement(const Direction dir) const
 {
     Vec2<float> movement{};
+    const auto diagonal = speed_.diagonal().value();
     switch (dir)
     {
     case D_UP:
@@ -177,27 +178,20 @@ Vec2<float> Link::calculateMovement(const Direction dir) const
         movement = {speed_.x, 0};
         break;
     case D_UPLEFT:
-        movement = {-speed_.x, -speed_.y};
+        movement = {-diagonal.x, -diagonal.y};
         break;
     case D_UPRIGHT:
-        movement = {speed_.x, -speed_.y};
+        movement = {diagonal.x, -diagonal.y};
         break;
     case D_DOWNLEFT:
-        movement = {-speed_.x, speed_.y};
+        movement = {-diagonal.x, diagonal.y};
         break;
     case D_DOWNRIGHT:
-        movement = {speed_.x, speed_.y};
+        movement = {diagonal.x, diagonal.y};
         break;
     case D_NONE:
     default:
         break;
-    }
-
-    // Normalize diagonal movement to prevent faster diagonal movement
-    if (const auto diagonal = movement.diagonal();
-        (dir == D_UPLEFT || dir == D_UPRIGHT || dir == D_DOWNLEFT || dir == D_DOWNRIGHT) && diagonal.has_value())
-    {
-        movement = diagonal.value();
     }
 
     return movement;
