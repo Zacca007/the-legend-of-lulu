@@ -39,14 +39,6 @@
       {"pos": {"x": 450, "y": 350}, "size": {"width": 50, "height":  50}},
       {"pos": {"x": 600, "y": 350}, "size": {"width": 50, "height":  50}}
     ],
-    "characters": [
-      {
-        "type": "Zol",
-        "pos": {
-          "x": 500,
-          "y": 100
-        }
-      }
-    ]
+    "NPCs": []
   }
 }

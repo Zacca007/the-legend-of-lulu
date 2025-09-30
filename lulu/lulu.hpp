@@ -7,3 +7,4 @@
 #include "fighters/fighter.hpp"
 #include "fighters/link.hpp"
 #include "utility actors/door.hpp"
+#include "utility actors/npc.hpp"

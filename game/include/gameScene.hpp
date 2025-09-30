@@ -1,6 +1,6 @@
 #pragma once
-#include "lulu.hpp"
 #include <raylib.h>
+#include "lulu.hpp"
 #include <string>
 #include <vector>
 
