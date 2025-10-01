@@ -1,6 +1,10 @@
 #include "gameplay.hpp"
 #include <nlohmann/json.hpp>
 
+#include "dialogue.hpp"
+#include "game.hpp"
+#include "menu.hpp"
+
 namespace game
 {
     Gameplay::Gameplay(Game* game, const std::string& configPath)
@@ -30,41 +34,80 @@ namespace game
     {
         UpdateMusicStream(music_);
         arena_.tick(activeInputs());
-        lulu::Link* pLink = nullptr;
-        for (const auto& actor : arena_.actors())
-        {
-            if (pLink = dynamic_cast<lulu::Link*>(actor.get()); pLink != nullptr)
-            {
-                break;
-            }
-        }
+
+        // Trova Link tra gli attori
+        lulu::Link* pLink = findLink();
         if (!pLink) return;
 
-        std::string destination{};
-        lulu::Vec2<float> spawn{};
-        bool changeMusic = false;
-        for (auto [target, collisionDirection] : arena_.collisions().at(pLink))
+        // Controlla se Link ha toccato una porta
+        if (const auto doorInfo = checkDoorCollision(pLink))
+        {
+            changeRoom(pLink, doorInfo.value());
+        }
+
+        const auto npc = checkNpcCollision(pLink).value();
+
+    }
+
+    lulu::Link* Gameplay::findLink() const
+    {
+        for (const auto& actor : arena_.actors())
+        {
+            if (auto* link = dynamic_cast<lulu::Link*>(actor.get()))
+            {
+                return link;
+            }
+        }
+        return nullptr;
+    }
+
+    std::optional<Gameplay::DoorInfo> Gameplay::checkDoorCollision(const lulu::Link* link) const
+    {
+        for (const auto& [target, direction] : arena_.collisions().at(link))
         {
             if (const auto* door = dynamic_cast<lulu::Door*>(target))
             {
-                destination = door->destination();
-                spawn = door->spawn();
-                changeMusic = door->changeMusic();
-                break;
+                return DoorInfo{
+                    door->destination(),
+                    door->spawn(),
+                    door->changeMusic()
+                };
             }
         }
+        return std::nullopt;
+    }
 
-        auto link = std::unique_ptr<lulu::Actor>{};
-        if (!destination.empty()) link = arena_.kill(pLink);
-
-        if (link)
+    std::optional<const lulu::NPC*> Gameplay::checkNpcCollision(const lulu::Link* link) const
+    {
+        for (const auto& [target, direction] : arena_.collisions().at(link))
         {
-            arena_ = lulu::Arena(destination);
-            setBackground(destination);
-            if (changeMusic) setMusic(destination);
-            link->setPos(spawn);
-            arena_.spawn(std::move(link));
+            if (const auto* npc = dynamic_cast<lulu::NPC*>(target))
+            {
+                return npc;
+            }
         }
+        return std::nullopt;
+    }
+
+
+    void Gameplay::changeRoom(lulu::Link* link, const DoorInfo& doorInfo)
+    {
+        // Rimuovi Link dall'arena corrente
+        auto linkPtr = arena_.kill(link);
+        if (!linkPtr) return;
+
+        // Carica la nuova stanza
+        arena_ = lulu::Arena(doorInfo.destination);
+        setBackground(doorInfo.destination);
+
+        if (doorInfo.changeMusic)
+        {
+            setMusic(doorInfo.destination);
+        }
+
+        // Riposiziona Link e rispawnalo
+        linkPtr->setPos(doorInfo.spawn);
+        arena_.spawn(std::move(linkPtr));
     }
 
     void Gameplay::render()
