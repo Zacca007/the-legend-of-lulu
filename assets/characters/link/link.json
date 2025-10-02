@@ -1,6 +1,6 @@
 {
   "actor": {
-    "sprite": "assets/link/movement/link front 1.png",
+    "sprite": "assets/characters/link/movement/link front 1.png",
     "size": {
       "width": 50,
       "height": 50
@@ -20,46 +20,46 @@
   "animations": {
     "movement": {
       "up": [
-        "assets/link/movement/link up 1.png",
-        "assets/link/movement/link up 2.png"
+        "assets/characters/link/movement/link up 1.png",
+        "assets/characters/link/movement/link up 2.png"
       ],
       "down": [
-        "assets/link/movement/link front 1.png",
-        "assets/link/movement/link front 2.png"
+        "assets/characters/link/movement/link front 1.png",
+        "assets/characters/link/movement/link front 2.png"
       ],
       "left": [
-        "assets/link/movement/link left 1.png",
-        "assets/link/movement/link left 2.png"
+        "assets/characters/link/movement/link left 1.png",
+        "assets/characters/link/movement/link left 2.png"
       ],
       "right": [
-        "assets/link/movement/link right 1.png",
-        "assets/link/movement/link right 2.png"
+        "assets/characters/link/movement/link right 1.png",
+        "assets/characters/link/movement/link right 2.png"
       ]
     },
     "attack": {
       "up": [
-        "assets/link/attack/link attack up 1.png",
-        "assets/link/attack/link attack up 2.png",
-        "assets/link/attack/link attack up 3.png",
-        "assets/link/attack/link attack up 4.png"
+        "assets/characters/link/attack/link attack down 1.png",
+        "assets/characters/link/attack/link attack up 2.png",
+        "assets/characters/link/attack/link attack up 3.png",
+        "assets/characters/link/attack/link attack up 4.png"
       ],
       "down": [
-        "assets/link/attack/link attack down 1.png",
-        "assets/link/attack/link attack down 2.png",
-        "assets/link/attack/link attack down 3.png",
-        "assets/link/attack/link attack down 4.png"
+        "assets/characters/link/attack/link attack down 1.png",
+        "assets/characters/link/attack/link attack down 2.png",
+        "assets/characters/link/attack/link attack down 3.png",
+        "assets/characters/link/attack/link attack down 4.png"
       ],
       "left": [
-        "assets/link/attack/link attack left 1.png",
-        "assets/link/attack/link attack left 2.png",
-        "assets/link/attack/link attack left 3.png",
-        "assets/link/attack/link attack left 4.png"
+        "assets/characters/link/attack/link attack left 1.png",
+        "assets/characters/link/attack/link attack left 2.png",
+        "assets/characters/link/attack/link attack left 3.png",
+        "assets/characters/link/attack/link attack left 4.png"
       ],
       "right": [
-        "assets/link/attack/link attack right 1.png",
-        "assets/link/attack/link attack right 2.png",
-        "assets/link/attack/link attack right 3.png",
-        "assets/link/attack/link attack right 4.png"
+        "assets/characters/link/attack/link attack right 1.png",
+        "assets/characters/link/attack/link attack right 2.png",
+        "assets/characters/link/attack/link attack right 3.png",
+        "assets/characters/link/attack/link attack right 4.png"
       ]
     }
   }

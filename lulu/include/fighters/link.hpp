@@ -101,7 +101,7 @@ namespace lulu
      * @param pos Posizione iniziale di spawn
      * @param configPath Percorso del file JSON (default: assets/link/link.json)
      */
-    explicit Link(Vec2<float> pos, const std::string &configPath = "assets/link/link.json");
+    explicit Link(Vec2<float> pos, const std::string &configPath = "assets/characters/link/link.json");
 
     /**
      * @brief Implementa il movimento di Link per un frame

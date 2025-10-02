@@ -148,7 +148,7 @@ namespace game
 
         // Font più grande
         constexpr int fontSize = 22;
-        constexpr int maxLineWidth = 450; // Larghezza massima per stare dentro al box
+        constexpr int maxLineWidth = 445; // Larghezza massima per stare dentro al box
 
         // 3.1) Disegna il nome del personaggio (testo grande)
         if (!speaker.empty())

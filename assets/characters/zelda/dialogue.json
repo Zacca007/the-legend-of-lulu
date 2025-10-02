@@ -2,9 +2,9 @@
   "dialogue": [
     {
       "speaker": "Princess LuLù",
-      "portrait": "assets/zelda/zelda icon.png",
+      "portrait": "assets/characters/zelda/lulu icon.png",
       "text": [
-        "…What?",
+        ". . .What?",
         "How?",
         "Why?",
         "Why did you come all this way?"
@@ -19,23 +19,22 @@
     },
     {
       "speaker": "Princess LuLù",
-      "portrait": "assets/zelda/zelda icon.png",
+      "portrait": "assets/characters/zelda/lulu icon.png",
       "text": [
         "I could have endured.",
-        "I would have carved my path to freedom."
+        "I would have carved my path out."
       ]
     },
     {
       "speaker": "Link",
       "portrait": "assets/dialogue/portraits/link.png",
       "text": [
-        "I know. Yet the shadows grew deep.",
-        "Once sworn as the realm’s knight, I could not stand idle."
+        "I know, but nce sworn as the knight of the realm, I could not stand idle."
       ]
     },
     {
       "speaker": "Princess LuLù",
-      "portrait": "assets/zelda/zelda icon.png",
+      "portrait": "assets/characters/zelda/lulu icon.png",
       "text": [
         "You are not bound to that vow any longer.",
         "My place is with the kingdom.",
@@ -48,20 +47,21 @@
       "speaker": "Link",
       "portrait": "assets/dialogue/portraits/link.png",
       "text": [
-        "Because my spirit cannot turn away.",
+        "Because I cannot turn away.",
         "Because I dread the day our bond is remembered as dust and folly.",
-        "I dread the day our deeds are but hollow carvings, stripped of meaning.",
-        "I dread the day your gaze falls on all we wrought, and feels nothing.",
-        "And perhaps that day has already come…"
+        "I cannot let it be cast aside, as if it were nothing.",
+        "Letting our victories turn to empty tales, forgotten by time.",
+        "And perhaps that day has already come. . ."
       ]
     },
     {
       "speaker": "Princess LuLù",
-      "portrait": "assets/zelda/zelda icon.png",
+      "portrait": "assets/characters/zelda/lulu icon.png",
       "text": [
         "I have never sworn to forsake you.",
         "You shielded me, and peace was restored.",
-        "But I can grant no more than this.",
+        "I thank you in name of the whole kingdom",
+        "but I can grant no more than this.",
         "Why give so much for so little?"
       ]
     },
@@ -69,11 +69,13 @@
       "speaker": "Link",
       "portrait": "assets/dialogue/portraits/link.png",
       "text": [
-        "Because it is not little.",
-        "It is the sum of my strength, and the purest I have known.",
-        "Because I will not let it fade as though it were unworthy, or never was at all.",
-        "Because no oath could bind me as my heart has bound me to you.",
-        "This is not a bargain to be repaid. It is the keeping of what should not be lost."
+        "Because it is not nothing.",
+        "It is all that is left to me, and the most precious I shall ever hold.",
+        "It must not fade as though it never was, nor be judged unworthy",
+        "For I could serve no other as I have served you,",
+        "and none would guard you as I have",
+        "This is no plea for reward, it is the keeping of what must not be lost.",
+        "you"
       ]
     }
   ]
