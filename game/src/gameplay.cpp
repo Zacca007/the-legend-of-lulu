@@ -18,11 +18,11 @@ namespace game
 
     Texture2D Gameplay::getTexture(const std::string& path)
     {
-        const auto it = textureCache_.find(path);
-        if (it == textureCache_.end())
+        // Usa emplace per evitare lookup doppio
+        auto [it, inserted] = textureCache_.try_emplace(path, Texture2D{});
+        if (inserted)
         {
-            textureCache_[path] = LoadTexture(path.c_str());
-            return textureCache_[path];
+            it->second = LoadTexture(path.c_str());
         }
         return it->second;
     }
@@ -38,45 +38,21 @@ namespace game
 
         if (dialogueManager_.isActive())
         {
-            dialogueManager_.update(deltaTime);
-            updateDialogue();
+            handleDialogueInput(deltaTime);
         }
         else
         {
-            arena_.tick(activeInputs());
-
-            lulu::Link* pLink = findLink();
-            if (!pLink) return;
-
-            // Controlla porta
-            if (const auto doorInfo = checkDoorCollision(pLink))
-            {
-                changeRoom(pLink, doorInfo.value());
-            }
-
-            // Controlla NPC
-            if (const auto npc = checkNpcCollision(pLink))
-            {
-                if (IsKeyDown(KEY_SPACE))
-                {
-                    startDialogue(npc.value());
-                }
-            }
+            handleGameplayInput();
         }
     }
 
-    void Gameplay::startDialogue(const lulu::NPC* npc)
+    void Gameplay::handleDialogueInput(float deltaTime)
     {
-        const auto dialogueLines = npc->loadDialogue();
-        dialogueManager_.startDialogue(npc, dialogueLines);
-    }
+        dialogueManager_.update(deltaTime);
 
-    void Gameplay::updateDialogue()
-    {
         if (IsKeyPressed(KEY_SPACE))
         {
             dialogueManager_.advance();
-
             if (!dialogueManager_.isActive())
             {
                 dialogueManager_.reset();
@@ -89,29 +65,62 @@ namespace game
         }
     }
 
+    void Gameplay::handleGameplayInput()
+    {
+        arena_.tick(activeInputs());
+
+        lulu::Link* pLink = findLink();
+        if (!pLink) return;
+
+        // Controlla porta
+        if (const auto doorInfo = checkDoorCollision(pLink))
+        {
+            changeRoom(pLink, doorInfo.value());
+        }
+
+        // Controlla NPC
+        if (const auto npc = checkNpcCollision(pLink))
+        {
+            if (IsKeyDown(KEY_SPACE))
+            {
+                startDialogue(npc.value());
+            }
+        }
+    }
+
+    void Gameplay::startDialogue(const lulu::NPC* npc)
+    {
+        const auto dialogueLines = npc->loadDialogue();
+        dialogueManager_.startDialogue(npc, dialogueLines);
+    }
+
     void Gameplay::render()
     {
         BeginDrawing();
         ClearBackground(BLACK);
         DrawTexture(background_, 0, 0, WHITE);
 
-        for (const auto& actor : arena_.actors())
-        {
-            if (std::string sprite = actor->sprite(); !sprite.empty())
-            {
-                const Texture2D& texture = getTexture(actor->sprite());
-                auto [x, y] = actor->pos().convert<int>();
-                DrawTexture(texture, x, y, WHITE);
-            }
-        }
+        renderActors();
 
-        // Renderizza il dialogo se attivo
         if (dialogueManager_.isActive())
         {
             dialogueManager_.render();
         }
 
         EndDrawing();
+    }
+
+    void Gameplay::renderActors()
+    {
+        for (const auto& actor : arena_.actors())
+        {
+            if (const std::string& sprite = actor->sprite(); !sprite.empty())
+            {
+                const Texture2D& texture = getTexture(sprite);
+                auto [x, y] = actor->pos().convert<int>();
+                DrawTexture(texture, x, y, WHITE);
+            }
+        }
     }
 
     lulu::Link* Gameplay::findLink() const
@@ -128,7 +137,11 @@ namespace game
 
     std::optional<Gameplay::DoorInfo> Gameplay::checkDoorCollision(const lulu::Link* link) const
     {
-        for (const auto& [target, direction] : arena_.collisions().at(link))
+        const auto& collisions = arena_.collisions();
+        auto it = collisions.find(link);
+        if (it == collisions.end()) return std::nullopt;
+
+        for (const auto& [target, direction] : it->second)
         {
             if (const auto* door = dynamic_cast<lulu::Door*>(target))
             {
@@ -144,7 +157,11 @@ namespace game
 
     std::optional<const lulu::NPC*> Gameplay::checkNpcCollision(const lulu::Link* link) const
     {
-        for (const auto& [target, direction] : arena_.collisions().at(link))
+        const auto& collisions = arena_.collisions();
+        auto it = collisions.find(link);
+        if (it == collisions.end()) return std::nullopt;
+
+        for (const auto& [target, direction] : it->second)
         {
             if (const auto* npc = dynamic_cast<lulu::NPC*>(target))
             {

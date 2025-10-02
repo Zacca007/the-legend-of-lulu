@@ -11,8 +11,7 @@ namespace game
     {
         lulu::Arena arena_;
         std::unordered_map<std::string, Texture2D> textureCache_;
-
-        DialogueManager dialogueManager_; // Sostituisce la vecchia struct
+        DialogueManager dialogueManager_;
 
         struct DoorInfo
         {
@@ -21,13 +20,28 @@ namespace game
             bool changeMusic;
         };
 
+        // Gestione texture
         Texture2D getTexture(const std::string& path);
+
+        // Ricerca attori
         lulu::Link* findLink() const;
+
+        // Gestione collisioni
         std::optional<DoorInfo> checkDoorCollision(const lulu::Link* link) const;
         std::optional<const lulu::NPC*> checkNpcCollision(const lulu::Link* link) const;
+
+        // Cambio stanza
         void changeRoom(lulu::Link* link, const DoorInfo& doorInfo);
+
+        // Gestione dialoghi
         void startDialogue(const lulu::NPC* npc);
-        void updateDialogue();
+        void handleDialogueInput(float deltaTime);
+
+        // Gestione gameplay normale
+        void handleGameplayInput();
+
+        // Rendering
+        void renderActors();
 
     public:
         explicit Gameplay(Game* game, const std::string& configPath = "assets/dungeon/rooms/hall.json");

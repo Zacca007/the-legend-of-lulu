@@ -1,10 +1,13 @@
+// dialogueManager.cpp - Versione refactored
+
 #include "dialogueManager.hpp"
 #include <raylib.h>
 #include <iostream>
+#include <unordered_map>
 
 namespace game
 {
-    DialogueManager::DialogueManager()
+        DialogueManager::DialogueManager()
     {
         // Carica la texture UNA volta sola
         dialogueBoxTexture_ = LoadTexture("assets/ui/dialoguebox.png");
@@ -126,125 +129,154 @@ namespace game
         return "";
     }
 
+    namespace
+    {
+        // Costanti estratte per migliore manutenibilità
+        constexpr int BOX_X = 100;
+        constexpr int BOX_Y = 300;
+        constexpr int PORTRAIT_SIZE = 100;
+        constexpr int PORTRAIT_PADDING = 20;
+        constexpr int TEXT_START_X = 150;
+        constexpr int TEXT_START_Y = 60;
+        constexpr int SPEAKER_FONT_SIZE = 24;
+        constexpr int TEXT_FONT_SIZE = 22;
+        constexpr int LINE_HEIGHT = 30;
+        constexpr int MAX_TEXT_WIDTH = 445;
+        constexpr int MAX_VISIBLE_LINES = 3;
+
+        // Helper per wrapping del testo
+        std::vector<std::string> wrapText(const std::string& text, int fontSize, int maxWidth)
+        {
+            std::vector<std::string> lines;
+            std::string currentLine;
+
+            for (char c : text)
+            {
+                currentLine += c;
+                int textWidth = MeasureText(currentLine.c_str(), fontSize);
+
+                if (textWidth >= maxWidth)
+                {
+                    size_t lastSpace = currentLine.find_last_of(' ');
+                    if (lastSpace != std::string::npos && lastSpace > 0)
+                    {
+                        lines.push_back(currentLine.substr(0, lastSpace));
+                        currentLine = currentLine.substr(lastSpace + 1);
+                    }
+                    else
+                    {
+                        lines.push_back(currentLine);
+                        currentLine.clear();
+                    }
+                }
+            }
+
+            if (!currentLine.empty())
+            {
+                lines.push_back(currentLine);
+            }
+
+            return lines;
+        }
+
+        void renderPortrait(const std::string& portraitPath, int x, int y)
+        {
+            if (portraitPath.empty()) return;
+
+            // Cache della texture invece di ricaricarla ogni frame
+            static std::unordered_map<std::string, Texture2D> portraitCache;
+
+            if (!portraitCache.contains(portraitPath))
+            {
+                Texture2D portrait = LoadTexture(portraitPath.c_str());
+                if (portrait.id != 0)
+                {
+                    portraitCache[portraitPath] = portrait;
+                }
+                else
+                {
+                    std::cout << "ERRORE: Impossibile caricare ritratto: " << portraitPath << std::endl;
+                    return;
+                }
+            }
+
+            DrawTexture(portraitCache[portraitPath], x, y, WHITE);
+        }
+
+        void renderPlaceholderPortrait(int x, int y, int size)
+        {
+            DrawRectangle(x, y, size, size, Color{50, 50, 80, 200});
+            DrawRectangleLines(x, y, size, size, BLUE);
+            DrawText("?", x + 40, y + 40, 30, WHITE);
+            DrawText("No img", x + 10, y + size + 10, 12, LIGHTGRAY);
+        }
+    }
+
     void DialogueManager::render() const
     {
         if (!isActive_) return;
 
-        // POSIZIONE E DIMENSIONI FISSE
-        constexpr int boxX = 100;
-        constexpr int boxY = 300;
         const int boxWidth = dialogueBoxTexture_.width;
         const int boxHeight = dialogueBoxTexture_.height;
 
-        // 1) DIBG UN RETTANGOLO BLU TRASPARENTE SOTTO IL BOX
-        DrawRectangle(boxX, boxY, boxWidth, boxHeight, Color{30, 60, 120, 180}); // Blu trasparente
+        // 1. Background semi-trasparente
+        DrawRectangle(BOX_X, BOX_Y, boxWidth, boxHeight, Color{30, 60, 120, 180});
 
-        // 2) POI DISEGNA IL PNG DEL BOX SOPRA (con trasparenza naturale del PNG)
-        DrawTexture(dialogueBoxTexture_, boxX, boxY, WHITE);
+        // 2. Texture del dialogue box
+        DrawTexture(dialogueBoxTexture_, BOX_X, BOX_Y, WHITE);
 
-        // 3) TESTO PIÙ GRANDE e WRAPPING AUTOMATICO
-        const std::string currentText = getCurrentText();
+        // 3. Speaker name
         const std::string speaker = getCurrentSpeaker();
-
-        // Font più grande
-        constexpr int fontSize = 22;
-        constexpr int maxLineWidth = 445; // Larghezza massima per stare dentro al box
-
-        // 3.1) Disegna il nome del personaggio (testo grande)
         if (!speaker.empty())
         {
-            DrawText(speaker.c_str(), boxX + 150, boxY + 15, 24, WHITE);
+            DrawText(speaker.c_str(), BOX_X + TEXT_START_X, BOX_Y + 15,
+                     SPEAKER_FONT_SIZE, WHITE);
         }
 
-        // 3.2) Dividi il testo in righe con wrapping
-        std::vector<std::string> lines;
-        std::string currentLine;
+        // 4. Wrapped text
+        const std::string currentText = getCurrentText();
+        std::vector<std::string> lines = wrapText(currentText, TEXT_FONT_SIZE, MAX_TEXT_WIDTH);
 
-        for (char c : currentText)
+        for (size_t i = 0; i < lines.size() && i < MAX_VISIBLE_LINES; i++)
         {
-            currentLine += c;
-            // Misura la larghezza del testo
-            int textWidth = MeasureText(currentLine.c_str(), fontSize);
-
-            if (textWidth >= maxLineWidth)
-            {
-                // Trova l'ultimo spazio per spezzare in modo pulito
-                size_t lastSpace = currentLine.find_last_of(' ');
-                if (lastSpace != std::string::npos && lastSpace > 0)
-                {
-                    lines.push_back(currentLine.substr(0, lastSpace));
-                    currentLine = currentLine.substr(lastSpace + 1);
-                }
-                else
-                {
-                    // Se non ci sono spazi, spezza comunque
-                    lines.push_back(currentLine);
-                    currentLine.clear();
-                }
-            }
+            DrawText(lines[i].c_str(),
+                     BOX_X + TEXT_START_X,
+                     BOX_Y + TEXT_START_Y + (i * LINE_HEIGHT),
+                     TEXT_FONT_SIZE,
+                     WHITE);
         }
 
-        if (!currentLine.empty())
-        {
-            lines.push_back(currentLine);
-        }
-
-        // 3.3) Disegna le righe (massimo 3 righe)
-        constexpr int startY = boxY + 60;
-
-        for (size_t i = 0; i < lines.size() && i < 3; i++)
-        {
-            constexpr int lineHeight = 30;
-            DrawText(lines[i].c_str(), boxX + 150, startY + (i * lineHeight), fontSize, WHITE);
-        }
-
-        // 4) GESTIONE RITRATTI - VERSIONE SEMPLICE
-        std::string portraitPath = getCurrentPortrait();
+        // 5. Portrait (con gestione errori migliorata)
+        const std::string portraitPath = getCurrentPortrait();
         if (!portraitPath.empty())
         {
-            // DEBUG
-            std::cout << "Tentativo di caricare ritratto: " << portraitPath << std::endl;
-
-            Texture2D portrait = LoadTexture(portraitPath.c_str());
-            if (portrait.id != 0)
-            {
-                std::cout << "SUCCESSO - Ritratto caricato, ID: " << portrait.id << std::endl;
-                DrawTexture(portrait, boxX + 20, boxY + 20, WHITE);
-                // NON UNLOADARE QUI - lascia in memoria per questo frame
-            }
-            else
-            {
-                std::cout << "FALLIMENTO - Ritratto non caricato" << std::endl;
-                // Placeholder
-                DrawRectangle(boxX + 20, boxY + 20, 100, 100, Color{50, 50, 80, 200});
-                DrawRectangleLines(boxX + 20, boxY + 20, 100, 100, BLUE);
-                DrawText("?", boxX + 60, boxY + 60, 30, WHITE);
-                DrawText("No img", boxX + 30, boxY + 130, 12, LIGHTGRAY);
-            }
-
-            // Indicatore di continuazione (lampeggiante)
-            if (isTextComplete_)
-            {
-                if (static_cast<int>(GetTime() * 2) % 2 == 0)
-                {
-                    const char* indicator = hasMoreLines() ? "▼" : "■";
-                    DrawText(indicator, boxX + boxWidth - 40, boxY + boxHeight - 40, 28, WHITE);
-                }
-            }
-
-            // Istruzioni con testo più leggibile
-            const int instructionsY = boxY + boxHeight - 30;
-            if (isTextComplete_)
-            {
-                const char* spaceText = hasMoreLines() ? "SPACE - Continua" : "SPACE - Chiudi";
-                DrawText(spaceText, boxX + 150, instructionsY, 16, LIGHTGRAY);
-            }
-            else
-            {
-                DrawText("SPACE - Velocizza", boxX + 150, instructionsY, 16, LIGHTGRAY);
-            }
-
-            DrawText("ESC - Salta", boxX + boxWidth - 120, instructionsY, 16, GRAY);
+            renderPortrait(portraitPath, BOX_X + PORTRAIT_PADDING, BOX_Y + PORTRAIT_PADDING);
         }
-    } // namespace game
+        else
+        {
+            renderPlaceholderPortrait(BOX_X + PORTRAIT_PADDING, BOX_Y + PORTRAIT_PADDING,
+                                      PORTRAIT_SIZE);
+        }
+
+        // 6. Indicatore di continuazione (lampeggiante)
+        if (isTextComplete_ && static_cast<int>(GetTime() * 2) % 2 == 0)
+        {
+            const char* indicator = hasMoreLines() ? "▼" : "■";
+            DrawText(indicator, BOX_X + boxWidth - 40, BOX_Y + boxHeight - 40, 28, WHITE);
+        }
+
+        // 7. Istruzioni
+        const int instructionsY = BOX_Y + boxHeight - 30;
+        if (isTextComplete_)
+        {
+            const char* spaceText = hasMoreLines() ? "SPACE - Continua" : "SPACE - Chiudi";
+            DrawText(spaceText, BOX_X + TEXT_START_X, instructionsY, 16, LIGHTGRAY);
+        }
+        else
+        {
+            DrawText("SPACE - Velocizza", BOX_X + TEXT_START_X, instructionsY, 16, LIGHTGRAY);
+        }
+
+        DrawText("ESC - Salta", BOX_X + boxWidth - 120, instructionsY, 16, GRAY);
+    }
 }
