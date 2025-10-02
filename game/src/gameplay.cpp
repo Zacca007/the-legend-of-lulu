@@ -1,9 +1,6 @@
 #include "gameplay.hpp"
 #include <nlohmann/json.hpp>
-
-#include "dialogue.hpp"
 #include "game.hpp"
-#include "menu.hpp"
 
 namespace game
 {
@@ -32,21 +29,89 @@ namespace game
 
     void Gameplay::tick()
     {
+        static double lastTime = GetTime();
+        const double currentTime = GetTime();
+        const auto deltaTime = static_cast<float>(currentTime - lastTime);
+        lastTime = currentTime;
+
         UpdateMusicStream(music_);
-        arena_.tick(activeInputs());
 
-        // Trova Link tra gli attori
-        lulu::Link* pLink = findLink();
-        if (!pLink) return;
-
-        // Controlla se Link ha toccato una porta
-        if (const auto doorInfo = checkDoorCollision(pLink))
+        if (dialogueManager_.isActive())
         {
-            changeRoom(pLink, doorInfo.value());
+            dialogueManager_.update(deltaTime);
+            updateDialogue();
+        }
+        else
+        {
+            arena_.tick(activeInputs());
+
+            lulu::Link* pLink = findLink();
+            if (!pLink) return;
+
+            // Controlla porta
+            if (const auto doorInfo = checkDoorCollision(pLink))
+            {
+                changeRoom(pLink, doorInfo.value());
+            }
+
+            // Controlla NPC
+            if (const auto npc = checkNpcCollision(pLink))
+            {
+                if (IsKeyDown(KEY_SPACE))
+                {
+                    startDialogue(npc.value());
+                }
+            }
+        }
+    }
+
+    void Gameplay::startDialogue(const lulu::NPC* npc)
+    {
+        const auto dialogueLines = npc->loadDialogue();
+        dialogueManager_.startDialogue(npc, dialogueLines);
+    }
+
+    void Gameplay::updateDialogue()
+    {
+        if (IsKeyPressed(KEY_SPACE))
+        {
+            dialogueManager_.advance();
+
+            if (!dialogueManager_.isActive())
+            {
+                dialogueManager_.reset();
+            }
         }
 
-        const auto npc = checkNpcCollision(pLink).value();
+        if (IsKeyPressed(KEY_ESCAPE))
+        {
+            dialogueManager_.reset();
+        }
+    }
 
+    void Gameplay::render()
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawTexture(background_, 0, 0, WHITE);
+
+        for (const auto& actor : arena_.actors())
+        {
+            if (std::string sprite = actor->sprite(); !sprite.empty())
+            {
+                const Texture2D& texture = getTexture(actor->sprite());
+                auto [x, y] = actor->pos().convert<int>();
+                DrawTexture(texture, x, y, WHITE);
+            }
+        }
+
+        // Renderizza il dialogo se attivo
+        if (dialogueManager_.isActive())
+        {
+            dialogueManager_.render();
+        }
+
+        EndDrawing();
     }
 
     lulu::Link* Gameplay::findLink() const
@@ -89,14 +154,11 @@ namespace game
         return std::nullopt;
     }
 
-
     void Gameplay::changeRoom(lulu::Link* link, const DoorInfo& doorInfo)
     {
-        // Rimuovi Link dall'arena corrente
         auto linkPtr = arena_.kill(link);
         if (!linkPtr) return;
 
-        // Carica la nuova stanza
         arena_ = lulu::Arena(doorInfo.destination);
         setBackground(doorInfo.destination);
 
@@ -105,37 +167,7 @@ namespace game
             setMusic(doorInfo.destination);
         }
 
-        // Riposiziona Link e rispawnalo
         linkPtr->setPos(doorInfo.spawn);
         arena_.spawn(std::move(linkPtr));
     }
-
-    void Gameplay::render()
-    {
-        BeginDrawing();
-        ClearBackground(BLACK);
-        DrawTexture(background_, 0, 0, WHITE);
-
-        auto [ax, ay] = arena_.pos().convert<int>();
-        auto [aw, ah] = arena_.size().convert<int>();
-        DrawRectangleLines(ax, ay, aw, ah, WHITE);
-        for (const auto& actor : arena_.actors())
-        {
-            auto [ax, ay] = actor->pos().convert<int>();
-            auto [aw, ah] = actor->size().convert<int>();
-            DrawRectangleLines(ax, ay, aw, ah, WHITE);
-        }
-
-        for (const auto& actor : arena_.actors())
-        {
-            if (std::string sprite = actor->sprite(); !sprite.empty())
-            {
-                const Texture2D& texture = getTexture(actor->sprite());
-                auto [x, y] = actor->pos().convert<int>();
-                DrawTexture(texture, x, y, WHITE);
-            }
-        }
-
-        EndDrawing();
-    }
-} // namespace game
+}

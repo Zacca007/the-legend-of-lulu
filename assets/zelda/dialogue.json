@@ -1,0 +1,80 @@
+{
+  "dialogue": [
+    {
+      "speaker": "Princess LuLù",
+      "portrait": "assets/zelda/zelda icon.png",
+      "text": [
+        "…What?",
+        "How?",
+        "Why?",
+        "Why did you come all this way?"
+      ]
+    },
+    {
+      "speaker": "Link",
+      "portrait": "assets/dialogue/portraits/link.png",
+      "text": [
+        "Because you were in peril."
+      ]
+    },
+    {
+      "speaker": "Princess LuLù",
+      "portrait": "assets/zelda/zelda icon.png",
+      "text": [
+        "I could have endured.",
+        "I would have carved my path to freedom."
+      ]
+    },
+    {
+      "speaker": "Link",
+      "portrait": "assets/dialogue/portraits/link.png",
+      "text": [
+        "I know. Yet the shadows grew deep.",
+        "Once sworn as the realm’s knight, I could not stand idle."
+      ]
+    },
+    {
+      "speaker": "Princess LuLù",
+      "portrait": "assets/zelda/zelda icon.png",
+      "text": [
+        "You are not bound to that vow any longer.",
+        "My place is with the kingdom.",
+        "My people await me, my crown commands me.",
+        "You shall ever be welcome, but I cannot dwell at your side.",
+        "Why do you still come to me?"
+      ]
+    },
+    {
+      "speaker": "Link",
+      "portrait": "assets/dialogue/portraits/link.png",
+      "text": [
+        "Because my spirit cannot turn away.",
+        "Because I dread the day our bond is remembered as dust and folly.",
+        "I dread the day our deeds are but hollow carvings, stripped of meaning.",
+        "I dread the day your gaze falls on all we wrought, and feels nothing.",
+        "And perhaps that day has already come…"
+      ]
+    },
+    {
+      "speaker": "Princess LuLù",
+      "portrait": "assets/zelda/zelda icon.png",
+      "text": [
+        "I have never sworn to forsake you.",
+        "You shielded me, and peace was restored.",
+        "But I can grant no more than this.",
+        "Why give so much for so little?"
+      ]
+    },
+    {
+      "speaker": "Link",
+      "portrait": "assets/dialogue/portraits/link.png",
+      "text": [
+        "Because it is not little.",
+        "It is the sum of my strength, and the purest I have known.",
+        "Because I will not let it fade as though it were unworthy, or never was at all.",
+        "Because no oath could bind me as my heart has bound me to you.",
+        "This is not a bargain to be repaid. It is the keeping of what should not be lost."
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "background": "assets/dungeon/zelda's room.png",
   "music": "assets/dungeon/zelda's lullaby.mp3",
-  "inputs": [],
+  "inputs": [32, 65, 68, 83, 87, 256, 257, 262, 263, 264, 265],
   "arena": {
     "pos": {
       "x": 0,

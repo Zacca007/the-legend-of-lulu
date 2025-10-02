@@ -65,10 +65,11 @@ namespace lulu
         {
             Vec2 pos = {npcJson.at("pos").at("x").get<float>(), npcJson.at("pos").at("y").get<float>()};
             Vec2 size = {npcJson.at("size").at("width").get<float>(), npcJson.at("size").at("height").get<float>()};
-            std::string name = npcJson.at("name").get<std::string>();
-            std::string sprite = npcJson.at("sprite").get<std::string>();
-            std::string dialogue = npcJson.at("dialoguePath").get<std::string>();
-            spawn(std::make_unique<NPC>(pos, size, sprite, name, dialogue));
+            auto name = npcJson.at("name").get<std::string>();
+            auto sprite = npcJson.at("sprite").get<std::string>();
+            auto dialogue = npcJson.at("dialoguePath").get<std::string>();
+
+            spawn(std::make_unique<NPC>(pos, size, sprite, dialogue, name));
         }
     }
 

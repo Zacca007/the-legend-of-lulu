@@ -111,6 +111,7 @@ enum Key
     K_S = 83,       // Tasto S (giù)
     K_W = 87,       // Tasto W (su)
     K_ENTER = 257,  // Invio
+    K_ESCAPE = 256,
     K_RIGHT = 262,  // Freccia destra
     K_LEFT = 263,   // Freccia sinistra
     K_DOWN = 264,   // Freccia giù

@@ -1,7 +1,7 @@
 {
   "background": "assets/dungeon/room 1.png",
   "music": "assets/dungeon/dungeon.mp3",
-  "inputs": [65, 68, 83, 87, 257, 262, 263, 264, 265],
+  "inputs": [32, 65, 68, 83, 87, 257, 262, 263, 264, 265],
   "arena": {
     "pos": {
       "x": 0,
