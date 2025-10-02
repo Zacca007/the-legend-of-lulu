@@ -12,12 +12,14 @@ namespace lulu
 
     std::vector<DialogueLine> NPC::loadDialogue() const
     {
-        if (dialogueLoaded_) {
+        if (dialogueLoaded_)
+        {
             return cachedDialogue_;
         }
 
         std::ifstream f(dialoguePath_);
-        if (!f.is_open()) {
+        if (!f.is_open())
+        {
             return {{"Sistema", "[Errore: dialogo non trovato: " + dialoguePath_ + "]", ""}};
         }
 
@@ -26,24 +28,30 @@ namespace lulu
 
         std::vector<DialogueLine> dialogueLines;
 
-        if (j.contains("dialogue") && j["dialogue"].is_array()) {
-            for (const auto& entry : j["dialogue"]) {
+        if (j.contains("dialogue") && j["dialogue"].is_array())
+        {
+            for (const auto& entry : j["dialogue"])
+            {
                 if (entry.contains("speaker") && entry.contains("text") &&
-                    entry["text"].is_array() && entry.contains("portrait")) {
-
+                    entry["text"].is_array() && entry.contains("portrait"))
+                {
                     std::string speaker = entry["speaker"].get<std::string>();
                     std::string portrait = entry["portrait"].get<std::string>();
 
                     // PER OGNI elemento nell'array text, crea una riga SEPARATA
                     // Questo è CORRETTO - ogni frase deve essere una riga separata
-                    for (const auto& line : entry["text"]) {
-                        if (line.is_string()) {
+                    for (const auto& line : entry["text"])
+                    {
+                        if (line.is_string())
+                        {
                             dialogueLines.push_back({speaker, line.get<std::string>(), portrait});
                         }
                     }
-                    }
+                }
             }
-        } else {
+        }
+        else
+        {
             dialogueLines.push_back({"Sistema", "[Errore: formato dialogo non valido]", ""});
         }
 

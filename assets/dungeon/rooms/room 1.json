@@ -1,6 +1,6 @@
 {
-  "background": "assets/dungeon/room 1.png",
-  "music": "assets/dungeon/dungeon.mp3",
+  "background": "assets/dungeon/backgrounds/room 1.png",
+  "music": "assets/audio/music/dungeon.mp3",
   "inputs": [32, 65, 68, 83, 87, 257, 262, 263, 264, 265],
   "arena": {
     "pos": {
@@ -15,14 +15,14 @@
       {
         "pos": {"x": 375, "y": 500},
         "size": {"width": 50, "height": 50},
-        "destination": "assets/dungeon/configs/hall.json",
+        "destination": "assets/dungeon/rooms/hall.json",
         "spawn": {"x": 375, "y": 50},
         "changeMusic": false
       },
       {
         "pos": {"x": 0, "y": 250},
         "size": {"width": 50, "height": 50},
-        "destination": "assets/dungeon/configs/zelda's room.json",
+        "destination": "assets/dungeon/rooms/zelda's room.json",
         "spawn": {"x": 700, "y": 250},
         "changeMusic": true
       }

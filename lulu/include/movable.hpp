@@ -4,7 +4,6 @@
 
 namespace lulu
 {
-
   /**
    * @brief Classe base per tutti gli oggetti che possono muoversi
    *
@@ -43,7 +42,7 @@ namespace lulu
      *
      * @param configPath Percorso del file di configurazione JSON
      */
-    explicit Movable(const std::string &configPath);
+    explicit Movable(const std::string& configPath);
 
     // === METODI VIRTUALI PURI (DA IMPLEMENTARE NELLE SOTTOCLASSI) ===
 
@@ -87,7 +86,7 @@ namespace lulu
     // === GETTERS ===
 
     /** @brief Restituisce la velocità di movimento corrente */
-    [[nodiscard]] const Vec2<float> &speed() const;
+    [[nodiscard]] const Vec2<float>& speed() const;
 
     // === METODO PRINCIPALE ===
 
@@ -104,5 +103,4 @@ namespace lulu
      */
     virtual void move() = 0;
   };
-
 } // namespace lulu

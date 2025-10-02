@@ -16,7 +16,6 @@ namespace game
    */
   class Game final
   {
-  private:
     // Dimensioni fisse della finestra di gioco (larghezza x altezza)
     const lulu::Vec2<int> SCREEN_SIZE{800, 550};
 
@@ -48,6 +47,6 @@ namespace game
      *
      * @param newScene Nuova scena da attivare (prende ownership)
      */
-    void switchScene(std::unique_ptr<GameScene> &newScene);
+    void switchScene(std::unique_ptr<GameScene>& newScene);
   };
 } // namespace game

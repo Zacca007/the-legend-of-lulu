@@ -20,10 +20,10 @@ namespace lulu
   class Actor
   {
   protected:
-    Vec2<float> pos_;    // Posizione nell'arena (angolo in alto a sinistra)
+    Vec2<float> pos_; // Posizione nell'arena (angolo in alto a sinistra)
     Vec2<float> size_{}; // Dimensioni del rettangolo di collisione
     std::string sprite_; // Percorso del file immagine da renderizzare
-    Arena *arena_;       // Puntatore all'arena che contiene questo attore
+    Arena* arena_; // Puntatore all'arena che contiene questo attore
 
   public:
     /**
@@ -35,7 +35,7 @@ namespace lulu
      * @param size Dimensioni del rettangolo di collisione
      * @param sprite Percorso dell'immagine (opzionale)
      */
-    Actor(Vec2<float> pos, Vec2<float> size, const std::string &sprite = "");
+    Actor(Vec2<float> pos, Vec2<float> size, const std::string& sprite = "");
 
     /**
      * @brief Costruttore per attori complessi che caricano da JSON
@@ -46,7 +46,7 @@ namespace lulu
      * @param pos Posizione iniziale (sovrascrive quella nel JSON)
      * @param configPath Percorso del file di configurazione JSON
      */
-    explicit Actor(Vec2<float> pos, const std::string &configPath);
+    explicit Actor(Vec2<float> pos, const std::string& configPath);
 
     /**
      * @brief Distruttore virtuale per ereditarietà corretta
@@ -56,16 +56,16 @@ namespace lulu
     // === GETTERS ===
 
     /** @brief Restituisce la posizione corrente */
-    [[nodiscard]] const Vec2<float> &pos() const;
+    [[nodiscard]] const Vec2<float>& pos() const;
 
     /** @brief Restituisce le dimensioni del rettangolo di collisione */
-    [[nodiscard]] const Vec2<float> &size() const;
+    [[nodiscard]] const Vec2<float>& size() const;
 
     /** @brief Restituisce il percorso della sprite */
-    [[nodiscard]] const std::string &sprite() const;
+    [[nodiscard]] const std::string& sprite() const;
 
     /** @brief Restituisce l'arena che contiene questo attore */
-    [[nodiscard]] Arena *arena() const;
+    [[nodiscard]] Arena* arena() const;
 
     // === SETTERS ===
 
@@ -73,7 +73,7 @@ namespace lulu
      * @brief Imposta l'arena di appartenenza
      * @param arena Puntatore alla nuova arena
      */
-    void setArena(Arena *arena);
+    void setArena(Arena* arena);
 
     /**
      * @brief Cambia la posizione dell'attore
@@ -93,7 +93,7 @@ namespace lulu
      * @param other L'altro attore da controllare
      * @return Direzione della collisione (D_NONE se non c'è collisione)
      */
-    Direction checkCollision(const Actor *other) const;
+    Direction checkCollision(const Actor* other) const;
 
     /**
      * @brief Gestisce una collisione rilevata

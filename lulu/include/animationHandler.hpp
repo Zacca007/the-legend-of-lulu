@@ -7,7 +7,6 @@
 
 namespace lulu
 {
-
   /**
    * @brief Gestore delle animazioni sprite per attori mobili
    *
@@ -28,8 +27,8 @@ namespace lulu
     // === STATO CORRENTE DELL'ANIMAZIONE ===
 
     Direction movementDirection_; // Direzione corrente (determina quale animazione usare)
-    std::uint8_t frame_;          // Frame corrente nella sequenza (0, 1, 2, ...)
-    State state_;                 // Stato corrente (determina quale set di animazioni usare)
+    std::uint8_t frame_; // Frame corrente nella sequenza (0, 1, 2, ...)
+    State state_; // Stato corrente (determina quale set di animazioni usare)
 
     // === STORAGE DELLE ANIMAZIONI ===
 
@@ -47,7 +46,7 @@ namespace lulu
      * @param file Stream del file da cui leggere
      * @return Valore a 32 bit letto
      */
-    static std::uint32_t readBigEndian(std::ifstream &file);
+    static std::uint32_t readBigEndian(std::ifstream& file);
 
   public:
     // === FLAG DI CONTROLLO ===
@@ -97,7 +96,7 @@ namespace lulu
      *
      * @return Riferimento al vector di percorsi sprite
      */
-    [[nodiscard]] const std::vector<std::string> &currentAnimation() const;
+    [[nodiscard]] const std::vector<std::string>& currentAnimation() const;
 
     /**
      * @brief Aggiunge una nuova sequenza di animazione
@@ -106,7 +105,7 @@ namespace lulu
      * @param direction Direzione per cui vale (D_UP, D_LEFT, ecc.)
      * @param animation Sequenza di percorsi delle sprite
      */
-    void addAnimation(State state, Direction direction, const std::vector<std::string> &animation);
+    void addAnimation(State state, Direction direction, const std::vector<std::string>& animation);
 
     /**
      * @brief Cambia stato e direzione, resettando il frame a 0
@@ -144,7 +143,6 @@ namespace lulu
      * @param filepath Percorso del file PNG da analizzare
      * @return Dimensioni del PNG, oppure nullopt se errore
      */
-    static std::optional<Vec2<float>> getSpriteDimension(const std::string &filepath);
+    static std::optional<Vec2<float>> getSpriteDimension(const std::string& filepath);
   };
-
 } // namespace lulu

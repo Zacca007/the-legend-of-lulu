@@ -7,10 +7,10 @@ namespace game
     DialogueManager::DialogueManager()
     {
         // Carica la texture UNA volta sola
-        dialogueBoxTexture_ = LoadTexture("assets/dialoguebox.png");
+        dialogueBoxTexture_ = LoadTexture("assets/ui/dialoguebox.png");
         if (dialogueBoxTexture_.id == 0)
         {
-            std::cout << "ERRORE: Impossibile caricare assets/dialoguebox.png" << std::endl;
+            std::cout << "ERRORE: Impossibile caricare assets/ui/dialoguebox.png" << std::endl;
             // Crea un placeholder
             Image fallback = GenImageColor(600, 200, Color{0, 0, 0, 200});
             dialogueBoxTexture_ = LoadTextureFromImage(fallback);

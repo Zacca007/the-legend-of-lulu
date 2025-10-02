@@ -30,9 +30,9 @@ namespace game
      * @param music Percorso musica di sottofondo (default: menu.mp3)
      * @param inputs Lista tasti da controllare (default: solo INVIO)
      */
-    explicit Menu(Game *game, const std::string &background = "assets/menu/menu.png",
-                  const std::string &music = "assets/menu/menu.mp3",
-                  const std::vector<lulu::Key> &inputs = std::vector{lulu::K_ENTER});
+    explicit Menu(Game* game, const std::string& background = "assets/ui/menu.png",
+                  const std::string& music = "assets/audio/music/menu.mp3",
+                  const std::vector<lulu::Key>& inputs = std::vector{lulu::K_ENTER});
 
     /**
      * @brief Aggiorna la logica del menu

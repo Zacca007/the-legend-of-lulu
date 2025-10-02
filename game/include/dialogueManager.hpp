@@ -7,7 +7,8 @@
 
 namespace game
 {
-    class DialogueManager {
+    class DialogueManager
+    {
     private:
         const lulu::NPC* currentNPC_ = nullptr;
         std::vector<lulu::DialogueLine> lines_;
@@ -35,12 +36,12 @@ namespace game
         void reset();
         void completeText();
 
-        bool isActive() const { return isActive_ && currentLineIndex_ < lines_.size(); }
-        bool hasMoreLines() const { return currentLineIndex_ + 1 < lines_.size(); }
-        bool isTextComplete() const { return isTextComplete_; }
+        [[nodiscard]] bool isActive() const { return isActive_ && currentLineIndex_ < lines_.size(); }
+        [[nodiscard]] bool hasMoreLines() const { return currentLineIndex_ + 1 < lines_.size(); }
+        [[nodiscard]] bool isTextComplete() const { return isTextComplete_; }
 
-        std::string getCurrentText() const;
-        std::string getCurrentSpeaker() const;
-        std::string getCurrentPortrait() const;
+        [[nodiscard]] std::string getCurrentText() const;
+        [[nodiscard]] std::string getCurrentSpeaker() const;
+        [[nodiscard]] std::string getCurrentPortrait() const;
     };
 }

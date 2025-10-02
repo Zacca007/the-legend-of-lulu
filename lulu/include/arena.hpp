@@ -23,7 +23,7 @@ namespace lulu
   class Arena final
   {
   private:
-    Vec2<float> pos_{};  // Posizione dell'arena nello spazio di gioco
+    Vec2<float> pos_{}; // Posizione dell'arena nello spazio di gioco
     Vec2<float> size_{}; // Dimensioni dell'arena
 
     // Sistema di input: mantiene i tasti del frame precedente e corrente
@@ -44,7 +44,7 @@ namespace lulu
 
     // Mappa delle collisioni: per ogni attore mobile, mantiene la lista
     // di tutti gli attori con cui è in collisione in questo frame
-    std::unordered_map<const Actor *, std::vector<Collision>> collisions_;
+    std::unordered_map<const Actor*, std::vector<Collision>> collisions_;
 
     // === METODI INTERNI PER LE COLLISIONI ===
 
@@ -56,7 +56,7 @@ namespace lulu
      *
      * @param actor L'attore per cui rilevare le collisioni
      */
-    void detectCollisionsFor(const Actor *actor);
+    void detectCollisionsFor(const Actor* actor);
 
     /**
      * @brief Gestisce tutte le collisioni rilevate per un attore
@@ -65,7 +65,7 @@ namespace lulu
      *
      * @param actor L'attore per cui gestire le collisioni
      */
-    void handleCollisionsFor(Actor *actor) const;
+    void handleCollisionsFor(Actor* actor) const;
 
   public:
     /**
@@ -86,27 +86,27 @@ namespace lulu
      *
      * @param configPath Percorso del file di configurazione JSON
      */
-    explicit Arena(const std::string &configPath);
+    explicit Arena(const std::string& configPath);
 
     // === GETTERS ===
 
     /** @brief Restituisce la posizione dell'arena */
-    [[nodiscard]] const Vec2<float> &pos() const;
+    [[nodiscard]] const Vec2<float>& pos() const;
 
     /** @brief Restituisce le dimensioni dell'arena */
-    [[nodiscard]] const Vec2<float> &size() const;
+    [[nodiscard]] const Vec2<float>& size() const;
 
     /** @brief Restituisce gli input del frame precedente */
-    [[nodiscard]] const std::vector<Key> &prevInputs() const;
+    [[nodiscard]] const std::vector<Key>& prevInputs() const;
 
     /** @brief Restituisce gli input del frame corrente */
-    [[nodiscard]] const std::vector<Key> &currInputs() const;
+    [[nodiscard]] const std::vector<Key>& currInputs() const;
 
     /** @brief Restituisce tutti gli attori nell'arena (lettura sola) */
-    [[nodiscard]] const std::vector<std::unique_ptr<Actor>> &actors() const;
+    [[nodiscard]] const std::vector<std::unique_ptr<Actor>>& actors() const;
 
     /** @brief Restituisce la mappa delle collisioni correnti */
-    [[nodiscard]] const std::unordered_map<const Actor *, std::vector<Collision>> &collisions() const;
+    [[nodiscard]] const std::unordered_map<const Actor*, std::vector<Collision>>& collisions() const;
 
     // === GESTIONE ATTORI ===
 
@@ -129,7 +129,7 @@ namespace lulu
      * @param actor Raw pointer all'attore da rimuovere
      * @return unique_ptr all'attore rimosso (nullptr se non trovato)
      */
-    std::unique_ptr<Actor> kill(Actor *actor);
+    std::unique_ptr<Actor> kill(Actor* actor);
 
     // === GAME LOOP ===
 
@@ -145,7 +145,7 @@ namespace lulu
      *
      * @param keys Tasti premuti in questo frame
      */
-    void tick(const std::vector<Key> &keys);
+    void tick(const std::vector<Key>& keys);
 
     // === METODI DI UTILITÀ ===
 
@@ -156,7 +156,7 @@ namespace lulu
      * @param key Tasto da cercare
      * @return true se il tasto è presente
      */
-    static bool hasKey(const std::vector<Key> &keys, Key key);
+    static bool hasKey(const std::vector<Key>& keys, Key key);
 
     /**
      * @brief Controlla se un tasto è stato appena premuto (non nel frame precedente)

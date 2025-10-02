@@ -1,6 +1,6 @@
 {
-  "background": "assets/dungeon/dungeon hall.png",
-  "music": "assets/dungeon/dungeon.mp3",
+  "background": "assets/dungeon/backgrounds/dungeon hall.png",
+  "music": "assets/audio/music/dungeon.mp3",
   "inputs": [32, 65, 68, 83, 87, 257, 262, 263, 264, 265],
   "arena": {
     "pos": {
@@ -15,7 +15,7 @@
       {
         "pos": {"x":  375, "y":  0},
         "size": {"width":  50, "height": 50},
-        "destination": "assets/dungeon/configs/room 1.json",
+        "destination": "assets/dungeon/rooms/room 1.json",
         "spawn": {"x": 375, "y": 450},
         "changeMusic": false
       }

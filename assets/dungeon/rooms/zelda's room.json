@@ -1,6 +1,6 @@
 {
-  "background": "assets/dungeon/zelda's room.png",
-  "music": "assets/dungeon/zelda's lullaby.mp3",
+  "background": "assets/dungeon/backgrounds/zelda's room.png",
+  "music": "assets/audio/music/zelda's lullaby.mp3",
   "inputs": [32, 65, 68, 83, 87, 256, 257, 262, 263, 264, 265],
   "arena": {
     "pos": {
@@ -15,7 +15,7 @@
       {
         "pos": {"x": 750, "y": 250},
         "size": {"width": 50, "height": 50},
-        "destination": "assets/dungeon/configs/room 1.json",
+        "destination": "assets/dungeon/rooms/room 1.json",
         "spawn": {"x": 50, "y": 250},
         "changeMusic": true
       }
@@ -44,9 +44,9 @@
       {
         "pos": {"x": 375, "y": 250},
         "size": {"width": 50, "height": 50},
-        "sprite": "assets/zelda/zelda.png",
+        "sprite": "assets/characters/zelda/lulu.png",
         "name": "princess LuLù",
-        "dialoguePath": "assets/zelda/dialogue.json"
+        "dialoguePath": "assets/characters/zelda/dialogue.json"
       }
     ]
   }
