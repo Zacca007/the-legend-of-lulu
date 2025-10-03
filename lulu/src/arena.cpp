@@ -1,4 +1,3 @@
-
 #include "arena.hpp"
 #include "actor.hpp"
 #include "fighters/link.hpp"
@@ -15,7 +14,8 @@ namespace lulu
     }
 
     // Helper privato per parsing Vec2 dal JSON
-    namespace {
+    namespace
+    {
         Vec2<float> parseVec2(const nlohmann::json& j)
         {
             return Vec2{
@@ -23,7 +23,7 @@ namespace lulu
                 j.at("y").get<float>()
             };
         }
-        
+
         Vec2<float> parseSize(const nlohmann::json& j)
         {
             return Vec2{
@@ -55,24 +55,24 @@ namespace lulu
         loadDoors(arenaJson);
         loadNPCs(arenaJson);
     }
-    
+
     void Arena::loadActors(const nlohmann::json& arenaJson)
     {
         if (!arenaJson.contains("actors")) return;
-        
+
         for (const auto& actorJson : arenaJson.at("actors"))
         {
             Vec2<float> pos = parseVec2(actorJson.at("pos"));
             Vec2<float> size = parseSize(actorJson.at("size"));
-            
+
             spawn(std::make_unique<Actor>(pos, size));
         }
     }
-    
+
     void Arena::loadDoors(const nlohmann::json& arenaJson)
     {
         if (!arenaJson.contains("doors")) return;
-        
+
         for (const auto& doorJson : arenaJson.at("doors"))
         {
             Vec2<float> pos = parseVec2(doorJson.at("pos"));
@@ -80,15 +80,15 @@ namespace lulu
             Vec2<float> spawnPos = parseVec2(doorJson.at("spawn"));
             bool changeMusic = doorJson.at("changeMusic").get<bool>();
             std::string destination = doorJson.at("destination").get<std::string>();
-            
+
             spawn(std::make_unique<Door>(pos, size, spawnPos, destination, changeMusic));
         }
     }
-    
+
     void Arena::loadNPCs(const nlohmann::json& arenaJson)
     {
         if (!arenaJson.contains("NPCs")) return;
-        
+
         for (const auto& npcJson : arenaJson.at("NPCs"))
         {
             Vec2<float> pos = parseVec2(npcJson.at("pos"));
@@ -107,9 +107,10 @@ namespace lulu
     const std::vector<Key>& Arena::prevInputs() const { return prevInputs_; }
     const std::vector<Key>& Arena::currInputs() const { return currInputs_; }
     const std::vector<std::unique_ptr<Actor>>& Arena::actors() const { return actors_; }
-    const std::unordered_map<const Actor*, std::vector<Collision>>& Arena::collisions() const 
-    { 
-        return collisions_; 
+
+    const std::unordered_map<const Actor*, std::vector<Collision>>& Arena::collisions() const
+    {
+        return collisions_;
     }
 
     void Arena::spawn(std::unique_ptr<Actor> actor)
@@ -128,8 +129,8 @@ namespace lulu
     {
         if (!actor) return nullptr;
 
-        auto it = std::ranges::find_if(actors_, 
-            [actor](const auto& a) { return a.get() == actor; });
+        auto it = std::ranges::find_if(actors_,
+                                       [actor](const auto& a) { return a.get() == actor; });
 
         if (it != actors_.end())
         {
@@ -145,7 +146,7 @@ namespace lulu
     void Arena::tick(const std::vector<Key>& keys)
     {
         prevInputs_ = std::exchange(currInputs_, keys);
-        
+
         for (const auto& act : actors_)
         {
             if (auto* movable = dynamic_cast<Movable*>(act.get()))

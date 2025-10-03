@@ -11,8 +11,8 @@
       ]
     },
     {
-      "speaker": "Link",
-      "portrait": "assets/dialogue/portraits/link.png",
+      "speaker": "Pippi",
+      "portrait": "assets/characters/link/pietro.png",
       "text": [
         "Because you were in peril."
       ]
@@ -26,8 +26,8 @@
       ]
     },
     {
-      "speaker": "Link",
-      "portrait": "assets/dialogue/portraits/link.png",
+      "speaker": "Pippi",
+      "portrait": "assets/characters/link/pietro.png",
       "text": [
         "I know, but nce sworn as the knight of the realm, I could not stand idle."
       ]
@@ -44,8 +44,8 @@
       ]
     },
     {
-      "speaker": "Link",
-      "portrait": "assets/dialogue/portraits/link.png",
+      "speaker": "Pippi",
+      "portrait": "assets/characters/link/pietro.png",
       "text": [
         "Because I cannot turn away.",
         "Because I dread the day our bond is remembered as dust and folly.",
@@ -66,8 +66,8 @@
       ]
     },
     {
-      "speaker": "Link",
-      "portrait": "assets/dialogue/portraits/link.png",
+      "speaker": "Pippi",
+      "portrait": "assets/characters/link/pietro.png",
       "text": [
         "Because it is not nothing.",
         "It is all that is left to me, and the most precious I shall ever hold.",
