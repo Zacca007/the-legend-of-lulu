@@ -36,23 +36,23 @@ namespace lulu
     }
 
     // === Internal helpers ===
-    std::uint32_t AnimationHandler::readBigEndian(std::ifstream& file)
+    std::uint32_t AnimationHandler::readBigEndian(std::ifstream &file)
     {
         uint8_t bytes[4];
-        file.read(reinterpret_cast<char*>(bytes), 4);
+        file.read(reinterpret_cast<char *>(bytes), 4);
         // Convert from big-endian to host byte order
         return static_cast<uint32_t>(bytes[0]) << 24 | static_cast<uint32_t>(bytes[1]) << 16 |
-            static_cast<uint32_t>(bytes[2]) << 8 | static_cast<uint32_t>(bytes[3]);
+               static_cast<uint32_t>(bytes[2]) << 8 | static_cast<uint32_t>(bytes[3]);
     }
 
     // === Animation control ===
-    const std::vector<std::string>& AnimationHandler::currentAnimation() const
+    const std::vector<std::string> &AnimationHandler::currentAnimation() const
     {
         return animationSet_.at(state_).at(movementDirection_);
     }
 
     void AnimationHandler::addAnimation(const State state, const Direction direction,
-                                        const std::vector<std::string>& animation)
+                                        const std::vector<std::string> &animation)
     {
         animationSet_[state][direction] = animation;
     }
@@ -78,7 +78,7 @@ namespace lulu
         return sprite;
     }
 
-    std::optional<Vec2<float>> AnimationHandler::getSpriteDimension(const std::string& filepath)
+    std::optional<Vec2<float>> AnimationHandler::getSpriteDimension(const std::string &filepath)
     {
         std::ifstream file(filepath, std::ios::binary);
         if (!file)
@@ -87,7 +87,7 @@ namespace lulu
         // PNG file signature (8 bytes)
         constexpr uint8_t expected_signature[8] = {0x89, 'P', 'N', 'G', 0x0D, 0x0A, 0x1A, 0x0A};
         uint8_t signature[8];
-        file.read(reinterpret_cast<char*>(signature), 8);
+        file.read(reinterpret_cast<char *>(signature), 8);
 
         // Verify PNG signature
         if (!file || std::memcmp(signature, expected_signature, 8) != 0)

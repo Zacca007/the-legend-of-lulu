@@ -1,81 +1,126 @@
 {
   "dialogue": [
     {
-      "speaker": "Princess LuLù",
+      "speaker": "Lulù",
       "portrait": "assets/characters/zelda/lulu icon.png",
       "text": [
-        ". . .What?",
-        "How?",
-        "Why?",
-        "Why did you come all this way?"
+        "...Pippi?",
+        "You really came all this way just to find me?",
+        "You shouldn't have. I could've handled this myself."
       ]
     },
     {
       "speaker": "Pippi",
       "portrait": "assets/characters/link/pietro.png",
       "text": [
-        "Because you were in peril."
+        "Maybe you could have.",
+        "But I couldn't let you face it alone.",
+        "I didn't come because I thought you needed saving.",
+        "I came because I still love you."
       ]
     },
     {
-      "speaker": "Princess LuLù",
+      "speaker": "Lulù",
       "portrait": "assets/characters/zelda/lulu icon.png",
       "text": [
-        "I could have endured.",
-        "I would have carved my path out."
+        "After everything… you still hold on to that?",
+        "Pippi, people move on. Feelings change. That's just life.",
+        "You'll suffer if you keep loving me this way."
       ]
     },
     {
       "speaker": "Pippi",
       "portrait": "assets/characters/link/pietro.png",
       "text": [
-        "I know, but nce sworn as the knight of the realm, I could not stand idle."
+        "Maybe I will suffer. But pain is nothing compared to betraying what I believe in.",
+        "I don't love you out of habit or stubbornness.",
+        "I love you because you're still the most beautiful",
+        "the most alive, the most brilliant person I've ever known.",
+        "That hasn't changed",
+        "and until it does, I won't pretend it has."
       ]
     },
     {
-      "speaker": "Princess LuLù",
+      "speaker": "Lulù",
       "portrait": "assets/characters/zelda/lulu icon.png",
       "text": [
-        "You are not bound to that vow any longer.",
-        "My place is with the kingdom.",
-        "My people await me, my crown commands me.",
-        "You shall ever be welcome, but I cannot dwell at your side.",
-        "Why do you still come to me?"
+        "But you'll end up alone, stuck in something that doesn't exist anymore.",
+        "You can't live chained to a memory.",
+        "You have to let life happen again, even if it means loving in a different way."
       ]
     },
     {
       "speaker": "Pippi",
       "portrait": "assets/characters/link/pietro.png",
       "text": [
-        "Because I cannot turn away.",
-        "Because I dread the day our bond is remembered as dust and folly.",
-        "I cannot let it be cast aside, as if it were nothing.",
-        "Letting our victories turn to empty tales, forgotten by time.",
-        "And perhaps that day has already come. . ."
+        "I don't want to love in a different way.",
+        "I don't want to tell someone else the same words I told you",
+        "words I meant with all I had.",
+        "If I start making promises to everyone, what meaning do they have?",
+        "I gave everything so it would last",
+        "because I believed in forever when I said it.",
+        "If that belief makes me alone, then so be it."
       ]
     },
     {
-      "speaker": "Princess LuLù",
+      "speaker": "Lulù",
       "portrait": "assets/characters/zelda/lulu icon.png",
       "text": [
-        "I have never sworn to forsake you.",
-        "You shielded me, and peace was restored.",
-        "I thank you in name of the whole kingdom",
-        "but I can grant no more than this.",
-        "Why give so much for so little?"
+        "You talk as if love were a vow written in stone.",
+        "But people change. I've changed.",
+        "Don't you ever want peace? To stop hurting?"
       ]
     },
     {
       "speaker": "Pippi",
       "portrait": "assets/characters/link/pietro.png",
       "text": [
-        "Because it is not nothing.",
-        "It is all that is left to me, and the most precious I shall ever hold.",
-        "It must not fade as though it never was, nor be judged unworthy",
-        "For I could serve no other as I have served you,",
-        "and none would guard you as I have",
-        "This is no plea for reward, it is the keeping of what must not be lost.",
-        "you"
+        "Peace isn't my goal, Lulù.",
+        "Living honestly is.",
+        "What I feel doesn't need to be returned or validated. It's mine.",
+        "As long as I see the light in you",
+        "your strength, your warmth, your kindness",
+        "I'll love you.",
+        "And if one day that light fades, then it ends.",
+        "But until that day, I'll stay true to it."
+      ]
+    },
+    {
+      "speaker": "Lulù",
+      "portrait": "assets/characters/zelda/lulu icon.png",
+      "text": [
+        "You're impossible. . .",
+        "i must think about myself",
+        "I can't follow the way you love me."
+      ]
+    },
+    {
+      "speaker": "Pippi",
+      "portrait": "assets/characters/link/pietro.png",
+      "text": [
+        "You don't have to.",
+        "This isn't about holding you back.",
+        "I just need you to understand",
+        "I promised, I meant it, regardless",
+        "if my purpose is not to be the one",
+        "then it's to be a living reminder that you are perfect just as you are"
+      ]
+    },
+    {
+      "speaker": "Lulù",
+      "portrait": "assets/characters/zelda/lulu icon.png",
+      "text": [
+        ". . .You're still the same.",
+        "And somehow, that's comforting.",
+        "Come on. Let's go. This place is falling apart."
+      ]
+    },
+    {
+      "speaker": "Pippi",
+      "portrait": "assets/characters/link/pietro.png",
+      "text": [
+        "Yeah.",
+        "Let's get out of here."
       ]
     }
   ]

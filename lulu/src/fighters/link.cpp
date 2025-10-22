@@ -92,7 +92,7 @@ namespace lulu
         if (const State state = movement_.currentState(); state == S_ATTACK || state == S_HURT)
             return state;
 
-        if (arena_->isKeyJustPressed(K_SPACE))
+        if (arena_->isKeyJustPressed(K_SPACE) || isAttacking)
             return S_ATTACK;
 
         if (updatedDirection() != S_STILL)
@@ -225,21 +225,75 @@ namespace lulu
                     sprite_ = movement_.nextSprite();
             }
         }
+        else if(newState == S_ATTACK){
+            if(!isAttacking)setupAttack();
+
+            performAttack();
+            if(attackProgression==4)
+            endAttack();
+        }
     }
 
     void Link::setupAttack()
     {
+        isAttacking = true;
+        attackProgression = 0;
+        movement_.set(S_ATTACK, movement_.currentDirection());
     }
 
     void Link::performAttack()
     {
+        attackProgression++;
+        if(movement_.currentFrame() == 4) return;
+        if(movement_.currentFrame() == 2){}
+        sprite_ = movement_.nextSprite();
+        auto oldSize = size_;
+        size_ = AnimationHandler::getSpriteDimension(sprite_).value();
+        auto sizeDiff = size_ - oldSize;
+        switch(movement_.currentDirection()){
+            case D_UP:
+            case D_UPLEFT:
+            case D_UPRIGHT:
+                pos_.y -= sizeDiff.y;
+                break;
+
+            case D_LEFT:
+                pos_.x -= sizeDiff.x;
+                break;
+            default: ;
+        }
     }
 
     void Link::endAttack()
     {
+        isAttacking = false;
+        attackProgression = 0;
+        movement_.set(S_MOVING, movement_.currentDirection());
+        sprite_ = movement_.nextSprite();
+        auto oldSize = size_;
+        size_ = AnimationHandler::getSpriteDimension(sprite_).value();
+        auto sizeDiff = size_ - oldSize;
+        switch(movement_.currentDirection()){
+        case D_UP:
+        case D_UPLEFT:
+        case D_UPRIGHT:
+            pos_.y -= sizeDiff.y;
+            break;
+
+        case D_LEFT:
+            pos_.x -= sizeDiff.x;
+            break;
+        default: ;
+        }
     }
 
-    void Link::adjustPositionForAttack(const Vec2<float>& sizeDiff)
+    void Link::handleCollision(Collision collision)
     {
+        Actor* other = collision.target;
+        if (dynamic_cast<Movable*>(other) == nullptr)
+        {
+            if (!isAttacking) Actor::handleCollision(collision);
+
+        }
     }
 } // namespace lulu

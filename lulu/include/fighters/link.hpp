@@ -15,6 +15,11 @@ namespace lulu
    */
   class Link final : public Fighter
   {
+    bool isAttacking{};
+    std::uint8_t attackProgression{};
+
+
+
     // === IMPLEMENTAZIONI DEI METODI VIRTUALI DI MOVABLE ===
 
     /**
@@ -59,33 +64,20 @@ namespace lulu
 
     /**
      * @brief Prepara l'attacco di Link
-     *
-     * TODO: Implementare cambio dimensioni per simulare l'arma
      */
     void setupAttack() override;
 
     /**
      * @brief Esegue l'attacco di Link
-     *
-     * TODO: Implementare logica di danno ai nemici
      */
     void performAttack() override;
 
     /**
      * @brief Conclude l'attacco di Link
-     *
-     * TODO: Implementare ripristino dimensioni normali
      */
     void endAttack() override;
 
-    /**
-     * @brief Aggiusta la posizione quando cambiano le dimensioni per l'attacco
-     *
-     * Necessario per evitare che Link "salti" quando l'hitbox cambia.
-     *
-     * @param sizeDiff Differenza di dimensioni da compensare
-     */
-    void adjustPositionForAttack(const Vec2<float> &sizeDiff);
+    void handleCollision(Collision collision) override;
 
   public:
     /**

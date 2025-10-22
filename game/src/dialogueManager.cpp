@@ -7,7 +7,7 @@
 
 namespace game
 {
-        DialogueManager::DialogueManager()
+    DialogueManager::DialogueManager()
     {
         // Carica la texture UNA volta sola
         dialogueBoxTexture_ = LoadTexture("assets/ui/dialoguebox.png");
@@ -22,7 +22,7 @@ namespace game
         else
         {
             std::cout << "Dialogue box texture caricata: "
-                << dialogueBoxTexture_.width << "x" << dialogueBoxTexture_.height << std::endl;
+                      << dialogueBoxTexture_.width << "x" << dialogueBoxTexture_.height << std::endl;
             textureLoaded_ = true;
         }
     }
@@ -35,7 +35,7 @@ namespace game
         }
     }
 
-    void DialogueManager::startDialogue(const lulu::NPC* npc, const std::vector<lulu::DialogueLine>& dialogueLines)
+    void DialogueManager::startDialogue(const lulu::NPC *npc, const std::vector<lulu::DialogueLine> &dialogueLines)
     {
         currentNPC_ = npc;
         lines_ = dialogueLines;
@@ -48,12 +48,12 @@ namespace game
 
     void DialogueManager::update(float deltaTime)
     {
-        if (isTextComplete_ || lines_.empty()) return;
+        if (isTextComplete_ || lines_.empty())
+            return;
 
         textTimer_ += deltaTime;
 
-        if (int targetChars = static_cast<int>(textTimer_ * textSpeed_); targetChars >= lines_[currentLineIndex_].text.
-            length())
+        if (int targetChars = static_cast<int>(textTimer_ * textSpeed_); targetChars >= lines_[currentLineIndex_].text.length())
         {
             completeText();
         }
@@ -145,7 +145,7 @@ namespace game
         constexpr int MAX_VISIBLE_LINES = 3;
 
         // Helper per wrapping del testo
-        std::vector<std::string> wrapText(const std::string& text, int fontSize, int maxWidth)
+        std::vector<std::string> wrapText(const std::string &text, int fontSize, int maxWidth)
         {
             std::vector<std::string> lines;
             std::string currentLine;
@@ -179,9 +179,10 @@ namespace game
             return lines;
         }
 
-        void renderPortrait(const std::string& portraitPath, int x, int y)
+        void renderPortrait(const std::string &portraitPath, int x, int y)
         {
-            if (portraitPath.empty()) return;
+            if (portraitPath.empty())
+                return;
 
             // Cache della texture invece di ricaricarla ogni frame
             static std::unordered_map<std::string, Texture2D> portraitCache;
@@ -214,7 +215,8 @@ namespace game
 
     void DialogueManager::render() const
     {
-        if (!isActive_) return;
+        if (!isActive_)
+            return;
 
         const int boxWidth = dialogueBoxTexture_.width;
         const int boxHeight = dialogueBoxTexture_.height;
@@ -258,18 +260,11 @@ namespace game
                                       PORTRAIT_SIZE);
         }
 
-        // 6. Indicatore di continuazione (lampeggiante)
-        if (isTextComplete_ && static_cast<int>(GetTime() * 2) % 2 == 0)
-        {
-            const char* indicator = hasMoreLines() ? "▼" : "■";
-            DrawText(indicator, BOX_X + boxWidth - 40, BOX_Y + boxHeight - 40, 28, WHITE);
-        }
-
         // 7. Istruzioni
         const int instructionsY = BOX_Y + boxHeight - 30;
         if (isTextComplete_)
         {
-            const char* spaceText = hasMoreLines() ? "SPACE - Continua" : "SPACE - Chiudi";
+            const char *spaceText = hasMoreLines() ? "SPACE - Continua" : "SPACE - Chiudi";
             DrawText(spaceText, BOX_X + TEXT_START_X, instructionsY, 16, LIGHTGRAY);
         }
         else
