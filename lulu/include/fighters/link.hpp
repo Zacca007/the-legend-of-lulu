@@ -15,10 +15,14 @@ namespace lulu
    */
   class Link final : public Fighter
   {
-    bool isAttacking{};
-    std::uint8_t attackProgression{};
+    // === SISTEMA DI ATTACCO ===
 
+    bool isAttacking_{false};           // Flag che indica se Link sta attaccando
+    std::uint8_t attackFrame_{0};       // Frame corrente dell'animazione di attacco (0-4)
+    Vec2<float> originalSize_{};        // Dimensioni originali prima dell'attacco
 
+    static constexpr std::uint8_t ATTACK_DURATION = 5;  // Durata totale attacco in frame
+    static constexpr std::uint8_t DAMAGE_FRAME = 2;     // Frame in cui viene inflitto il danno
 
     // === IMPLEMENTAZIONI DEI METODI VIRTUALI DI MOVABLE ===
 
@@ -60,24 +64,53 @@ namespace lulu
      */
     [[nodiscard]] Vec2<float> calculateMovement(Direction dir) const override;
 
-    // === SISTEMA DI ATTACCO (DA IMPLEMENTARE) ===
+    // === SISTEMA DI ATTACCO ===
 
     /**
      * @brief Prepara l'attacco di Link
+     *
+     * - Inizializza i flag di attacco
+     * - Imposta l'animazione corretta
+     * - Salva le dimensioni originali
      */
     void setupAttack() override;
 
     /**
      * @brief Esegue l'attacco di Link
+     *
+     * - Aggiorna il frame dell'animazione
+     * - Aggiusta le dimensioni in base alla sprite
+     * - Infligge danno nel frame corretto
      */
     void performAttack() override;
 
     /**
      * @brief Conclude l'attacco di Link
+     *
+     * - Resetta i flag di attacco
+     * - Ripristina le dimensioni originali
+     * - Torna allo stato normale
      */
     void endAttack() override;
 
+    /**
+     * @brief Gestisce le collisioni specifiche di Link
+     *
+     * Durante l'attacco, Link può attraversare gli ostacoli statici
+     * ma continua a collidere con entità mobili.
+     */
     void handleCollision(Collision collision) override;
+
+    /**
+     * @brief Aggiusta la posizione in base al cambio di dimensioni
+     *
+     * Quando la sprite cambia dimensione (durante attacco),
+     * aggiusta la posizione per mantenere l'allineamento corretto
+     * in base alla direzione corrente.
+     *
+     * @param sizeDifference Differenza tra nuova e vecchia dimensione
+     */
+    void adjustPositionForSize(const Vec2<float>& sizeDifference);
 
   public:
     /**
@@ -102,8 +135,9 @@ namespace lulu
      * 1. Determina stato e direzione correnti dai tasti premuti
      * 2. Se fermo: imposta animazione idle
      * 3. Se in movimento: calcola spostamento e aggiorna posizione
-     * 4. Gestisce il cambio di animazioni quando necessario
-     * 5. Avanza l'animazione ogni 4 frame per velocità appropriata
+     * 4. Se in attacco: gestisce l'animazione e il danno
+     * 5. Gestisce il cambio di animazioni quando necessario
+     * 6. Avanza l'animazione ogni 4 frame per velocità appropriata
      *
      * Override del metodo virtuale puro di Movable.
      */

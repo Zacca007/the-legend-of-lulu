@@ -1,7 +1,5 @@
 #include "fighters/link.hpp"
-
 #include "arena.hpp"
-
 #include <fstream>
 #include <nlohmann/json.hpp>
 
@@ -14,7 +12,7 @@ namespace lulu
         nlohmann::json j;
         f >> j;
 
-        // Parse dei dati base (se non sono già stati letti dai costruttori padre)
+        // Parse dei dati base
         const auto& actorData = j["actor"];
         const auto& movableData = j["movable"];
         const auto& fighterData = j["fighter"];
@@ -22,8 +20,9 @@ namespace lulu
         // Inizializza sprite base
         sprite_ = actorData["sprite"];
 
-        // Inizializza size
+        // Inizializza size e salva come originale
         size_ = Vec2{actorData["size"]["width"].get<float>(), actorData["size"]["height"].get<float>()};
+        originalSize_ = size_;
 
         // Inizializza velocità
         speed_ = Vec2{movableData["speed"]["x"].get<float>(), movableData["speed"]["y"].get<float>()};
@@ -86,16 +85,18 @@ namespace lulu
         sprite_ = movement_.nextSprite();
     }
 
-    // Implementazioni base per i metodi virtuali, aggiungere controllo su hurt
     State Link::updatedState() const
     {
+        // Mantieni lo stato corrente se già in attacco o ferito
         if (const State state = movement_.currentState(); state == S_ATTACK || state == S_HURT)
             return state;
 
-        if (arena_->isKeyJustPressed(K_SPACE) || isAttacking)
+        // Inizia attacco se premuto SPAZIO (o già in corso)
+        if (arena_->isKeyJustPressed(K_SPACE) || isAttacking_)
             return S_ATTACK;
 
-        if (updatedDirection() != S_STILL)
+        // Movimento se c'è input direzionale
+        if (updatedDirection() != D_NONE)
             return S_MOVING;
 
         return S_STILL;
@@ -162,6 +163,7 @@ namespace lulu
     {
         Vec2<float> movement{};
         const auto diagonal = speed_.diagonal().value();
+
         switch (dir)
         {
         case D_UP:
@@ -196,104 +198,148 @@ namespace lulu
         return movement;
     }
 
-    void Link::move()
+    void Link::adjustPositionForSize(const Vec2<float>& sizeDifference)
     {
-        const State newState = updatedState();
-        const Direction newDirection = updatedDirection();
-        static uint8_t animationSwitch;
-
-        if (newState == S_STILL)
+        // Aggiusta la posizione in base alla direzione per mantenere l'allineamento
+        switch (movement_.currentDirection())
         {
-            if (movement_.currentState() != S_STILL)
-                movement_.set(S_STILL, movement_.currentDirection());
-        }
-        else if (newState == S_MOVING)
-        {
-            if (newDirection != D_NONE)
-            {
-                pos_ += calculateMovement(newDirection);
+        case D_UP:
+        case D_UPLEFT:
+        case D_UPRIGHT:
+            // Per attacchi verso l'alto, sposta Link verso l'alto
+            pos_.y -= sizeDifference.y;
+            break;
 
-                if (movement_.currentDirection() != newDirection)
-                {
-                    movement_.set(S_MOVING, newDirection);
-                    movement_.nextSprite();
-                    animationSwitch = 0;
-                }
+        case D_LEFT:
+        case D_DOWNLEFT:
+            // Per attacchi verso sinistra, sposta Link verso sinistra
+            pos_.x -= sizeDifference.x;
+            break;
 
-                // Update sprite every 4 frames for smooth movement animation
-                if (animationSwitch++ % 4 == 0)
-                    sprite_ = movement_.nextSprite();
-            }
-        }
-        else if(newState == S_ATTACK){
-            if(!isAttacking)setupAttack();
-
-            performAttack();
-            if(attackProgression==4)
-            endAttack();
+        // DOWN e RIGHT non richiedono aggiustamenti (sprite espande verso basso/destra)
+        default:
+            break;
         }
     }
 
     void Link::setupAttack()
     {
-        isAttacking = true;
-        attackProgression = 0;
+        isAttacking_ = true;
+        attackFrame_ = 0;
+        originalSize_ = size_;
         movement_.set(S_ATTACK, movement_.currentDirection());
     }
 
     void Link::performAttack()
     {
-        attackProgression++;
-        if(movement_.currentFrame() == 4) return;
-        if(movement_.currentFrame() == 2){}
-        sprite_ = movement_.nextSprite();
-        auto oldSize = size_;
-        size_ = AnimationHandler::getSpriteDimension(sprite_).value();
-        auto sizeDiff = size_ - oldSize;
-        switch(movement_.currentDirection()){
-            case D_UP:
-            case D_UPLEFT:
-            case D_UPRIGHT:
-                pos_.y -= sizeDiff.y;
-                break;
+        // Aggiorna il frame dell'attacco
+        attackFrame_++;
 
-            case D_LEFT:
-                pos_.x -= sizeDiff.x;
-                break;
-            default: ;
+        // Non avanzare oltre l'ultimo frame
+        if (movement_.currentFrame() >= ATTACK_DURATION - 1)
+            return;
+
+        // TODO: Nel frame di danno, controlla collisioni con nemici e infliggi danno
+        if (attackFrame_ == DAMAGE_FRAME)
+        {
+            // Qui andrà la logica per infliggere danno ai nemici colpiti
+            // Per ora è solo un placeholder
         }
+
+        // Avanza all'animazione successiva
+        sprite_ = movement_.nextSprite();
+
+        // Aggiorna le dimensioni in base alla nuova sprite
+        const Vec2<float> oldSize = size_;
+        size_ = AnimationHandler::getSpriteDimension(sprite_).value_or(originalSize_);
+
+        // Aggiusta la posizione se le dimensioni sono cambiate
+        const Vec2<float> sizeDiff = size_ - oldSize;
+        adjustPositionForSize(sizeDiff);
     }
 
     void Link::endAttack()
     {
-        isAttacking = false;
-        attackProgression = 0;
+        // Reset dei flag di attacco
+        isAttacking_ = false;
+        attackFrame_ = 0;
+
+        // Torna allo stato di movimento
         movement_.set(S_MOVING, movement_.currentDirection());
         sprite_ = movement_.nextSprite();
-        auto oldSize = size_;
-        size_ = AnimationHandler::getSpriteDimension(sprite_).value();
-        auto sizeDiff = size_ - oldSize;
-        switch(movement_.currentDirection()){
-        case D_UP:
-        case D_UPLEFT:
-        case D_UPRIGHT:
-            pos_.y -= sizeDiff.y;
-            break;
 
-        case D_LEFT:
-            pos_.x -= sizeDiff.x;
-            break;
-        default: ;
-        }
+        // Ripristina le dimensioni originali
+        const Vec2<float> oldSize = size_;
+        size_ = AnimationHandler::getSpriteDimension(sprite_).value_or(originalSize_);
+
+        // Aggiusta la posizione finale
+        const Vec2<float> sizeDiff = size_ - oldSize;
+        adjustPositionForSize(sizeDiff);
     }
 
     void Link::handleCollision(Collision collision)
     {
+        // Durante l'attacco, Link ignora collisioni con oggetti statici
+        // ma continua a collidere con entità mobili (altri Fighter)
         Actor* other = collision.target;
-        if (dynamic_cast<Movable*>(other) == nullptr)
-        {
-            if (!isAttacking) Actor::handleCollision(collision);
 
+        if (dynamic_cast<Movable*>(other) == nullptr && isAttacking_)
+        {
+            // Ignora collisioni con oggetti statici durante attacco
+            return;
+        }
+
+        // Gestione normale delle collisioni
+        Actor::handleCollision(collision);
+    }
+
+    void Link::move()
+    {
+        const State newState = updatedState();
+        const Direction newDirection = updatedDirection();
+        static uint8_t animationSwitch = 0;
+
+        if (newState == S_STILL)
+        {
+            // Transizione a stato fermo
+            if (movement_.currentState() != S_STILL)
+                movement_.set(S_STILL, movement_.currentDirection());
+        }
+        else if (newState == S_MOVING)
+        {
+            // Gestione movimento
+            if (newDirection != D_NONE)
+            {
+                pos_ += calculateMovement(newDirection);
+
+                // Cambio direzione richiede reset animazione
+                if (movement_.currentDirection() != newDirection)
+                {
+                    movement_.set(S_MOVING, newDirection);
+                    sprite_ = movement_.nextSprite();
+                    animationSwitch = 0;
+                }
+
+                // Update sprite ogni 4 frame per animazione fluida
+                if (animationSwitch++ % 4 == 0)
+                    sprite_ = movement_.nextSprite();
+            }
+        }
+        else if (newState == S_ATTACK)
+        {
+            // Gestione attacco
+            if (!isAttacking_)
+            {
+                setupAttack();
+            }
+
+            performAttack();
+
+            // Termina attacco quando raggiunge la durata massima
+            if (attackFrame_ >= ATTACK_DURATION)
+            {
+                endAttack();
+            }
         }
     }
 } // namespace lulu
