@@ -14,7 +14,7 @@
     "enableAnimation": true
   },
   "fighter": {
-    "hp": 12,
+    "hp": 6,
     "damage": 1
   },
   "animations": {

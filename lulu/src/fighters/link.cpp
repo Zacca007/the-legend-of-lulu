@@ -281,9 +281,7 @@ namespace lulu
     {
         // Durante l'attacco, Link ignora collisioni con oggetti statici
         // ma continua a collidere con entità mobili (altri Fighter)
-        Actor* other = collision.target;
-
-        if (dynamic_cast<Movable*>(other) == nullptr && isAttacking_)
+        if (Actor* other = collision.target; dynamic_cast<Movable*>(other) == nullptr && isAttacking_)
         {
             // Ignora collisioni con oggetti statici durante attacco
             return;

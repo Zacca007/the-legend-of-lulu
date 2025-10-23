@@ -13,6 +13,11 @@ namespace game
         std::unordered_map<std::string, Texture2D> textureCache_;
         DialogueManager dialogueManager_;
 
+        // Texture per i cuori (caricate una volta sola)
+        Texture2D heartFull_{};
+        Texture2D heartHalf_{};
+        Texture2D heartEmpty_{};
+
         struct DoorInfo
         {
             std::string destination;
@@ -42,6 +47,7 @@ namespace game
 
         // Rendering
         void renderActors();
+        void renderHearts(float currentHp) const;
 
     public:
         explicit Gameplay(Game* game, const std::string& configPath = "assets/dungeon/rooms/hall.json");
