@@ -16,13 +16,15 @@ namespace lulu
   class Link final : public Fighter
   {
     // === SISTEMA DI ATTACCO ===
-
+    bool isHurt_{false};
     bool isAttacking_{false};           // Flag che indica se Link sta attaccando
     std::uint8_t attackFrame_{0};       // Frame corrente dell'animazione di attacco (0-4)
-    Vec2<float> originalSize_{};        // Dimensioni originali prima dell'attacco
+    std::uint8_t hurtFrame_{0};
 
     static constexpr std::uint8_t ATTACK_DURATION = 5;  // Durata totale attacco in frame
     static constexpr std::uint8_t DAMAGE_FRAME = 2;     // Frame in cui viene inflitto il danno
+
+    static constexpr std::uint8_t INVINCIBILITY_DURATION = 10;
 
     // === IMPLEMENTAZIONI DEI METODI VIRTUALI DI MOVABLE ===
 
@@ -100,6 +102,7 @@ namespace lulu
      * ma continua a collidere con entità mobili.
      */
     void handleCollision(Collision collision) override;
+    void recoil(Direction collisionDirection);
 
     /**
      * @brief Aggiusta la posizione in base al cambio di dimensioni

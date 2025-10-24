@@ -118,6 +118,6 @@ namespace lulu
      *
      * @param fighter Bersaglio dell'attacco
      */
-    void attack(Fighter &fighter) const;
+    void attack(Fighter* fighter) const;
   };
 } // namespace lulu

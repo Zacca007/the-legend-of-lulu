@@ -44,9 +44,9 @@ namespace lulu
         hp_ -= damage;
     }
 
-    void Fighter::attack(Fighter& fighter) const
+    void Fighter::attack(Fighter* fighter) const
     {
-        fighter.takeDamage(damage_);
+        fighter->takeDamage(damage_);
     }
 
     bool Fighter::isAlive() const

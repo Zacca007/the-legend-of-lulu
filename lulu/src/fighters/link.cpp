@@ -22,7 +22,6 @@ namespace lulu
 
         // Inizializza size e salva come originale
         size_ = Vec2{actorData["size"]["width"].get<float>(), actorData["size"]["height"].get<float>()};
-        originalSize_ = size_;
 
         // Inizializza velocità
         speed_ = Vec2{movableData["speed"]["x"].get<float>(), movableData["speed"]["y"].get<float>()};
@@ -90,6 +89,8 @@ namespace lulu
         // Mantieni lo stato corrente se già in attacco o ferito
         if (const State state = movement_.currentState(); state == S_ATTACK || state == S_HURT)
             return state;
+
+        if (isHurt_) return S_HURT;
 
         // Inizia attacco se premuto SPAZIO (o già in corso)
         if (arena_->isKeyJustPressed(K_SPACE) || isAttacking_)
@@ -226,7 +227,6 @@ namespace lulu
     {
         isAttacking_ = true;
         attackFrame_ = 0;
-        originalSize_ = size_;
         movement_.set(S_ATTACK, movement_.currentDirection());
     }
 
@@ -251,7 +251,7 @@ namespace lulu
 
         // Aggiorna le dimensioni in base alla nuova sprite
         const Vec2<float> oldSize = size_;
-        size_ = AnimationHandler::getSpriteDimension(sprite_).value_or(originalSize_);
+        size_ = AnimationHandler::getSpriteDimension(sprite_).value();
 
         // Aggiusta la posizione se le dimensioni sono cambiate
         const Vec2<float> sizeDiff = size_ - oldSize;
@@ -270,7 +270,7 @@ namespace lulu
 
         // Ripristina le dimensioni originali
         const Vec2<float> oldSize = size_;
-        size_ = AnimationHandler::getSpriteDimension(sprite_).value_or(originalSize_);
+        size_ = AnimationHandler::getSpriteDimension(sprite_).value();
 
         // Aggiusta la posizione finale
         const Vec2<float> sizeDiff = size_ - oldSize;
@@ -286,9 +286,38 @@ namespace lulu
             // Ignora collisioni con oggetti statici durante attacco
             return;
         }
-
+        isHurt_ = true;
         // Gestione normale delle collisioni
         Actor::handleCollision(collision);
+        if (hurtFrame_==0)
+        takeDamage(1);
+    }
+
+    void Link::recoil(const Direction collisionDirection)
+    {
+        switch (collisionDirection)
+        {
+        case D_UP:
+        case D_UPLEFT:
+        case D_UPRIGHT:
+            pos_.y += speed_.y*2;
+            break;
+
+        case D_DOWN:
+        case D_DOWNLEFT:
+        case D_DOWNRIGHT:
+            pos_.y -= speed_.y*2;
+            break;
+
+        case D_LEFT:
+            pos_.x += speed_.x*2;
+            break;
+        case D_RIGHT:
+            pos_.x -= speed_.x*2;
+            break;
+        default:
+            break;
+        }
     }
 
     void Link::move()
@@ -337,6 +366,22 @@ namespace lulu
             if (attackFrame_ >= ATTACK_DURATION)
             {
                 endAttack();
+            }
+        }
+        else if (newState == S_HURT)
+        {
+            if (hurtFrame_ < INVINCIBILITY_DURATION)
+            {
+                hurtFrame_++;
+                if (hurtFrame_ < INVINCIBILITY_DURATION / 2)
+                {
+                    recoil(movement_.currentDirection());
+                }
+            }
+            else
+            {
+                hurtFrame_ = 0;
+                isHurt_ = false;
             }
         }
     }
