@@ -102,7 +102,6 @@ namespace lulu
      * ma continua a collidere con entità mobili.
      */
     void handleCollision(Collision collision) override;
-    void recoil(Direction collisionDirection);
 
     /**
      * @brief Aggiusta la posizione in base al cambio di dimensioni

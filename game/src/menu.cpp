@@ -38,7 +38,7 @@ namespace game
         BeginDrawing();
         ClearBackground(BLACK);
         DrawTexture(background_, 0, 0, WHITE);
-        DrawText("Press SPACE to start", 225, 500, 30, {255, 255, 255, transparency});
+        DrawText("Press ENTER to start", 225, 500, 30, {255, 255, 255, transparency});
         EndDrawing();
     }
 } // namespace game

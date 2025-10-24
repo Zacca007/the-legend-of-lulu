@@ -1,6 +1,6 @@
 #include "arena.hpp"
 #include "actor.hpp"
-#include "fighters/link.hpp"
+#include "movable.hpp"
 #include "utility actors/door.hpp"
 #include "utility actors/npc.hpp"
 #include <fstream>
@@ -52,6 +52,7 @@ namespace lulu
 
         // Load actors
         loadActors(arenaJson);
+        //loadEnemies(arenaJson);
         loadDoors(arenaJson);
         loadNPCs(arenaJson);
     }
@@ -68,6 +69,24 @@ namespace lulu
             spawn(std::make_unique<Actor>(pos, size));
         }
     }
+
+    /*void Arena::loadEnemies(const nlohmann::json& arenaJson)
+    {
+        if (!arenaJson.contains("enemies")) return;
+
+        for (const auto& enemyJson : arenaJson.at("enemies"))
+        {
+            std::string type = enemyJson.at("type").get<std::string>();
+            Vec2<float> pos = parseVec2(enemyJson.at("pos"));
+
+            if (type == "zol")
+            {
+                spawn(std::make_unique<Zol>(pos));
+            }
+            // Qui puoi aggiungere altri tipi di nemici in futuro:
+            // else if (type == "moblin") { spawn(std::make_unique<Moblin>(pos, config)); }
+        }
+    }*/
 
     void Arena::loadDoors(const nlohmann::json& arenaJson)
     {

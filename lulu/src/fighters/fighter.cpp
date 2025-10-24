@@ -38,6 +38,32 @@ namespace lulu
         }
     }
 
+    void Fighter::recoil(const Direction collisionDirection)
+    {
+        switch (collisionDirection)
+        {
+        case D_UP:
+        case D_UPLEFT:
+        case D_UPRIGHT:
+            pos_.y += speed_.y * 2;
+            break;
+
+        case D_DOWN:
+        case D_DOWNLEFT:
+        case D_DOWNRIGHT:
+            pos_.y -= speed_.y * 2;
+            break;
+
+        case D_LEFT:
+            pos_.x += speed_.x * 2;
+            break;
+        case D_RIGHT:
+            pos_.x -= speed_.x * 2;
+            break;
+        default:
+            break;
+        }
+    }
 
     void Fighter::takeDamage(const float damage)
     {

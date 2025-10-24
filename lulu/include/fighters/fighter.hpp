@@ -56,6 +56,8 @@ namespace lulu
      */
     virtual void endAttack() = 0;
 
+    void recoil(Direction collisionDirection);
+
     // === COSTRUTTORI PROTETTI (SOLO PER SOTTOCLASSI) ===
 
     /**

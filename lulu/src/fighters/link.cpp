@@ -239,13 +239,6 @@ namespace lulu
         if (movement_.currentFrame() >= ATTACK_DURATION - 1)
             return;
 
-        // TODO: Nel frame di danno, controlla collisioni con nemici e infliggi danno
-        if (attackFrame_ == DAMAGE_FRAME)
-        {
-            // Qui andrà la logica per infliggere danno ai nemici colpiti
-            // Per ora è solo un placeholder
-        }
-
         // Avanza all'animazione successiva
         sprite_ = movement_.nextSprite();
 
@@ -281,44 +274,38 @@ namespace lulu
     {
         // Durante l'attacco, Link ignora collisioni con oggetti statici
         // ma continua a collidere con entità mobili (altri Fighter)
-        if (Actor* other = collision.target; dynamic_cast<Movable*>(other) == nullptr && isAttacking_)
+        Actor* other = collision.target;
+
+        if (!dynamic_cast<Fighter*>(other))
         {
             // Ignora collisioni con oggetti statici durante attacco
+            if (isAttacking_)
+                return;
+            Actor::handleCollision(collision);
             return;
         }
-        isHurt_ = true;
-        // Gestione normale delle collisioni
-        Actor::handleCollision(collision);
-        if (hurtFrame_==0)
-        takeDamage(1);
-    }
 
-    void Link::recoil(const Direction collisionDirection)
-    {
-        switch (collisionDirection)
+        if (auto* fighter = dynamic_cast<Fighter*>(other))
         {
-        case D_UP:
-        case D_UPLEFT:
-        case D_UPRIGHT:
-            pos_.y += speed_.y*2;
-            break;
-
-        case D_DOWN:
-        case D_DOWNLEFT:
-        case D_DOWNRIGHT:
-            pos_.y -= speed_.y*2;
-            break;
-
-        case D_LEFT:
-            pos_.x += speed_.x*2;
-            break;
-        case D_RIGHT:
-            pos_.x -= speed_.x*2;
-            break;
-        default:
-            break;
+            // Link subisce danno se NON sta attaccando
+            if (!isAttacking_)
+            {
+                isHurt_ = true;
+                // Infliggi danno solo al primo frame dell'hurt
+                if (hurtFrame_ == 0)
+                {
+                    fighter->attack(this);
+                }
+                Actor::handleCollision(collision);
+            }
+            // Link infligge danno se STA attaccando nel frame giusto
+            else if (isAttacking_ && attackFrame_ == DAMAGE_FRAME)
+            {
+                attack(fighter);
+            }
         }
     }
+
 
     void Link::move()
     {

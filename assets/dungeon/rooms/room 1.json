@@ -27,6 +27,20 @@
         "changeMusic": true
       }
     ],
+    "enemies": [
+      {
+        "type": "zol",
+        "pos": {"x": 200, "y": 200}
+      },
+      {
+        "type": "zol",
+        "pos": {"x": 500, "y": 300}
+      },
+      {
+        "type": "zol",
+        "pos": {"x": 350, "y": 250}
+      }
+    ],
     "actors": [
       {"pos": {"x": 0, "y": 0}, "size": {"width": 800, "height":  100}},
       {"pos": {"x": 0, "y": 0}, "size": {"width": 100, "height":  250}},

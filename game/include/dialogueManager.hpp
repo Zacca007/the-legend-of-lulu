@@ -22,7 +22,7 @@ namespace game
         bool isTextComplete_ = false;
 
         // Texture del box - caricata UNA volta
-        Texture2D dialogueBoxTexture_;
+        Texture2D dialogueBoxTexture_{};
         bool textureLoaded_ = false;
 
     public:

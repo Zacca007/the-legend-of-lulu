@@ -1,0 +1,44 @@
+{
+  "actor": {
+    "sprite": "assets/characters/zol/movement/zol 1.png",
+    "size": {
+      "width": 50,
+      "height": 50
+    }
+  },
+  "movable": {
+    "speed": {
+      "x": 2,
+      "y": 2
+    },
+    "enableAnimation": true
+  },
+  "fighter": {
+    "hp": 1,
+    "damage": 1
+  },
+  "animations": {
+    "movement": {
+      "up": [
+        "assets/characters/zol/zol png",
+        "assets/characters/zol/zol png"
+      ],
+      "down": [
+        "assets/characters/zol/zol 1.png",
+        "assets/characters/zol/zol 2.png"
+      ],
+      "left": [
+        "assets/characters/zol/zol 1.png",
+        "assets/characters/zol/zol 2.png"
+      ],
+      "right": [
+        "assets/characters/zol/zol 1.png",
+        "assets/characters/zol/zol 2.png"
+      ]
+    }
+  },
+  "ai": {
+    "changeDirectionInterval": 60,
+    "pauseChance": 0.15
+  }
+}

@@ -1,6 +1,8 @@
 #include "gameplay.hpp"
 #include <nlohmann/json.hpp>
 #include "game.hpp"
+#include "menu.hpp"
+#include "lulu.hpp"
 
 namespace game
 {
@@ -91,7 +93,7 @@ namespace game
         // Controlla NPC
         if (const auto npc = checkNpcCollision(pLink))
         {
-            if (IsKeyDown(KEY_SPACE))
+            if (IsKeyDown(KEY_T))
             {
                 startDialogue(npc.value());
             }
@@ -122,7 +124,7 @@ namespace game
             constexpr int HEART_SPACING = 5;
 
             // Calcola quanta HP rappresenta questo cuore (2 HP per cuore)
-            const float heartMinHp = i * 2.0f;
+            const float heartMinHp = static_cast<float>(i) * 2.0f;
             const float heartMaxHp = heartMinHp + 2.0f;
 
             // Posizione X del cuore corrente
