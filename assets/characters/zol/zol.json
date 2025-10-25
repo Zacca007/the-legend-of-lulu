@@ -20,8 +20,8 @@
   "animations": {
     "movement": {
       "up": [
-        "assets/characters/zol/zol png",
-        "assets/characters/zol/zol png"
+        "assets/characters/zol/zol 1.png",
+        "assets/characters/zol/zol 2.png"
       ],
       "down": [
         "assets/characters/zol/zol 1.png",
@@ -36,9 +36,5 @@
         "assets/characters/zol/zol 2.png"
       ]
     }
-  },
-  "ai": {
-    "changeDirectionInterval": 60,
-    "pauseChance": 0.15
   }
 }

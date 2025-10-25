@@ -75,7 +75,7 @@ namespace lulu
      * - Imposta l'animazione corretta
      * - Salva le dimensioni originali
      */
-    void setupAttack() override;
+    void setupAttack();
 
     /**
      * @brief Esegue l'attacco di Link
@@ -84,7 +84,7 @@ namespace lulu
      * - Aggiusta le dimensioni in base alla sprite
      * - Infligge danno nel frame corretto
      */
-    void performAttack() override;
+    void performAttack();
 
     /**
      * @brief Conclude l'attacco di Link
@@ -93,7 +93,7 @@ namespace lulu
      * - Ripristina le dimensioni originali
      * - Torna allo stato normale
      */
-    void endAttack() override;
+    void endAttack();
 
     /**
      * @brief Gestisce le collisioni specifiche di Link

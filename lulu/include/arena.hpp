@@ -22,7 +22,7 @@ namespace lulu
 
     // Helper per parsing JSON
     void loadActors(const nlohmann::json& arenaJson);
-    //void loadEnemies(const nlohmann::json& arenaJson);
+    void loadEnemies(const nlohmann::json& arenaJson);
     void loadDoors(const nlohmann::json& arenaJson);
     void loadNPCs(const nlohmann::json& arenaJson);
 

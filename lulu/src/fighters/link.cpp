@@ -2,6 +2,7 @@
 #include "arena.hpp"
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <print>
 
 namespace lulu
 {
@@ -275,37 +276,35 @@ namespace lulu
         // Durante l'attacco, Link ignora collisioni con oggetti statici
         // ma continua a collidere con entità mobili (altri Fighter)
         Actor* other = collision.target;
+        auto* fighter = dynamic_cast<Fighter*>(other);
 
-        if (!dynamic_cast<Fighter*>(other))
+        if (fighter == nullptr)
         {
-            // Ignora collisioni con oggetti statici durante attacco
+            // Ignora collisioni con oggetti non combattenti durante attacco
             if (isAttacking_)
                 return;
+
             Actor::handleCollision(collision);
             return;
         }
 
-        if (auto* fighter = dynamic_cast<Fighter*>(other))
+        // Link subisce danno se NON sta attaccando
+        if (!isAttacking_)
         {
-            // Link subisce danno se NON sta attaccando
-            if (!isAttacking_)
+            isHurt_ = true;
+            // Infliggi danno solo al primo frame dell'hurt
+            if (hurtFrame_ == 0)
             {
-                isHurt_ = true;
-                // Infliggi danno solo al primo frame dell'hurt
-                if (hurtFrame_ == 0)
-                {
-                    fighter->attack(this);
-                }
-                Actor::handleCollision(collision);
+                fighter->attack(this);
             }
-            // Link infligge danno se STA attaccando nel frame giusto
-            else if (isAttacking_ && attackFrame_ == DAMAGE_FRAME)
-            {
-                attack(fighter);
-            }
+            Actor::handleCollision(collision);
+        }
+        // Link infligge danno se STA attaccando nel frame giusto
+        else if (isAttacking_ && attackFrame_ == DAMAGE_FRAME)
+        {
+            attack(fighter);
         }
     }
-
 
     void Link::move()
     {

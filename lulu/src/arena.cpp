@@ -7,6 +7,8 @@
 #include <nlohmann/json.hpp>
 #include <utility>
 
+#include "fighters/zol.hpp"
+
 namespace lulu
 {
     Arena::Arena(const Vec2<float> pos, const Vec2<float> size) : pos_(pos), size_(size)
@@ -52,7 +54,7 @@ namespace lulu
 
         // Load actors
         loadActors(arenaJson);
-        //loadEnemies(arenaJson);
+        loadEnemies(arenaJson);
         loadDoors(arenaJson);
         loadNPCs(arenaJson);
     }
@@ -70,7 +72,7 @@ namespace lulu
         }
     }
 
-    /*void Arena::loadEnemies(const nlohmann::json& arenaJson)
+    void Arena::loadEnemies(const nlohmann::json& arenaJson)
     {
         if (!arenaJson.contains("enemies")) return;
 
@@ -86,7 +88,7 @@ namespace lulu
             // Qui puoi aggiungere altri tipi di nemici in futuro:
             // else if (type == "moblin") { spawn(std::make_unique<Moblin>(pos, config)); }
         }
-    }*/
+    }
 
     void Arena::loadDoors(const nlohmann::json& arenaJson)
     {
@@ -173,6 +175,14 @@ namespace lulu
                 movable->move();
                 detectCollisionsFor(act.get());
                 handleCollisionsFor(act.get());
+
+                if (auto* fighter = dynamic_cast<Fighter*>(act.get()))
+                {
+                    if (!fighter->isAlive())
+                    {
+                        kill(act.get());
+                    }
+                }
             }
         }
     }

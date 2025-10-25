@@ -25,37 +25,6 @@ namespace lulu
     float damage_; // Danno inflitto per attacco
 
     // === SISTEMA DI ATTACCO (DA IMPLEMENTARE NELLE SOTTOCLASSI) ===
-
-    /**
-     * @brief Prepara l'attacco (animazione iniziale, cambio hitbox)
-     *
-     * Chiamato all'inizio della sequenza di attacco.
-     * Qui si può:
-     * - Cambiare le dimensioni dell'attore per l'arma
-     * - Impostare animazioni di preparazione
-     * - Preparare effetti sonori
-     */
-    virtual void setupAttack() = 0;
-
-    /**
-     * @brief Esegue l'attacco vero e proprio (infligge danni)
-     *
-     * Chiamato nel frame centrale della sequenza di attacco.
-     * Qui avviene il calcolo e l'applicazione dei danni.
-     */
-    virtual void performAttack() = 0;
-
-    /**
-     * @brief Conclude l'attacco (ripristina stato normale)
-     *
-     * Chiamato alla fine della sequenza di attacco.
-     * Qui si può:
-     * - Ripristinare le dimensioni originali
-     * - Tornare allo stato normale
-     * - Pulire effetti temporanei
-     */
-    virtual void endAttack() = 0;
-
     void recoil(Direction collisionDirection);
 
     // === COSTRUTTORI PROTETTI (SOLO PER SOTTOCLASSI) ===
