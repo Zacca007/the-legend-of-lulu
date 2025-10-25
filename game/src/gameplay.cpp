@@ -58,7 +58,7 @@ namespace game
         }
     }
 
-    void Gameplay::handleDialogueInput(float deltaTime)
+    void Gameplay::handleDialogueInput(const float deltaTime)
     {
         dialogueManager_.update(deltaTime);
 
@@ -164,7 +164,7 @@ namespace game
         renderActors();
 
         // Renderizza i cuori (HP di Link)
-        if (lulu::Link* pLink = findLink())
+        if (const lulu::Link* pLink = findLink())
         {
             renderHearts(pLink->hp());
         }
@@ -205,7 +205,7 @@ namespace game
     std::optional<Gameplay::DoorInfo> Gameplay::checkDoorCollision(const lulu::Link* link) const
     {
         const auto& collisions = arena_.collisions();
-        auto it = collisions.find(link);
+        const auto it = collisions.find(link);
         if (it == collisions.end()) return std::nullopt;
 
         for (const auto& [target, direction] : it->second)
@@ -225,7 +225,7 @@ namespace game
     std::optional<const lulu::NPC*> Gameplay::checkNpcCollision(const lulu::Link* link) const
     {
         const auto& collisions = arena_.collisions();
-        auto it = collisions.find(link);
+        const auto it = collisions.find(link);
         if (it == collisions.end()) return std::nullopt;
 
         for (const auto& [target, direction] : it->second)

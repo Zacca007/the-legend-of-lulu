@@ -78,7 +78,7 @@ namespace lulu
 
         for (const auto& enemyJson : arenaJson.at("enemies"))
         {
-            std::string type = enemyJson.at("type").get<std::string>();
+            auto type = enemyJson.at("type").get<std::string>();
             Vec2<float> pos = parseVec2(enemyJson.at("pos"));
 
             if (type == "zol")
@@ -100,7 +100,7 @@ namespace lulu
             Vec2<float> size = parseSize(doorJson.at("size"));
             Vec2<float> spawnPos = parseVec2(doorJson.at("spawn"));
             bool changeMusic = doorJson.at("changeMusic").get<bool>();
-            std::string destination = doorJson.at("destination").get<std::string>();
+            auto destination = doorJson.at("destination").get<std::string>();
 
             spawn(std::make_unique<Door>(pos, size, spawnPos, destination, changeMusic));
         }
@@ -114,9 +114,9 @@ namespace lulu
         {
             Vec2<float> pos = parseVec2(npcJson.at("pos"));
             Vec2<float> size = parseSize(npcJson.at("size"));
-            std::string name = npcJson.at("name").get<std::string>();
-            std::string sprite = npcJson.at("sprite").get<std::string>();
-            std::string dialogue = npcJson.at("dialoguePath").get<std::string>();
+            auto name = npcJson.at("name").get<std::string>();
+            auto sprite = npcJson.at("sprite").get<std::string>();
+            auto dialogue = npcJson.at("dialoguePath").get<std::string>();
 
             spawn(std::make_unique<NPC>(pos, size, sprite, dialogue, name));
         }
@@ -150,8 +150,8 @@ namespace lulu
     {
         if (!actor) return nullptr;
 
-        auto it = std::ranges::find_if(actors_,
-                                       [actor](const auto& a) { return a.get() == actor; });
+        const auto it = std::ranges::find_if(actors_,
+                                             [actor](const auto& a) { return a.get() == actor; });
 
         if (it != actors_.end())
         {
@@ -176,7 +176,7 @@ namespace lulu
                 detectCollisionsFor(act.get());
                 handleCollisionsFor(act.get());
 
-                if (auto* fighter = dynamic_cast<Fighter*>(act.get()))
+                if (const auto* fighter = dynamic_cast<Fighter*>(act.get()))
                 {
                     if (!fighter->isAlive())
                     {

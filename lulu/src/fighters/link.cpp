@@ -2,7 +2,6 @@
 #include "arena.hpp"
 #include <fstream>
 #include <nlohmann/json.hpp>
-#include <print>
 
 namespace lulu
 {
@@ -164,7 +163,7 @@ namespace lulu
     Vec2<float> Link::calculateMovement(const Direction dir) const
     {
         Vec2<float> movement{};
-        const auto diagonal = speed_.diagonal().value();
+        const auto [x, y] = speed_.diagonal().value();
 
         switch (dir)
         {
@@ -181,16 +180,16 @@ namespace lulu
             movement = {speed_.x, 0};
             break;
         case D_UPLEFT:
-            movement = {-diagonal.x, -diagonal.y};
+            movement = {-x, -y};
             break;
         case D_UPRIGHT:
-            movement = {diagonal.x, -diagonal.y};
+            movement = {x, -y};
             break;
         case D_DOWNLEFT:
-            movement = {-diagonal.x, diagonal.y};
+            movement = {-x, y};
             break;
         case D_DOWNRIGHT:
-            movement = {diagonal.x, diagonal.y};
+            movement = {x, y};
             break;
         case D_NONE:
         default:
@@ -271,7 +270,7 @@ namespace lulu
         adjustPositionForSize(sizeDiff);
     }
 
-    void Link::handleCollision(Collision collision)
+    void Link::handleCollision(const Collision collision)
     {
         // Durante l'attacco, Link ignora collisioni con oggetti statici
         // ma continua a collidere con entità mobili (altri Fighter)

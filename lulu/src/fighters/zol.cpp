@@ -3,11 +3,10 @@
 #include <random>
 
 namespace lulu {
-
-    Zol::Zol(Vec2<float> pos, const std::string& configPath) : Fighter(pos, configPath)
+    Zol::Zol(Vec2<float> pos, const std::string& config) : Fighter(pos, config)
     {
         // Leggi il JSON
-        std::ifstream f(configPath);
+        std::ifstream f(config);
         nlohmann::json j;
         f >> j;
 
@@ -66,8 +65,7 @@ namespace lulu {
         static std::mt19937 gen(rd());
         static std::uniform_int_distribution<> dis(0, 7);
 
-        int randomDir = dis(gen);
-        switch (randomDir)
+        switch (dis(gen))
         {
             case 0: currentDirection_ = D_UP; break;
             case 1: currentDirection_ = D_DOWN; break;
@@ -108,7 +106,7 @@ namespace lulu {
             static std::mt19937 gen(rd());
             static std::uniform_int_distribution<> dis(0, 7);
 
-            int randomDir = dis(gen);
+            const int randomDir = dis(gen);
             Direction newDirection = currentDirection_;
 
             switch (randomDir)
@@ -133,7 +131,7 @@ namespace lulu {
     Vec2<float> Zol::calculateMovement(const Direction dir) const
     {
         Vec2<float> movement{};
-        const auto diagonal = speed_.diagonal().value();
+        const auto [x, y] = speed_.diagonal().value();
 
         switch (dir)
         {
@@ -150,16 +148,16 @@ namespace lulu {
             movement = {speed_.x, 0};
             break;
         case D_UPLEFT:
-            movement = {-diagonal.x, -diagonal.y};
+            movement = {-x, -y};
             break;
         case D_UPRIGHT:
-            movement = {diagonal.x, -diagonal.y};
+            movement = {x, -y};
             break;
         case D_DOWNLEFT:
-            movement = {-diagonal.x, diagonal.y};
+            movement = {-x, y};
             break;
         case D_DOWNRIGHT:
-            movement = {diagonal.x, diagonal.y};
+            movement = {x, y};
             break;
         case D_NONE:
         default:
@@ -172,7 +170,7 @@ namespace lulu {
     void Zol::move()
     {
         const State newState = updatedState();
-        Direction newDirection = updatedDirection();
+        const Direction newDirection = updatedDirection();
 
         // Aggiorna i contatori
         movementCounter_++;
