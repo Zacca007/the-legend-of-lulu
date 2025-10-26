@@ -22,6 +22,9 @@ namespace game
         for (const auto& texture : textureCache_ | std::views::values)
             UnloadTexture(texture);
 
+        for (const auto& sound : soundCache_ | std::views::values)
+            UnloadSound(sound);
+
         // Scarica le texture dei cuori
         UnloadTexture(heartFull_);
         UnloadTexture(heartHalf_);
@@ -37,6 +40,23 @@ namespace game
             it->second = LoadTexture(path.c_str());
         }
         return it->second;
+    }
+
+    Sound Gameplay::getSound(const std::string& path)
+    {
+        // Usa emplace per evitare lookup doppio
+        auto [it, inserted] = soundCache_.try_emplace(path, Sound{});
+        if (inserted)
+        {
+            it->second = LoadSound(path.c_str());
+        }
+        return it->second;
+    }
+
+    void Gameplay::playSound(const std::string& path)
+    {
+        Sound sound = getSound(path);
+        PlaySound(sound);
     }
 
     void Gameplay::tick()
@@ -79,10 +99,40 @@ namespace game
 
     void Gameplay::handleGameplayInput()
     {
+        lulu::Link* pLink = findLink();
+
+        // Esegui il tick dell'arena (dove Link imposta attackResult_)
         arena_.tick(activeInputs());
 
-        lulu::Link* pLink = findLink();
         if (!pLink) return;
+
+
+        // Controlla il risultato dell'attacco (impostato da Link durante handleCollision)
+        switch (pLink->attackState())
+        {
+            case lulu::AttackState::AS_HIT:
+                playSound("assets/audio/sfx/enemy_hit.wav");
+                break;
+            case lulu::AttackState::AS_KILL:
+                playSound("assets/audio/sfx/enemy_die.wav");
+                break;
+            case lulu::AttackState::AS_SWING:
+                playSound("assets/audio/sfx/sword_slash.wav");
+            break;
+            case lulu::AttackState::AS_NONE:
+            default:
+                break;
+        }
+
+        // Controlla se Link è stato colpito
+        static float previousLinkHp = pLink->hp();
+        float currentLinkHp = pLink->hp();
+
+        if (currentLinkHp < previousLinkHp)
+        {
+            playSound("assets/audio/sfx/link_hurt.wav");
+            previousLinkHp = currentLinkHp;
+        }
 
         // Controlla porta
         if (const auto doorInfo = checkDoorCollision(pLink))

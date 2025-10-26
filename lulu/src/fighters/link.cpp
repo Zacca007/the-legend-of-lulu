@@ -235,6 +235,11 @@ namespace lulu
         // Aggiorna il frame dell'attacco
         attackFrame_++;
 
+        if (attackFrame_==DAMAGE_FRAME)
+            attackState_ = AS_SWING;
+        else
+            attackState_ = AS_NONE;
+
         // Non avanzare oltre l'ultimo frame
         if (movement_.currentFrame() >= ATTACK_DURATION - 1)
             return;
@@ -301,7 +306,9 @@ namespace lulu
         // Link infligge danno se STA attaccando nel frame giusto
         else if (isAttacking_ && attackFrame_ == DAMAGE_FRAME)
         {
+            attackState_ = AS_HIT;
             attack(fighter);
+            if (!fighter->isAlive())attackState_=AS_KILL;
         }
     }
 

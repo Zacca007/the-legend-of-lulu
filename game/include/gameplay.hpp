@@ -11,6 +11,7 @@ namespace game
     {
         lulu::Arena arena_;
         std::unordered_map<std::string, Texture2D> textureCache_;
+        std::unordered_map<std::string, Sound> soundCache_;
         DialogueManager dialogueManager_;
 
         // Texture per i cuori (caricate una volta sola)
@@ -27,6 +28,10 @@ namespace game
 
         // Gestione texture
         Texture2D getTexture(const std::string& path);
+
+        // Gestione sound effects
+        Sound getSound(const std::string& path);
+        void playSound(const std::string& path);
 
         // Ricerca attori
         lulu::Link* findLink() const;

@@ -3,6 +3,17 @@
 
 namespace lulu
 {
+  /*
+   * @brief Enum per tracciare il risultato dell'attacco di Link
+  */
+  enum AttackState
+  {
+    AS_NONE, // Nessun attacco in corso
+    AS_SWING, // Attacco a vuoto (nessun nemico colpito)
+    AS_HIT, // Attacco a segno (nemico colpito ma vivo)
+    AS_KILL // Attacco letale (nemico ucciso)
+  };
+
   /**
    * @brief Il protagonista del gioco - personaggio controllato dal giocatore
    *
@@ -17,14 +28,16 @@ namespace lulu
   {
     // === SISTEMA DI ATTACCO ===
     bool isHurt_{false};
-    bool isAttacking_{false};           // Flag che indica se Link sta attaccando
-    std::uint8_t attackFrame_{0};       // Frame corrente dell'animazione di attacco (0-4)
+    bool isAttacking_{false}; // Flag che indica se Link sta attaccando
+    AttackState attackState_ = AS_NONE;
+    std::uint8_t attackFrame_{0}; // Frame corrente dell'animazione di attacco (0-4)
     std::uint8_t hurtFrame_{0};
 
-    static constexpr std::uint8_t ATTACK_DURATION = 5;  // Durata totale attacco in frame
-    static constexpr std::uint8_t DAMAGE_FRAME = 2;     // Frame in cui viene inflitto il danno
 
-    static constexpr std::uint8_t INVINCIBILITY_DURATION = 10;
+    static constexpr std::uint8_t ATTACK_DURATION = 5; // Durata totale attacco in frame
+    static constexpr std::uint8_t DAMAGE_FRAME = 2; // Frame in cui viene inflitto il danno
+
+    static constexpr std::uint8_t INVINCIBILITY_DURATION = 12;
 
     // === IMPLEMENTAZIONI DEI METODI VIRTUALI DI MOVABLE ===
 
@@ -128,7 +141,10 @@ namespace lulu
      * @param pos Posizione iniziale di spawn
      * @param configPath Percorso del file JSON (default: assets/link/link.json)
      */
-    explicit Link(Vec2<float> pos, const std::string &configPath = "assets/characters/link/link.json");
+    explicit Link(Vec2<float> pos, const std::string& configPath = "assets/characters/link/link.json");
+
+
+    [[nodiscard]] AttackState attackState() const { return attackState_; }
 
     /**
      * @brief Implementa il movimento di Link per un frame
