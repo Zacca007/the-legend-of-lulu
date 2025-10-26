@@ -90,8 +90,12 @@ namespace lulu
         if (const State state = movement_.currentState(); state == S_ATTACK || state == S_HURT)
             return state;
 
-        if (isHurt_) return S_HURT;
 
+        if (isHurt_)
+            return S_HURT;
+
+        if (!isAlive())
+            return S_DEAD;
         // Inizia attacco se premuto SPAZIO (o già in corso)
         if (arena_->isKeyJustPressed(K_SPACE) || isAttacking_)
             return S_ATTACK;
@@ -375,6 +379,10 @@ namespace lulu
                 hurtFrame_ = 0;
                 isHurt_ = false;
             }
+        }
+        else if (newState==S_DEAD)
+        {
+            shouldDie_ = true;
         }
     }
 } // namespace lulu

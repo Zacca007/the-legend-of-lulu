@@ -35,6 +35,11 @@
         "assets/characters/zol/zol 1.png",
         "assets/characters/zol/zol 2.png"
       ]
-    }
+    },
+    "death": [
+      "assets/characters/Enemy Death 1.png",
+      "assets/characters/Enemy Death 2.png",
+      "assets/characters/Enemy Death 3.png"
+    ]
   }
 }

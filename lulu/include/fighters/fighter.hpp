@@ -23,7 +23,7 @@ namespace lulu
 
     float hp_;     // Punti vita correnti
     float damage_; // Danno inflitto per attacco
-
+    bool shouldDie_ = false;
     // === SISTEMA DI ATTACCO (DA IMPLEMENTARE NELLE SOTTOCLASSI) ===
     void recoil(Direction collisionDirection);
 
@@ -61,6 +61,7 @@ namespace lulu
      * @return true se HP > 0
      */
     [[nodiscard]] bool isAlive() const;
+    [[nodiscard]] bool shouldDie() const;
 
     /** @brief Restituisce i punti vita correnti */
     [[nodiscard]] float hp() const;

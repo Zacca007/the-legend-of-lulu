@@ -40,6 +40,9 @@ namespace lulu {
         std::vector<std::string> left = movement["left"];
         std::vector<std::string> right = movement["right"];
 
+        std::vector<std::string> death = animations["death"];
+        movement_.addAnimation(S_DEAD, D_NONE, death);
+
         // Aggiungi animazioni movimento per tutte le direzioni
         movement_.addAnimation(S_MOVING, D_UP, up);
         movement_.addAnimation(S_MOVING, D_UPLEFT, up);
@@ -85,15 +88,16 @@ namespace lulu {
 
     State Zol::updatedState() const
     {
+        if (!isAlive())
+        {
+            return S_DEAD;
+        }
         // Pattern: si muove per 45 frame, poi si ferma per 15 frame
         if (movementCounter_ < 45)
         {
             return S_MOVING;
         }
-        else
-        {
-            return S_STILL;
-        }
+        return S_STILL;
     }
 
     Direction Zol::updatedDirection() const
@@ -107,7 +111,7 @@ namespace lulu {
             static std::uniform_int_distribution<> dis(0, 7);
 
             const int randomDir = dis(gen);
-            Direction newDirection = currentDirection_;
+            Direction newDirection;
 
             switch (randomDir)
             {
@@ -188,7 +192,7 @@ namespace lulu {
             // Quando è fermo, mantiene l'animazione ma non si muove
             if (movement_.currentState() != S_STILL)
             {
-                movement_.set(S_STILL, currentDirection_);
+                movement_.set(newState, currentDirection_);
                 sprite_ = movement_.nextSprite();
             }
 
@@ -209,7 +213,7 @@ namespace lulu {
                 // Cambio direzione richiede reset animazione
                 if (movement_.currentDirection() != newDirection)
                 {
-                    movement_.set(S_MOVING, newDirection);
+                    movement_.set(newState, newDirection);
                     sprite_ = movement_.nextSprite();
                     animationCounter_ = 0;
                 }
@@ -219,6 +223,25 @@ namespace lulu {
                 {
                     sprite_ = movement_.nextSprite();
                 }
+            }
+        }
+        else if (newState == S_DEAD)
+        {
+            static int frameCount = 0;
+            if (movement_.currentState() != S_DEAD)
+            {
+                movement_.set(newState, D_NONE);
+                return;
+            }
+            if (frameCount < movement_.currentAnimation().size())
+            {
+                sprite_ = movement_.nextSprite();
+                frameCount++;
+            }
+            else
+            {
+                frameCount = 0;
+                shouldDie_ = true;
             }
         }
     }

@@ -178,7 +178,7 @@ namespace lulu
 
                 if (const auto* fighter = dynamic_cast<Fighter*>(act.get()))
                 {
-                    if (!fighter->isAlive())
+                    if (fighter->shouldDie())
                     {
                         kill(act.get());
                     }

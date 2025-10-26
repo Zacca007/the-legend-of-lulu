@@ -80,6 +80,11 @@ namespace lulu
         return hp_ > 0;
     }
 
+    bool Fighter::shouldDie() const
+    {
+        return shouldDie_;
+    }
+
     float Fighter::hp() const
     {
         return hp_;

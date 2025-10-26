@@ -128,7 +128,8 @@ enum State
     S_STILL,    // Fermo (idle)
     S_MOVING,   // In movimento
     S_ATTACK,   // Attaccando
-    S_HURT      // Ferito
+    S_HURT,      // Ferito
+    S_DEAD
 };
 
 /**
