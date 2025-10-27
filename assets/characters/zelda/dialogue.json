@@ -5,122 +5,54 @@
       "portrait": "assets/characters/zelda/lulu icon.png",
       "text": [
         "...Pippi?",
-        "You really came all this way just to find me?",
-        "You shouldn't have. I could've handled this myself."
+        "you came all this way down here?",
+        "you shouldn’t have. i could’ve handled this myself."
       ]
     },
     {
       "speaker": "Pippi",
       "portrait": "assets/characters/link/pietro.png",
       "text": [
-        "Maybe you could have.",
-        "But I couldn't let you face it alone.",
-        "I didn't come because I thought you needed saving.",
-        "I came because I still love you."
+        "i don’t doubt it at all.",
+        "i just missed you, i wanted to see you."
       ]
     },
     {
       "speaker": "Lulù",
       "portrait": "assets/characters/zelda/lulu icon.png",
       "text": [
-        "After everything… you still hold on to that?",
-        "Pippi, people move on. Feelings change. That's just life.",
-        "You'll suffer if you keep loving me this way."
+        "why do you still hold on to that?",
+        "there are so many things out there, so many people.",
+        "you’re missing out on a lot"
       ]
     },
     {
       "speaker": "Pippi",
       "portrait": "assets/characters/link/pietro.png",
       "text": [
-        "Maybe I will suffer. But pain is nothing compared to betraying what I believe in.",
-        "I don't love you out of habit or stubbornness.",
-        "I love you because you're still the most beautiful",
-        "the most alive, the most brilliant person I've ever known.",
-        "That hasn't changed",
-        "and until it does, I won't pretend it has."
+        "but i don't want any of that",
+        "i don’t miss the feeling, i miss you",
+        "how close you were, and what you used to think of me."
       ]
     },
     {
       "speaker": "Lulù",
       "portrait": "assets/characters/zelda/lulu icon.png",
       "text": [
-        "But you'll end up alone, stuck in something that doesn't exist anymore.",
-        "You can't live chained to a memory.",
-        "You have to let life happen again, even if it means loving in a different way."
+        "i don’t know what to say.",
+        "i still care about you, i’m not disappearing.",
+        "but this is just how life moves. you can’t fight that."
       ]
     },
     {
       "speaker": "Pippi",
       "portrait": "assets/characters/link/pietro.png",
       "text": [
-        "I don't want to love in a different way.",
-        "I don't want to tell someone else the same words I told you",
-        "words I meant with all I had.",
-        "If I start making promises to everyone, what meaning do they have?",
-        "I gave everything so it would last",
-        "because I believed in forever when I said it.",
-        "If that belief makes me alone, then so be it."
-      ]
-    },
-    {
-      "speaker": "Lulù",
-      "portrait": "assets/characters/zelda/lulu icon.png",
-      "text": [
-        "You talk as if love were a vow written in stone.",
-        "But people change. I've changed.",
-        "Don't you ever want peace? To stop hurting?"
-      ]
-    },
-    {
-      "speaker": "Pippi",
-      "portrait": "assets/characters/link/pietro.png",
-      "text": [
-        "Peace isn't my goal, Lulù.",
-        "Living honestly is.",
-        "What I feel doesn't need to be returned or validated. It's mine.",
-        "As long as I see the light in you",
-        "your strength, your warmth, your kindness",
-        "I'll love you.",
-        "And if one day that light fades, then it ends.",
-        "But until that day, I'll stay true to it."
-      ]
-    },
-    {
-      "speaker": "Lulù",
-      "portrait": "assets/characters/zelda/lulu icon.png",
-      "text": [
-        "You're impossible. . .",
-        "i must think about myself",
-        "I can't follow the way you love me."
-      ]
-    },
-    {
-      "speaker": "Pippi",
-      "portrait": "assets/characters/link/pietro.png",
-      "text": [
-        "You don't have to.",
-        "This isn't about holding you back.",
-        "I just need you to understand",
-        "I promised, I meant it, regardless",
-        "if my purpose is not to be the one",
-        "then it's to be a living reminder that you are perfect just as you are"
-      ]
-    },
-    {
-      "speaker": "Lulù",
-      "portrait": "assets/characters/zelda/lulu icon.png",
-      "text": [
-        ". . .You're still the same.",
-        "And somehow, that's comforting.",
-        "Come on. Let's go. This place is falling apart."
-      ]
-    },
-    {
-      "speaker": "Pippi",
-      "portrait": "assets/characters/link/pietro.png",
-      "text": [
-        "Yeah.",
-        "Let's get out of here."
+        "i know, and i’m not trying to change anything.",
+        "i just wish i was still worth your desire.",
+        "i’m trying to be enough again.",
+        "I just wish you felt the same, regardless",
+        "if i have to work to deserve it, i’m fine with that."
       ]
     }
   ]
