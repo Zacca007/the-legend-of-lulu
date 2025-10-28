@@ -6,14 +6,14 @@
       "text": [
         "...Pippi?",
         "you came all this way down here?",
-        "you shouldn’t have. i could’ve handled this myself."
+        "you shouldn't have. i could've handled this myself."
       ]
     },
     {
       "speaker": "Pippi",
       "portrait": "assets/characters/link/pietro.png",
       "text": [
-        "i don’t doubt it at all.",
+        "i don't doubt it at all.",
         "i just missed you, i wanted to see you."
       ]
     },
@@ -21,38 +21,50 @@
       "speaker": "Lulù",
       "portrait": "assets/characters/zelda/lulu icon.png",
       "text": [
-        "why do you still hold on to that?",
-        "there are so many things out there, so many people.",
-        "you’re missing out on a lot"
+        "why do you do all this for me? what are you trying to gain?",
+        "you're missing out on a lot"
       ]
     },
     {
       "speaker": "Pippi",
       "portrait": "assets/characters/link/pietro.png",
       "text": [
-        "but i don't want any of that",
-        "i don’t miss the feeling, i miss you",
-        "how close you were, and what you used to think of me."
+        "i'm not trying to achieve anything",
+        "to this day, i've never seen anyone more beautiful than you",
+        "i feel my heart jump inside of my chest when you look at me",
+        "you don't know i happy it makes me whenever you get closer to me",
+        "every time you compliment me i love myself more",
+        "i don't care what i'm missing"
       ]
     },
     {
       "speaker": "Lulù",
       "portrait": "assets/characters/zelda/lulu icon.png",
       "text": [
-        "i don’t know what to say.",
-        "i still care about you, i’m not disappearing.",
-        "but this is just how life moves. you can’t fight that."
+        "i don't know what to say.",
+        "you're so stubborn. . .",
+        "thanks for these words, pippi",
+        "just remember that i care for you",
+        "you need to relax, and take it easier",
+        "you'll only hurt yourself by stressing yourself for no reason",
+        "don't ever think i'm going away"
       ]
     },
     {
       "speaker": "Pippi",
       "portrait": "assets/characters/link/pietro.png",
       "text": [
-        "i know, and i’m not trying to change anything.",
-        "i just wish i was still worth your desire.",
-        "i’m trying to be enough again.",
-        "I just wish you felt the same, regardless",
-        "if i have to work to deserve it, i’m fine with that."
+        "thank you for everything",
+        "you're the most important person i know",
+        "i won't go anywhere either"
+      ]
+    },
+    {
+      "speaker": "Lulù",
+      "portrait": "assets/characters/zelda/lulu icon.png",
+      "text": [
+        "come on now",
+        "let's get out of here before this dungeon falls apart."
       ]
     }
   ]

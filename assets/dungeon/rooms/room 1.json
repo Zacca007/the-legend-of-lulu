@@ -22,9 +22,9 @@
       {
         "pos": {"x": 0, "y": 250},
         "size": {"width": 50, "height": 50},
-        "destination": "assets/dungeon/rooms/zelda's room.json",
+        "destination": "assets/dungeon/rooms/room 2.json",
         "spawn": {"x": 700, "y": 250},
-        "changeMusic": true
+        "changeMusic": false
       }
     ],
     "enemies": [

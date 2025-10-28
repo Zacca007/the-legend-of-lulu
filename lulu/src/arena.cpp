@@ -134,6 +134,29 @@ namespace lulu
         return collisions_;
     }
 
+    void Arena::tick(const std::vector<Key>& keys)
+    {
+        prevInputs_ = std::exchange(currInputs_, keys);
+
+        for (const auto& act : actors_)
+        {
+            if (auto* movable = dynamic_cast<Movable*>(act.get()))
+            {
+                movable->move();
+                detectCollisionsFor(act.get());
+                handleCollisionsFor(act.get());
+
+                if (const auto* fighter = dynamic_cast<Fighter*>(act.get()))
+                {
+                    if (fighter->shouldDie())
+                    {
+                        kill(act.get());
+                    }
+                }
+            }
+        }
+    }
+
     void Arena::spawn(std::unique_ptr<Actor> actor)
     {
         if (!actor) return;
@@ -162,29 +185,6 @@ namespace lulu
         }
 
         return nullptr;
-    }
-
-    void Arena::tick(const std::vector<Key>& keys)
-    {
-        prevInputs_ = std::exchange(currInputs_, keys);
-
-        for (const auto& act : actors_)
-        {
-            if (auto* movable = dynamic_cast<Movable*>(act.get()))
-            {
-                movable->move();
-                detectCollisionsFor(act.get());
-                handleCollisionsFor(act.get());
-
-                if (const auto* fighter = dynamic_cast<Fighter*>(act.get()))
-                {
-                    if (fighter->shouldDie())
-                    {
-                        kill(act.get());
-                    }
-                }
-            }
-        }
     }
 
     void Arena::detectCollisionsFor(const Actor* actor)

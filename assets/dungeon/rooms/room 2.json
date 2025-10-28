@@ -1,0 +1,52 @@
+{
+  "background": "assets/dungeon/backgrounds/room 2.png",
+  "music": "assets/audio/music/dungeon.mp3",
+  "inputs": [32, 65, 68, 83, 87, 257, 262, 263, 264, 265],
+  "arena": {
+    "pos": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 800,
+      "height": 550
+    },
+    "doors": [
+      {
+        "pos": {"x": 750, "y": 250},
+        "size": {"width": 50, "height": 50},
+        "destination": "assets/dungeon/rooms/room 1.json",
+        "spawn": {"x": 50, "y": 250},
+        "changeMusic": false
+      },
+      {
+        "pos": {"x": 0, "y": 250},
+        "size": {"width": 50, "height": 50},
+        "destination": "assets/dungeon/rooms/zelda's room.json",
+        "spawn": {"x": 700, "y": 250},
+        "changeMusic": true
+      }
+    ],
+    "enemies": [
+      {
+        "type": "zol",
+        "pos": {"x": 200, "y": 200}
+      }
+    ],
+    "actors": [
+      {"pos": {"x": 0, "y": 0}, "size": {"width": 800, "height":  100}},
+      {"pos": {"x": 0, "y": 450}, "size": {"width": 800, "height":  100}},
+      {"pos": {"x": 0, "y": 0}, "size": {"width": 100, "height":  250}},
+      {"pos": {"x": 0, "y": 300}, "size": {"width":  100, "height": 250}},
+      {"pos": {"x": 700, "y": 0}, "size": {"width": 100, "height":  250}},
+      {"pos": {"x": 700, "y": 300}, "size": {"width": 100, "height":  250}},
+
+      {"pos": {"x": 200, "y": 200}, "size": {"width": 50, "height": 50}},
+      {"pos": {"x": 550, "y": 200}, "size": {"width": 50, "height": 50}},
+
+      {"pos": {"x": 200, "y": 300}, "size": {"width": 50, "height": 50}},
+      {"pos": {"x": 550, "y": 300}, "size": {"width": 50, "height": 50}}
+    ],
+    "NPCs": []
+  }
+}

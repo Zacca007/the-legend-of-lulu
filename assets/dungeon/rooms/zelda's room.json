@@ -15,7 +15,7 @@
       {
         "pos": {"x": 750, "y": 250},
         "size": {"width": 50, "height": 50},
-        "destination": "assets/dungeon/rooms/room 1.json",
+        "destination": "assets/dungeon/rooms/room 2.json",
         "spawn": {"x": 50, "y": 250},
         "changeMusic": true
       }
